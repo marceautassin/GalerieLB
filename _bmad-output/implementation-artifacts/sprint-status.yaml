@@ -1,0 +1,84 @@
+# generated: 2026-02-25
+# project: GallerieLouisBarrand
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-02-25
+project: GallerieLouisBarrand
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Fondations & Gestion de contenu
+  epic-1: in-progress
+  1-1-initialisation-des-projets-front-et-cms: done
+  1-2-modele-de-donnees-cms-artistes-et-oeuvres: ready-for-dev
+  1-3-modele-de-donnees-cms-expositions-presse-et-a-propos: ready-for-dev
+  1-4-layout-principal-et-styles-globaux: ready-for-dev
+  epic-1-retrospective: optional
+
+  # Epic 2: Découverte Artistes & Oeuvres
+  epic-2: in-progress
+  2-1-client-api-strapi-et-types-typescript: ready-for-dev
+  2-2-pages-artistes-liste-et-fiche: ready-for-dev
+  2-3-pages-oeuvres-liste-et-fiche: ready-for-dev
+  2-4-navigation-par-thematique: ready-for-dev
+  epic-2-retrospective: optional
+
+  # Epic 3: Expositions & Identité de la galerie
+  epic-3: in-progress
+  3-1-pages-expositions-liste-et-fiche: ready-for-dev
+  3-2-page-a-propos: ready-for-dev
+  3-3-section-presse: ready-for-dev
+  3-4-liens-externes-despierre-et-proantic: ready-for-dev
+  epic-3-retrospective: optional
+
+  # Epic 4: Contact & Page d'accueil
+  epic-4: in-progress
+  4-1-formulaire-de-contact: ready-for-dev
+  4-2-cta-prendre-rendez-vous-contextuel: ready-for-dev
+  4-3-page-daccueil-avec-nouveautes: ready-for-dev
+  epic-4-retrospective: optional
+
+  # Epic 5: SEO & Référencement
+  epic-5: in-progress
+  5-1-donnees-structurees-schema-org: ready-for-dev
+  5-2-meta-open-graph-et-sitemap: ready-for-dev
+  5-3-robots-txt-llms-txt-et-optimisation-performance: ready-for-dev
+  epic-5-retrospective: optional
+
+  # Epic 6: Déploiement & Mise en production
+  epic-6: in-progress
+  6-1-deploiement-cms-sur-clever-cloud: ready-for-dev
+  6-2-deploiement-front-et-webhook-rebuild: ready-for-dev
+  6-3-nom-de-domaine-monitoring-et-go-live: ready-for-dev
+  epic-6-retrospective: optional

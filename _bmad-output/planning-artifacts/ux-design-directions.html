@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galerie Louis Barrand — Design Directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF8F5;
+    --text: #1A1A1A;
+    --text-secondary: #4A4A4A;
+    --text-tertiary: #7A7A7A;
+    --border: #E5E2DE;
+    --white: #FFFFFF;
+    --black: #000000;
+    --success: #2D6A4F;
+    --error: #C1292E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Abhaya Libre', serif; }
+
+  /* Navigation entre mockups */
+  .mockup-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--black);
+    color: var(--white);
+    padding: 12px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    z-index: 1000;
+    font-size: 0.875rem;
+    flex-wrap: wrap;
+  }
+  .mockup-nav span { font-weight: 500; opacity: 0.6; }
+  .mockup-nav button {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--white);
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    transition: all 200ms;
+  }
+  .mockup-nav button:hover,
+  .mockup-nav button.active {
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .mockup-section {
+    display: none;
+    padding-top: 70px;
+    min-height: 100vh;
+  }
+  .mockup-section.active { display: block; }
+
+  .section-title {
+    text-align: center;
+    padding: 48px 24px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .section-title h2 { font-size: 1.5rem; margin-bottom: 8px; }
+  .section-title p { color: var(--text-secondary); font-size: 0.875rem; }
+
+  /* === MOCKUP: PAGE D'ACCUEIL === */
+
+  /* Direction A: Hero plein écran */
+  .hero-a {
+    height: 85vh;
+    background: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.3)),
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect fill="%23C4A882" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" fill="%23fff" font-size="32" font-family="serif" opacity="0.5">Oeuvre phare — visuel plein écran</text></svg>');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 64px 48px;
+    color: white;
+  }
+  .hero-a h1 { font-size: 3rem; margin-bottom: 8px; }
+  .hero-a p { font-size: 1.1rem; opacity: 0.9; max-width: 500px; }
+
+  /* Direction B: Hero minimal */
+  .hero-b {
+    text-align: center;
+    padding: 96px 48px 64px;
+  }
+  .hero-b h1 { font-size: 2.5rem; margin-bottom: 16px; letter-spacing: 0.05em; }
+  .hero-b p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+  .hero-b .separator {
+    width: 48px;
+    height: 1px;
+    background: var(--text);
+    margin: 32px auto;
+  }
+
+  /* Grille nouveautés */
+  .nouveautes {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+  .nouveautes h2 {
+    font-size: 1.5rem;
+    margin-bottom: 32px;
+  }
+  .grid-oeuvres {
+    display: grid;
+    gap: 24px;
+  }
+  .grid-asymetrique {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+  }
+  .grid-asymetrique .carte:nth-child(1) { grid-row: span 2; }
+  .grid-asymetrique .carte:nth-child(4) { grid-column: span 2; }
+
+  .grid-uniforme {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .carte {
+    position: relative;
+    overflow: hidden;
+    background: var(--white);
+    cursor: pointer;
+    transition: opacity 200ms;
+  }
+  .carte:hover { opacity: 0.9; }
+  .carte-img {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    object-fit: cover;
+    display: block;
+  }
+  .carte-img-placeholder {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+  .carte-info {
+    padding: 16px;
+  }
+  .carte-info h3 { font-size: 1rem; margin-bottom: 4px; }
+  .carte-info p { font-size: 0.875rem; color: var(--text-secondary); }
+
+  /* Carte avec overlay au hover */
+  .carte-overlay .carte-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+  .carte-overlay:hover .carte-info-overlay { opacity: 1; }
+  .carte-overlay .carte-info-overlay h3 { font-size: 1rem; color: white; }
+  .carte-overlay .carte-info-overlay p { font-size: 0.875rem; color: rgba(255,255,255,0.8); }
+
+  /* === MOCKUP: FICHE OEUVRE === */
+  .fiche-oeuvre-split {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px;
+    gap: 48px;
+    min-height: 70vh;
+  }
+  .fiche-oeuvre-stack {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+  .fiche-img-placeholder {
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+  }
+  .fiche-meta h1 { font-size: 2rem; margin-bottom: 8px; }
+  .fiche-meta .artiste-link {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+    display: block;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .fiche-meta dl { margin-bottom: 32px; }
+  .fiche-meta dt {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    margin-top: 16px;
+  }
+  .fiche-meta dd { font-size: 0.95rem; }
+  .btn-cta {
+    display: inline-block;
+    background: var(--text);
+    color: var(--bg);
+    padding: 14px 32px;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 200ms;
+    border: 1px solid var(--text);
+  }
+  .btn-cta:hover {
+    background: var(--bg);
+    color: var(--text);
+  }
+  .liens-croises {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .liens-croises h3 { font-size: 1rem; margin-bottom: 16px; color: var(--text-secondary); }
+
+  /* Tags thématiques */
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .tag {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 200ms;
+  }
+  .tag:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  /* === MOCKUP: HEADER === */
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .site-header .logo {
+    font-family: 'Abhaya Libre', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .site-header nav { display: flex; gap: 32px; }
+  .site-header nav a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    transition: color 200ms;
+  }
+  .site-header nav a:hover { color: var(--text); }
+
+  /* Header centré */
+  .site-header-centered {
+    text-align: center;
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .site-header-centered .logo {
+    font-family: 'Abhaya Libre', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .site-header-centered nav { display: flex; justify-content: center; gap: 32px; }
+  .site-header-centered nav a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 200ms;
+  }
+  .site-header-centered nav a:hover { color: var(--text); }
+
+  /* === MOCKUP: FOOTER === */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    max-width: 1280px;
+    margin: 64px auto 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .site-footer a { color: var(--text-secondary); }
+  .footer-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; color: var(--text-tertiary); font-family: 'Inter', sans-serif; font-weight: 500; }
+  .footer-col p { margin-bottom: 4px; }
+
+  /* === MOCKUP: FORMULAIRE === */
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+  .form-container h1 { font-size: 2rem; margin-bottom: 8px; }
+  .form-container .intro { color: var(--text-secondary); margin-bottom: 32px; }
+  .form-group { margin-bottom: 24px; }
+  .form-group label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 200ms;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--text); }
+  .form-group textarea { min-height: 120px; resize: vertical; }
+  .form-ref {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: var(--bg);
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  /* Comparaison côte à côte */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+  .compare-item {
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .compare-label {
+    background: var(--text);
+    color: var(--white);
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .compare { grid-template-columns: 1fr; }
+    .fiche-oeuvre-split { grid-template-columns: 1fr; }
+    .grid-asymetrique { grid-template-columns: 1fr; }
+    .grid-asymetrique .carte:nth-child(1) { grid-row: span 1; }
+    .grid-asymetrique .carte:nth-child(4) { grid-column: span 1; }
+    .grid-uniforme { grid-template-columns: 1fr 1fr; }
+    .site-header, .site-header-centered { padding: 16px 24px; }
+    .site-header nav, .site-header-centered nav { gap: 16px; }
+    .hero-a { padding: 32px 24px; }
+    .hero-a h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mockup-nav">
+  <span>Design Directions</span>
+  <button class="active" onclick="show('header')">Header</button>
+  <button onclick="show('accueil')">Page d'accueil</button>
+  <button onclick="show('grille')">Grille oeuvres</button>
+  <button onclick="show('fiche')">Fiche oeuvre</button>
+  <button onclick="show('contact')">Formulaire</button>
+  <button onclick="show('footer')">Footer</button>
+</div>
+
+<!-- HEADER -->
+<div id="header" class="mockup-section active">
+  <div class="section-title">
+    <h2>Header — 2 directions</h2>
+    <p>Direction A : logo à gauche, nav à droite (classique). Direction B : logo centré, nav dessous (galerie).</p>
+  </div>
+  <div class="compare">
+    <div class="compare-item">
+      <div class="compare-label">Direction A — Classique</div>
+      <header class="site-header">
+        <div class="logo">Galerie Louis Barrand</div>
+        <nav>
+          <a href="#">Artistes</a>
+          <a href="#">Oeuvres</a>
+          <a href="#">Expositions</a>
+          <a href="#">À propos</a>
+          <a href="#">Presse</a>
+          <a href="#">Contact</a>
+        </nav>
+      </header>
+    </div>
+    <div class="compare-item">
+      <div class="compare-label">Direction B — Galerie centrée</div>
+      <div class="site-header-centered">
+        <span class="logo">Galerie Louis Barrand</span>
+        <nav>
+          <a href="#">Artistes</a>
+          <a href="#">Oeuvres</a>
+          <a href="#">Expositions</a>
+          <a href="#">À propos</a>
+          <a href="#">Presse</a>
+          <a href="#">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE D'ACCUEIL -->
+<div id="accueil" class="mockup-section">
+  <div class="section-title">
+    <h2>Page d'accueil — 2 directions</h2>
+    <p>Direction A : hero plein écran avec oeuvre phare. Direction B : entrée sobre et textuelle.</p>
+  </div>
+  <div class="compare">
+    <div class="compare-item">
+      <div class="compare-label">Direction A — Hero immersif</div>
+      <div class="hero-a">
+        <h1>Galerie Louis Barrand</h1>
+        <p>Art figuratif français des XIXe et XXe siècles</p>
+      </div>
+    </div>
+    <div class="compare-item">
+      <div class="compare-label">Direction B — Entrée sobre</div>
+      <div class="hero-b">
+        <h1>Galerie Louis Barrand</h1>
+        <div class="separator"></div>
+        <p>Redécouvrir les artistes oubliés et les pans méconnus d'artistes majeurs du XIXe et XXe siècle</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GRILLE OEUVRES -->
+<div id="grille" class="mockup-section">
+  <div class="section-title">
+    <h2>Grille oeuvres — 2 directions</h2>
+    <p>Direction A : grille asymétrique (proportions variées). Direction B : grille uniforme avec info sous l'image.</p>
+  </div>
+  <div class="compare">
+    <div class="compare-item">
+      <div class="compare-label">Direction A — Grille asymétrique + overlay hover</div>
+      <div style="padding: 24px;">
+        <div class="tags" style="margin-bottom: 24px; margin-top: 0;">
+          <span class="tag" style="border-color: var(--text); color: var(--text);">Toutes</span>
+          <span class="tag">Paysage</span>
+          <span class="tag">Portrait</span>
+          <span class="tag">Équestre</span>
+          <span class="tag">Nature morte</span>
+        </div>
+        <div class="grid-oeuvres grid-asymetrique">
+          <div class="carte carte-overlay" style="background: #C4A882;">
+            <div class="carte-img-placeholder" style="min-height:100%; background: #C4A882; color: rgba(255,255,255,0.5);">Paysage vertical</div>
+            <div class="carte-info-overlay"><h3>Paysage du Midi</h3><p>Louis Valtat</p></div>
+          </div>
+          <div class="carte carte-overlay" style="background: #8BA4A8;">
+            <div class="carte-img-placeholder" style="min-height:250px; background: #8BA4A8; color: rgba(255,255,255,0.5);">Marine</div>
+            <div class="carte-info-overlay"><h3>Bord de mer</h3><p>Henri Lebasque</p></div>
+          </div>
+          <div class="carte carte-overlay" style="background: #A89878;">
+            <div class="carte-img-placeholder" style="min-height:250px; background: #A89878; color: rgba(255,255,255,0.5);">Portrait</div>
+            <div class="carte-info-overlay"><h3>Jeune femme au chapeau</h3><p>Edmond Ceria</p></div>
+          </div>
+          <div class="carte carte-overlay" style="background: #7A8868;">
+            <div class="carte-img-placeholder" style="min-height:200px; background: #7A8868; color: rgba(255,255,255,0.5);">Paysage panoramique</div>
+            <div class="carte-info-overlay"><h3>Les Jardins</h3><p>Henri Martin</p></div>
+          </div>
+          <div class="carte carte-overlay" style="background: #9A7A6A;">
+            <div class="carte-img-placeholder" style="min-height:200px; background: #9A7A6A; color: rgba(255,255,255,0.5);">Cavalier</div>
+            <div class="carte-info-overlay"><h3>Le Cavalier</h3><p>René Princeteau</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="compare-item">
+      <div class="compare-label">Direction B — Grille uniforme + info visible</div>
+      <div style="padding: 24px;">
+        <div class="tags" style="margin-bottom: 24px; margin-top: 0;">
+          <span class="tag" style="border-color: var(--text); color: var(--text);">Toutes</span>
+          <span class="tag">Paysage</span>
+          <span class="tag">Portrait</span>
+          <span class="tag">Équestre</span>
+          <span class="tag">Nature morte</span>
+        </div>
+        <div class="grid-oeuvres grid-uniforme">
+          <div class="carte">
+            <div class="carte-img-placeholder" style="background: #C4A882; color: rgba(255,255,255,0.5);">Paysage</div>
+            <div class="carte-info"><h3>Paysage du Midi</h3><p>Louis Valtat</p></div>
+          </div>
+          <div class="carte">
+            <div class="carte-img-placeholder" style="background: #8BA4A8; color: rgba(255,255,255,0.5);">Marine</div>
+            <div class="carte-info"><h3>Bord de mer</h3><p>Henri Lebasque</p></div>
+          </div>
+          <div class="carte">
+            <div class="carte-img-placeholder" style="background: #A89878; color: rgba(255,255,255,0.5);">Portrait</div>
+            <div class="carte-info"><h3>Jeune femme au chapeau</h3><p>Edmond Ceria</p></div>
+          </div>
+          <div class="carte">
+            <div class="carte-img-placeholder" style="background: #7A8868; color: rgba(255,255,255,0.5);">Paysage</div>
+            <div class="carte-info"><h3>Les Jardins</h3><p>Henri Martin</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE OEUVRE -->
+<div id="fiche" class="mockup-section">
+  <div class="section-title">
+    <h2>Fiche oeuvre — 2 directions</h2>
+    <p>Direction A : split layout (image 60% / métadonnées 40%). Direction B : image empilée au-dessus.</p>
+  </div>
+  <div style="max-width: 1400px; margin: 0 auto; padding: 0 24px 64px;">
+    <div style="margin-bottom: 48px;">
+      <div class="compare-label" style="display: inline-block; margin-bottom: 16px;">Direction A — Split layout</div>
+      <div class="fiche-oeuvre-split" style="padding: 0; border: 1px solid var(--border);">
+        <div class="fiche-img-placeholder" style="background: #C4A882; color: rgba(255,255,255,0.5);">
+          Visuel oeuvre — grand format
+        </div>
+        <div class="fiche-meta" style="padding: 32px;">
+          <h1>Paysage du Midi</h1>
+          <a class="artiste-link" href="#">Louis Valtat</a>
+          <dl>
+            <dt>Technique</dt><dd>Huile sur toile</dd>
+            <dt>Dimensions</dt><dd>65 × 81 cm</dd>
+            <dt>Provenance</dt><dd>Collection particulière, Paris</dd>
+          </dl>
+          <div class="tags">
+            <span class="tag">Paysage</span>
+            <span class="tag">Post-impressionnisme</span>
+          </div>
+          <div style="margin-top: 32px;">
+            <a class="btn-cta" href="#">Prendre rendez-vous</a>
+          </div>
+          <div class="liens-croises">
+            <h3>Autres oeuvres de Louis Valtat</h3>
+            <p style="font-size: 0.875rem; color: var(--text-secondary);">3 oeuvres disponibles →</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="compare-label" style="display: inline-block; margin-bottom: 16px;">Direction B — Empilé</div>
+      <div class="fiche-oeuvre-stack" style="padding: 0; border: 1px solid var(--border);">
+        <div class="fiche-img-placeholder" style="background: #C4A882; color: rgba(255,255,255,0.5); min-height: 400px;">
+          Visuel oeuvre — pleine largeur
+        </div>
+        <div class="fiche-meta" style="padding: 32px; text-align: center;">
+          <h1>Paysage du Midi</h1>
+          <a class="artiste-link" href="#" style="display: inline;">Louis Valtat</a>
+          <dl style="display: flex; justify-content: center; gap: 32px; margin-top: 24px;">
+            <div><dt>Technique</dt><dd>Huile sur toile</dd></div>
+            <div><dt>Dimensions</dt><dd>65 × 81 cm</dd></div>
+          </dl>
+          <div class="tags" style="justify-content: center;">
+            <span class="tag">Paysage</span>
+            <span class="tag">Post-impressionnisme</span>
+          </div>
+          <div style="margin-top: 32px;">
+            <a class="btn-cta" href="#">Prendre rendez-vous</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULAIRE CONTACT -->
+<div id="contact" class="mockup-section">
+  <div class="section-title">
+    <h2>Formulaire de contact</h2>
+    <p>Avec pré-remplissage contextuel de la référence oeuvre.</p>
+  </div>
+  <div class="form-container">
+    <h1>Contact</h1>
+    <p class="intro">Prenez rendez-vous pour une visite privée ou renseignez-vous sur une oeuvre.</p>
+    <div class="form-ref">
+      Oeuvre de référence : <strong>Paysage du Midi — Louis Valtat</strong>
+    </div>
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text" placeholder="Votre nom">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="votre@email.com">
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea placeholder="Votre message..."></textarea>
+    </div>
+    <a class="btn-cta" href="#" style="width: 100%; text-align: center;">Envoyer</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div id="footer" class="mockup-section">
+  <div class="section-title">
+    <h2>Footer — léger</h2>
+    <p>Adresse, horaires, liens essentiels. Pas de footer massif.</p>
+  </div>
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px 48px;">
+    <footer class="site-footer" style="margin-top: 0;">
+      <div class="footer-col">
+        <h4>Galerie</h4>
+        <p>Galerie Louis Barrand</p>
+        <p>XX rue du Faubourg Saint-Honoré</p>
+        <p>75008 Paris</p>
+      </div>
+      <div class="footer-col">
+        <h4>Horaires</h4>
+        <p>Mardi — Samedi</p>
+        <p>10h — 18h</p>
+        <p>Sur rendez-vous</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liens</h4>
+        <p><a href="#">Jacques Despierre ↗</a></p>
+        <p><a href="#">Proantic ↗</a></p>
+        <p><a href="#">Instagram ↗</a></p>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.mockup-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.mockup-nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
