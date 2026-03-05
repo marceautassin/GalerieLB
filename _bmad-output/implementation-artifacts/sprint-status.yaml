@@ -41,9 +41,9 @@ development_status:
   # Epic 1: Fondations & Gestion de contenu
   epic-1: in-progress
   1-1-initialisation-des-projets-front-et-cms: done
-  1-2-modele-de-donnees-cms-artistes-et-oeuvres: ready-for-dev
-  1-3-modele-de-donnees-cms-expositions-presse-et-a-propos: ready-for-dev
-  1-4-layout-principal-et-styles-globaux: ready-for-dev
+  1-2-modele-de-donnees-cms-artistes-et-oeuvres: in-progress
+  1-3-modele-de-donnees-cms-expositions-presse-et-a-propos: done
+  1-4-layout-principal-et-styles-globaux: done
   epic-1-retrospective: optional
 
   # Epic 2: Découverte Artistes & Oeuvres
