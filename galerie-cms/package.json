@@ -1,0 +1,38 @@
+{
+  "name": "galerie-cms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CMS Strapi v5 pour la Galerie Louis Barrand",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.ts\" \"config/**/*.ts\""
+  },
+  "dependencies": {
+    "@strapi/plugin-cloud": "^5.37.1",
+    "@strapi/plugin-users-permissions": "^5.37.1",
+    "@strapi/provider-upload-aws-s3": "^5.37.1",
+    "@strapi/strapi": "^5.37.1",
+    "@strapi/typescript-utils": "^5.37.1",
+    "better-sqlite3": "^12.6.2",
+    "esbuild": "^0.27.3",
+    "pg": "^8.19.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
+    "styled-components": "^6.3.11",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0"
+  }
+}

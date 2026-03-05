@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import type { Oeuvre } from '../types/strapi';
+
+interface Props {
+  oeuvre: Oeuvre;
+}
+
+const { oeuvre } = Astro.props;
+const visuel = oeuvre.visuels?.[0];
+const artisteNom = oeuvre.artiste?.nom ?? '';
+const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
+---
+
+<a href={`/oeuvres/${oeuvre.slug}`} class="carte-oeuvre">
+  <div class="carte-oeuvre-image">
+    {visuel ? (
+      <Image
+        src={visuel.url}
+        alt={altText}
+        width={visuel.width}
+        height={visuel.height}
+        loading="lazy"
+      />
+    ) : (
+      <div class="carte-oeuvre-placeholder" aria-hidden="true">
+        <span>{oeuvre.titre.charAt(0)}</span>
+      </div>
+    )}
+    <div class="carte-oeuvre-overlay">
+      <span class="carte-oeuvre-titre">{oeuvre.titre}</span>
+      {artisteNom && <span class="carte-oeuvre-artiste">{artisteNom}</span>}
+    </div>
+  </div>
+  <div class="carte-oeuvre-info-mobile">
+    <span class="carte-oeuvre-titre">{oeuvre.titre}</span>
+    {artisteNom && <span class="carte-oeuvre-artiste">{artisteNom}</span>}
+  </div>
+</a>
+
+<style>
+  .carte-oeuvre {
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .carte-oeuvre:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  .carte-oeuvre-image {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+
+  .carte-oeuvre-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform var(--transition-default);
+  }
+
+  .carte-oeuvre:hover .carte-oeuvre-image img {
+    transform: scale(1.03);
+  }
+
+  .carte-oeuvre-placeholder {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-border);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+
+  /* Desktop overlay */
+  .carte-oeuvre-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-md);
+    background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.6));
+    opacity: 0;
+    transition: opacity var(--transition-default);
+    color: var(--color-bg);
+  }
+
+  @media (min-width: 768px) {
+    .carte-oeuvre-overlay {
+      display: flex;
+    }
+  }
+
+  .carte-oeuvre:hover .carte-oeuvre-overlay {
+    opacity: 1;
+  }
+
+  .carte-oeuvre-overlay .carte-oeuvre-titre {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .carte-oeuvre-overlay .carte-oeuvre-artiste {
+    font-size: 0.875rem;
+    opacity: 0.85;
+  }
+
+  /* Mobile info (always visible) */
+  .carte-oeuvre-info-mobile {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-sm) 0;
+  }
+
+  @media (min-width: 768px) {
+    .carte-oeuvre-info-mobile {
+      display: none;
+    }
+  }
+
+  .carte-oeuvre-info-mobile .carte-oeuvre-titre {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .carte-oeuvre-info-mobile .carte-oeuvre-artiste {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+</style>

@@ -1,0 +1,20 @@
+# Galerie Louis Barrand
+
+## About
+Galerie Louis Barrand is an art gallery based in France, specializing in modern and contemporary art.
+
+## Content
+- Artists: Biographies and portfolios of represented artists
+- Works: Paintings, sculptures, and other artworks with detailed descriptions
+- Exhibitions: Current and past exhibitions with dates and descriptions
+- Press: Press articles and media coverage
+- About: Gallery history, Marcus Prize, and practical information
+- Contact: Inquiry form for appointments and information
+
+## Site Structure
+- /artistes - Artist listings and individual profiles
+- /oeuvres - Artwork catalog with thematic navigation
+- /expositions - Exhibition listings and details
+- /a-propos - About the gallery
+- /presse - Press section
+- /contact - Contact form

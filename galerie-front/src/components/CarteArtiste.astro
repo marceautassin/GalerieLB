@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+import type { Artiste } from '../types/strapi';
+
+interface Props {
+  artiste: Artiste;
+}
+
+const { artiste } = Astro.props;
+const hasPhoto = artiste.photo?.url;
+---
+
+<a href={`/artistes/${artiste.slug}`} class="carte-artiste">
+  <div class="carte-artiste-image">
+    {hasPhoto ? (
+      <Image
+        src={artiste.photo!.url}
+        alt={`Portrait de ${artiste.nom}`}
+        width={artiste.photo!.width}
+        height={artiste.photo!.height}
+        loading="lazy"
+      />
+    ) : (
+      <div class="carte-artiste-placeholder" aria-hidden="true">
+        <span>{artiste.nom.charAt(0)}</span>
+      </div>
+    )}
+  </div>
+  <h2 class="carte-artiste-nom">{artiste.nom}</h2>
+</a>
+
+<style>
+  .carte-artiste {
+    display: block;
+    text-decoration: none;
+    transition: box-shadow var(--transition-default);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .carte-artiste:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .carte-artiste:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  .carte-artiste-image {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+
+  .carte-artiste-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carte-artiste-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-border);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+  }
+
+  .carte-artiste-nom {
+    padding: var(--space-md);
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-align: center;
+  }
+</style>

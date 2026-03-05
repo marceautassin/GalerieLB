@@ -1,0 +1,119 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h3>Galerie Louis Barrand</h3>
+      <address>
+        2 rue des Moulins<br />
+        13100 Aix-en-Provence<br />
+        France
+      </address>
+    </div>
+    <div class="footer-col">
+      <h3>Horaires</h3>
+      <p>
+        Mardi - Samedi : 10h - 18h<br />
+        Dimanche - Lundi : Fermé
+      </p>
+    </div>
+    <div class="footer-col">
+      <h3>Liens</h3>
+      <ul>
+        <li>
+          <a href="https://www.despierre.com" target="_blank" rel="noopener">Despierre</a>
+        </li>
+        <li>
+          <a href="https://www.proantic.com" target="_blank" rel="noopener">Proantic</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; {currentYear} Galerie Louis Barrand. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-black);
+    color: var(--color-bg);
+    padding: var(--space-3xl) var(--space-lg) var(--space-lg);
+  }
+
+  .footer-inner {
+    display: grid;
+    gap: var(--space-xl);
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding: var(--space-3xl) var(--space-2xl) var(--space-lg);
+    }
+    .footer-inner {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer {
+      padding: var(--space-3xl) var(--space-lg) var(--space-lg);
+    }
+  }
+  @media (min-width: 1440px) {
+    .site-footer {
+      padding: var(--space-3xl) 0 var(--space-lg);
+    }
+  }
+
+  .footer-col h3 {
+    font-size: 1rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-bg);
+  }
+
+  .footer-col address {
+    font-style: normal;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-tertiary);
+  }
+
+  .footer-col p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-tertiary);
+  }
+
+  .footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer-col a {
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+    transition: color var(--transition-fade);
+  }
+
+  .footer-col a:hover {
+    color: var(--color-bg);
+  }
+
+  .footer-bottom {
+    max-width: var(--max-width);
+    margin: var(--space-xl) auto 0;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-text-secondary);
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+</style>

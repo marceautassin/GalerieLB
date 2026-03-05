@@ -1,0 +1,46 @@
+---
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import GalerieImages from '../../components/GalerieImages.astro';
+import ChipThematique from '../../components/ChipThematique.vue';
+import { fetchOeuvres, fetchThematiques } from '../../lib/strapi-client';
+
+const oeuvres = await fetchOeuvres();
+const thematiques = await fetchThematiques();
+---
+
+<LayoutPrincipal
+  title="Œuvres — Galerie Louis Barrand"
+  description="Parcourez le catalogue d'œuvres de la Galerie Louis Barrand."
+>
+  <section class="page-oeuvres">
+    <h1>Œuvres</h1>
+    {oeuvres.length > 0 ? (
+      thematiques.length > 0 ? (
+        <ChipThematique
+          client:visible
+          thematiques={thematiques}
+          oeuvres={oeuvres}
+        />
+      ) : (
+        <GalerieImages oeuvres={oeuvres} />
+      )
+    ) : (
+      <p class="empty">Aucune œuvre pour le moment.</p>
+    )}
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .page-oeuvres h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+  }
+
+  .page-oeuvres {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    padding: var(--space-2xl) 0;
+  }
+</style>

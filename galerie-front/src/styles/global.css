@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Global Styles — Galerie Louis Barrand
+   Reset + Design Tokens + Base Styles
+   ========================================================================== */
+
+/* ---------- Design Tokens ---------- */
+
+:root {
+  /* Couleurs */
+  --color-bg: #FAF8F5;
+  --color-text: #1A1A1A;
+  --color-text-secondary: #4A4A4A;
+  --color-text-tertiary: #7A7A7A;
+  --color-border: #E5E2DE;
+  --color-surface: #FFFFFF;
+  --color-black: #000000;
+  --color-success: #2D6A4F;
+  --color-error: #C1292E;
+
+  /* Typographie */
+  --font-heading: 'Abhaya Libre', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Espacements */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* Layout */
+  --max-width: 1280px;
+
+  /* Transitions */
+  --transition-default: 200ms ease-in-out;
+  --transition-fade: 150ms ease-in-out;
+}
+
+/* ---------- CSS Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  line-height: 1.5;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* ---------- Typographie — Headings ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ---------- Focus Visible Global ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* ---------- Sélection ---------- */
+
+::selection {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* ---------- Bouton Primaire (CTA) ---------- */
+
+.btn-primary {
+  display: inline-block;
+  background: var(--color-text);
+  color: var(--color-bg);
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition-default);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-text);
+}

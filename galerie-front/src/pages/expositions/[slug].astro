@@ -1,0 +1,179 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CarteOeuvre from '../../components/CarteOeuvre.astro';
+import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
+import { fetchExpositions } from '../../lib/strapi-client';
+import { formatDateFr } from '../../lib/format';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const expositions = await fetchExpositions();
+  return expositions.map((exposition) => ({
+    params: { slug: exposition.slug },
+    props: { exposition },
+  }));
+};
+
+const { exposition } = Astro.props;
+const visuels = exposition.visuels ?? [];
+const visuelPrincipal = visuels[0];
+const oeuvres = exposition.oeuvres ?? [];
+
+// Artistes déduits des oeuvres (pas de relation directe Expo ↔ Artiste)
+const artistesUniques = [...new Map(
+  oeuvres
+    .map((o) => o.artiste)
+    .filter(Boolean)
+    .map((a) => [a!.id, a!]),
+).values()];
+
+const artistesLiens = artistesUniques.map((a) => ({
+  label: a.nom,
+  href: `/artistes/${a.slug}`,
+}));
+
+const dates = exposition.dateFin
+  ? `Du ${formatDateFr(exposition.dateDebut)} au ${formatDateFr(exposition.dateFin)}`
+  : `Depuis le ${formatDateFr(exposition.dateDebut)}`;
+
+function truncateAtWord(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
+}
+
+const descParts = [exposition.titre, dates];
+if (exposition.preface) descParts.push(exposition.preface.replace(/<[^>]*>/g, ''));
+const description = truncateAtWord(descParts.join(' — '), 160);
+
+const breadcrumbItems = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Expositions', href: '/expositions' },
+  { label: exposition.titre },
+];
+---
+
+<LayoutPrincipal
+  title={`${exposition.titre} — Galerie Louis Barrand`}
+  description={description}
+  ogImage={visuelPrincipal?.url}
+>
+  <article class="fiche-exposition-page">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="fiche-exposition-header">
+      <h1>{exposition.titre}</h1>
+      <p class="fiche-exposition-dates">{dates}</p>
+    </header>
+
+    {visuels.length > 0 && (
+      <div class="fiche-exposition-visuels">
+        {visuels.map((v) => (
+          <div class="fiche-exposition-visuel">
+            <Image
+              src={v.url}
+              alt={v.alternativeText ?? exposition.titre}
+              width={v.width}
+              height={v.height}
+            />
+          </div>
+        ))}
+      </div>
+    )}
+
+    {exposition.preface && (
+      <div class="fiche-exposition-preface" set:html={exposition.preface} />
+    )}
+
+    {oeuvres.length > 0 && (
+      <section class="fiche-exposition-oeuvres">
+        <h2>Oeuvres présentées</h2>
+        <ul class="grille-oeuvres">
+          {oeuvres.map((oeuvre) => (
+            <li>
+              <CarteOeuvre oeuvre={oeuvre} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {artistesLiens.length > 0 && (
+      <SectionLiensRelies
+        titre="Artistes"
+        items={artistesLiens}
+        voirToutHref="/artistes"
+      />
+    )}
+  </article>
+</LayoutPrincipal>
+
+<style>
+  .fiche-exposition-page {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .fiche-exposition-header {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .fiche-exposition-dates {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+  }
+
+  .fiche-exposition-visuels {
+    display: grid;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .fiche-exposition-visuel {
+    overflow: hidden;
+  }
+
+  .fiche-exposition-visuel img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .fiche-exposition-preface {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: var(--space-2xl);
+    max-width: 75ch;
+  }
+
+  .fiche-exposition-oeuvres {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .fiche-exposition-oeuvres h2 {
+    margin-bottom: var(--space-lg);
+  }
+
+  .grille-oeuvres {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

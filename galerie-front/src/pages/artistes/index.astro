@@ -1,0 +1,57 @@
+---
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import CarteArtiste from '../../components/CarteArtiste.astro';
+import { fetchArtistes } from '../../lib/strapi-client';
+
+const artistes = await fetchArtistes();
+---
+
+<LayoutPrincipal
+  title="Artistes — Galerie Louis Barrand"
+  description="Découvrez les artistes représentés par la Galerie Louis Barrand."
+>
+  <section class="page-artistes">
+    <h1>Artistes</h1>
+    {artistes.length > 0 ? (
+      <ul class="grille-artistes">
+        {artistes.map((artiste) => (
+          <li>
+            <CarteArtiste artiste={artiste} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">Aucun artiste pour le moment.</p>
+    )}
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .page-artistes h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+  }
+
+  .grille-artistes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding-bottom: var(--space-2xl);
+  }
+
+  @media (min-width: 640px) {
+    .grille-artistes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grille-artistes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    padding: var(--space-2xl) 0;
+  }
+</style>

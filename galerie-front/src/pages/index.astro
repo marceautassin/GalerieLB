@@ -1,0 +1,25 @@
+---
+import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
+---
+
+<LayoutPrincipal
+  title="Galerie Louis Barrand — Art moderne et contemporain"
+  description="Galerie d'art spécialisée en peinture moderne et contemporaine à Aix-en-Provence. Expositions, artistes et oeuvres."
+>
+  <section class="hero">
+    <h1>Galerie Louis Barrand</h1>
+    <p>Art moderne et contemporain à Aix-en-Provence</p>
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    gap: var(--space-md);
+  }
+</style>

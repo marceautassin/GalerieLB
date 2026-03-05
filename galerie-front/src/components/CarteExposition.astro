@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import type { Exposition } from '../types/strapi';
+import { formatDateFr } from '../lib/format';
+
+interface Props {
+  exposition: Exposition;
+}
+
+const { exposition } = Astro.props;
+const visuel = exposition.visuels?.[0];
+const enCours = exposition.statut === 'en-cours';
+
+const dates = exposition.dateFin
+  ? `${formatDateFr(exposition.dateDebut, 'short')} — ${formatDateFr(exposition.dateFin, 'short')}`
+  : `Depuis ${formatDateFr(exposition.dateDebut, 'short')}`;
+---
+
+<a href={`/expositions/${exposition.slug}`} class="carte-exposition">
+  <div class="carte-exposition-image">
+    {visuel ? (
+      <Image
+        src={visuel.url}
+        alt={visuel.alternativeText ?? exposition.titre}
+        width={visuel.width}
+        height={visuel.height}
+        loading="lazy"
+      />
+    ) : (
+      <div class="carte-exposition-placeholder" aria-hidden="true">
+        <span>{exposition.titre.charAt(0)}</span>
+      </div>
+    )}
+    {enCours && <span class="badge-en-cours">En cours</span>}
+  </div>
+  <div class="carte-exposition-info">
+    <h2 class="carte-exposition-titre">{exposition.titre}</h2>
+    <p class="carte-exposition-dates">{dates}</p>
+  </div>
+</a>
+
+<style>
+  .carte-exposition {
+    display: block;
+    text-decoration: none;
+    transition: box-shadow var(--transition-default);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .carte-exposition:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .carte-exposition:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  .carte-exposition-image {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+
+  .carte-exposition-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carte-exposition-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-border);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+  }
+
+  .badge-en-cours {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: var(--color-text);
+    color: var(--color-bg);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+  }
+
+  .carte-exposition-info {
+    padding: var(--space-md);
+  }
+
+  .carte-exposition-titre {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .carte-exposition-dates {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-xs);
+  }
+</style>

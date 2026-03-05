@@ -1,0 +1,91 @@
+---
+interface LienRelie {
+  label: string;
+  href: string;
+  image?: string;
+}
+
+interface Props {
+  titre: string;
+  items: LienRelie[];
+  maxItems?: number;
+  voirToutHref?: string;
+}
+
+const { titre, items, maxItems = 6, voirToutHref } = Astro.props;
+const visibleItems = items.slice(0, maxItems);
+const hasMore = items.length > maxItems;
+---
+
+{visibleItems.length > 0 && (
+  <section class="section-liens-relies">
+    <h3>{titre}</h3>
+    <ul class="liens-relies-list">
+      {visibleItems.map((item) => (
+        <li>
+          <a href={item.href} class="lien-relie">{item.label}</a>
+        </li>
+      ))}
+    </ul>
+    {hasMore && voirToutHref && (
+      <a href={voirToutHref} class="voir-tout">Voir tout</a>
+    )}
+  </section>
+)}
+
+<style>
+  .section-liens-relies {
+    margin-top: var(--space-xl);
+  }
+
+  .section-liens-relies h3 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .liens-relies-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .lien-relie {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid var(--color-border);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: var(--transition-default);
+  }
+
+  .lien-relie:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+
+  .voir-tout {
+    display: inline-block;
+    margin-top: var(--space-md);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    transition: color var(--transition-fade);
+  }
+
+  .voir-tout:hover {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 639px) {
+    .liens-relies-list {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: var(--space-sm);
+    }
+
+    .lien-relie {
+      white-space: nowrap;
+    }
+  }
+</style>

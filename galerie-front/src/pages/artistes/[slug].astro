@@ -1,0 +1,178 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CarteOeuvre from '../../components/CarteOeuvre.astro';
+import type { Artiste } from '../../types/strapi';
+import { fetchArtistes, fetchArtisteBySlug } from '../../lib/strapi-client';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const artistes = await fetchArtistes();
+  const artistesDetailles = await Promise.all(
+    artistes.map((a) => fetchArtisteBySlug(a.slug)),
+  );
+  return artistesDetailles
+    .filter((a): a is Artiste => a !== null)
+    .map((artiste) => ({
+      params: { slug: artiste.slug },
+      props: { artiste },
+    }));
+};
+
+const { artiste } = Astro.props;
+
+function truncateAtWord(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
+}
+
+const description = artiste.biographie
+  ? truncateAtWord(artiste.biographie, 160)
+  : `Découvrez ${artiste.nom} à la Galerie Louis Barrand.`;
+---
+
+<LayoutPrincipal
+  title={`${artiste.nom} — Galerie Louis Barrand`}
+  description={description}
+>
+  <article class="fiche-artiste">
+    <Breadcrumb items={[
+      { label: 'Accueil', href: '/' },
+      { label: 'Artistes', href: '/artistes' },
+      { label: artiste.nom },
+    ]} />
+
+    <header class="fiche-artiste-header">
+      {artiste.photo && (
+        <div class="fiche-artiste-photo">
+          <Image
+            src={artiste.photo.url}
+            alt={`Portrait de ${artiste.nom}`}
+            width={artiste.photo.width}
+            height={artiste.photo.height}
+          />
+        </div>
+      )}
+      <div class="fiche-artiste-intro">
+        <h1>{artiste.nom}</h1>
+        {artiste.biographie && (
+          <div class="fiche-artiste-bio">
+            {artiste.biographie.split('\n').filter((p) => p.trim()).map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    {artiste.contexteArtistique && (
+      <section class="fiche-artiste-contexte">
+        <h2>Contexte artistique</h2>
+        {artiste.contexteArtistique.split('\n').filter((p) => p.trim()).map((p) => (
+          <p>{p}</p>
+        ))}
+      </section>
+    )}
+
+    {artiste.oeuvres.length > 0 && (
+      <section class="fiche-artiste-oeuvres">
+        <h2>Œuvres</h2>
+        <ul class="grille-oeuvres">
+          {artiste.oeuvres.map((oeuvre) => (
+            <li>
+              <CarteOeuvre oeuvre={oeuvre} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</LayoutPrincipal>
+
+<style>
+  .fiche-artiste {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .fiche-artiste-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    margin: var(--space-xl) 0;
+  }
+
+  @media (min-width: 768px) {
+    .fiche-artiste-header {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .fiche-artiste-photo {
+    flex-shrink: 0;
+    max-width: 320px;
+    overflow: hidden;
+  }
+
+  .fiche-artiste-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .fiche-artiste-intro h1 {
+    margin-bottom: var(--space-md);
+  }
+
+  .fiche-artiste-bio {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .fiche-artiste-bio p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .fiche-artiste-contexte {
+    margin: var(--space-2xl) 0;
+  }
+
+  .fiche-artiste-contexte h2 {
+    margin-bottom: var(--space-md);
+  }
+
+  .fiche-artiste-contexte p {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-sm);
+  }
+
+  .fiche-artiste-oeuvres {
+    margin-top: var(--space-2xl);
+  }
+
+  .fiche-artiste-oeuvres h2 {
+    margin-bottom: var(--space-lg);
+  }
+
+  .grille-oeuvres {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

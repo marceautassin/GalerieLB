@@ -1,0 +1,219 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
+import { fetchOeuvres } from '../../lib/strapi-client';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const oeuvres = await fetchOeuvres();
+  return oeuvres.map((oeuvre) => ({
+    params: { slug: oeuvre.slug },
+    props: { oeuvre },
+  }));
+};
+
+const { oeuvre } = Astro.props;
+const visuel = oeuvre.visuels?.[0];
+const artisteNom = oeuvre.artiste?.nom ?? '';
+const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
+
+function truncateAtWord(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
+}
+
+const descParts = [oeuvre.titre];
+if (artisteNom) descParts.push(artisteNom);
+if (oeuvre.technique) descParts.push(oeuvre.technique);
+if (oeuvre.dimensions) descParts.push(oeuvre.dimensions);
+const description = truncateAtWord(descParts.join(' — '), 160);
+
+const thematiques = (oeuvre.thematiques ?? []).map((t) => ({
+  label: t.nom,
+  href: `/oeuvres?thematique=${t.slug}`,
+}));
+
+const expositions = (oeuvre.expositions ?? []).map((e) => ({
+  label: e.titre,
+  href: `/expositions/${e.slug}`,
+}));
+
+const breadcrumbItems = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Œuvres', href: '/oeuvres' },
+];
+if (oeuvre.artiste) {
+  breadcrumbItems.push({ label: oeuvre.artiste.nom, href: `/artistes/${oeuvre.artiste.slug}` });
+}
+breadcrumbItems.push({ label: oeuvre.titre });
+---
+
+<LayoutPrincipal
+  title={`${oeuvre.titre} — Galerie Louis Barrand`}
+  description={description}
+  ogImage={visuel?.url}
+>
+  <article class="fiche-oeuvre-page">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <div class="fiche-oeuvre">
+      <div class="fiche-oeuvre-visuel">
+        {visuel ? (
+          <a href={visuel.url} target="_blank" rel="noopener" class="visuel-link">
+            <Image
+              src={visuel.url}
+              alt={altText}
+              width={visuel.width}
+              height={visuel.height}
+            />
+          </a>
+        ) : (
+          <div class="fiche-oeuvre-placeholder" aria-hidden="true">
+            <span>{oeuvre.titre.charAt(0)}</span>
+          </div>
+        )}
+      </div>
+
+      <div class="fiche-oeuvre-meta">
+        <h1>{oeuvre.titre}</h1>
+
+        {oeuvre.artiste && (
+          <p class="meta-artiste">
+            <a href={`/artistes/${oeuvre.artiste.slug}`}>{oeuvre.artiste.nom}</a>
+          </p>
+        )}
+
+        <dl class="meta-details">
+          {oeuvre.technique && (
+            <>
+              <dt>Technique</dt>
+              <dd>{oeuvre.technique}</dd>
+            </>
+          )}
+          {oeuvre.dimensions && (
+            <>
+              <dt>Dimensions</dt>
+              <dd>{oeuvre.dimensions}</dd>
+            </>
+          )}
+          {oeuvre.provenance && (
+            <>
+              <dt>Provenance</dt>
+              <dd>{oeuvre.provenance}</dd>
+            </>
+          )}
+        </dl>
+
+        <a href={`/contact?oeuvre=${oeuvre.slug}`} class="btn-primary cta-rdv">
+          Prendre rendez-vous
+        </a>
+
+        <SectionLiensRelies
+          titre="Thématiques"
+          items={thematiques}
+        />
+
+        <SectionLiensRelies
+          titre="Expositions"
+          items={expositions}
+          voirToutHref="/expositions"
+        />
+      </div>
+    </div>
+  </article>
+</LayoutPrincipal>
+
+<style>
+  .fiche-oeuvre-page {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .fiche-oeuvre {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .fiche-oeuvre {
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+
+  .fiche-oeuvre-visuel {
+    overflow: hidden;
+  }
+
+  .visuel-link {
+    display: block;
+    cursor: zoom-in;
+  }
+
+  .visuel-link img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .fiche-oeuvre-placeholder {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-border);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+  }
+
+  .fiche-oeuvre-meta h1 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .meta-artiste {
+    margin-bottom: var(--space-lg);
+  }
+
+  .meta-artiste a {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    transition: color var(--transition-fade);
+  }
+
+  .meta-artiste a:hover {
+    color: var(--color-text);
+  }
+
+  .meta-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-xs) var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .meta-details dt {
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+    font-weight: 600;
+  }
+
+  .meta-details dd {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .cta-rdv {
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+</style>

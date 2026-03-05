@@ -1,0 +1,52 @@
+---
+import type { Oeuvre } from '../types/strapi';
+import CarteOeuvre from './CarteOeuvre.astro';
+
+interface Props {
+  oeuvres: Oeuvre[];
+}
+
+const { oeuvres } = Astro.props;
+---
+
+<ul class="galerie-images">
+  {oeuvres.map((oeuvre, index) => (
+    <li class:list={[(index + 1) % 5 === 0 && 'span-2']}>
+      <CarteOeuvre oeuvre={oeuvre} />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .galerie-images {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .galerie-images {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .galerie-images {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .galerie-images .span-2 {
+      grid-column: span 2;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .galerie-images {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .galerie-images .span-2 {
+      grid-column: span 1;
+    }
+  }
+</style>

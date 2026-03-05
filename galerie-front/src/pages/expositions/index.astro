@@ -1,0 +1,89 @@
+---
+import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
+import CarteExposition from '../../components/CarteExposition.astro';
+import { fetchExpositions } from '../../lib/strapi-client';
+
+const expositions = await fetchExpositions();
+const enCours = expositions.filter((e) => e.statut === 'en-cours');
+const passees = expositions.filter((e) => e.statut === 'passee');
+---
+
+<LayoutPrincipal
+  title="Expositions — Galerie Louis Barrand"
+  description="Découvrez les expositions passées et en cours de la Galerie Louis Barrand."
+>
+  <section class="page-expositions">
+    <h1>Expositions</h1>
+
+    {enCours.length > 0 && (
+      <div class="section-expositions">
+        <h2>En cours</h2>
+        <ul class="grille-expositions">
+          {enCours.map((exposition) => (
+            <li>
+              <CarteExposition exposition={exposition} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {passees.length > 0 && (
+      <div class="section-expositions">
+        <h2>Passées</h2>
+        <ul class="grille-expositions">
+          {passees.map((exposition) => (
+            <li>
+              <CarteExposition exposition={exposition} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {expositions.length === 0 && (
+      <p class="empty">Aucune exposition pour le moment.</p>
+    )}
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .page-expositions h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+  }
+
+  .section-expositions {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-expositions h2 {
+    margin-bottom: var(--space-lg);
+  }
+
+  .grille-expositions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .grille-expositions {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grille-expositions {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .page-expositions {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    padding: var(--space-2xl) 0;
+  }
+</style>

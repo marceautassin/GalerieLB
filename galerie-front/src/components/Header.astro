@@ -1,0 +1,305 @@
+---
+const navLinks = [
+  { label: 'Artistes', href: '/artistes' },
+  { label: 'Oeuvres', href: '/oeuvres' },
+  { label: 'Expositions', href: '/expositions' },
+  { label: 'À propos', href: '/a-propos' },
+  { label: 'Presse', href: '/presse' },
+];
+---
+
+<a href="#main-content" class="skip-link">Aller au contenu</a>
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo">Galerie Louis Barrand</a>
+    <nav class="nav-desktop" aria-label="Navigation principale">
+      <ul>
+        {navLinks.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+        <li><a href="/contact" class="btn-primary nav-cta">Contact</a></li>
+      </ul>
+    </nav>
+    <button
+      class="burger"
+      id="burger-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Ouvrir le menu"
+    >
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Menu de navigation" aria-modal="true" hidden>
+  <div class="mobile-menu-inner">
+    <button
+      class="mobile-close"
+      id="mobile-close-btn"
+      type="button"
+      aria-label="Fermer le menu"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <nav aria-label="Navigation principale mobile">
+      <ul>
+        {navLinks.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+      <a href="/contact" class="btn-primary mobile-cta">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-md);
+    z-index: 1000;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+  .skip-link:focus {
+    top: var(--space-sm);
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    transition: transform var(--transition-default);
+  }
+  .site-header.header-shadow {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+  .site-header.header-hidden {
+    transform: translateY(-100%);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--space-md) var(--space-lg);
+  }
+  @media (min-width: 768px) {
+    .header-inner {
+      padding: var(--space-md) var(--space-2xl);
+    }
+  }
+  @media (min-width: 1024px) {
+    .header-inner {
+      padding: var(--space-md) var(--space-lg);
+    }
+  }
+  @media (min-width: 1440px) {
+    .header-inner {
+      padding: var(--space-md) 0;
+    }
+  }
+
+  .logo {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* Desktop nav */
+  .nav-desktop {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .nav-desktop {
+      display: block;
+    }
+  }
+  .nav-desktop ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+  .nav-desktop a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color var(--transition-fade);
+  }
+  .nav-desktop a:hover {
+    color: var(--color-text-secondary);
+  }
+  .nav-cta {
+    padding: 8px 20px;
+  }
+
+  /* Burger button */
+  .burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  @media (min-width: 768px) {
+    .burger {
+      display: none;
+    }
+  }
+  .burger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    transition: var(--transition-default);
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu[hidden] {
+    display: none;
+  }
+  .mobile-menu-inner {
+    text-align: center;
+  }
+  .mobile-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-lg);
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .mobile-menu nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+  .mobile-menu nav a {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  .mobile-cta {
+    display: inline-block;
+    margin-top: var(--space-3xl);
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+</style>
+
+<script>
+  // Sticky header hide/show on scroll
+  const header = document.getElementById('site-header');
+  let lastScrollY = 0;
+  let ticking = false;
+
+  function updateHeader() {
+    if (!header) return;
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      header.classList.add('header-hidden');
+    } else {
+      header.classList.remove('header-hidden');
+    }
+
+    if (currentScrollY > 10) {
+      header.classList.add('header-shadow');
+    } else {
+      header.classList.remove('header-shadow');
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Mobile menu
+  const burgerBtn = document.getElementById('burger-btn');
+  const closeBtn = document.getElementById('mobile-close-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function openMenu() {
+    if (!mobileMenu || !burgerBtn) return;
+    mobileMenu.hidden = false;
+    burgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    // Focus first link
+    const firstLink = mobileMenu.querySelector('a');
+    firstLink?.focus();
+    // Setup focus trap
+    mobileMenu.addEventListener('keydown', trapFocus);
+  }
+
+  function closeMenu() {
+    if (!mobileMenu || !burgerBtn) return;
+    mobileMenu.hidden = true;
+    burgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    mobileMenu.removeEventListener('keydown', trapFocus);
+    burgerBtn.focus();
+  }
+
+  function trapFocus(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      closeMenu();
+      return;
+    }
+    if (e.key !== 'Tab' || !mobileMenu) return;
+
+    const focusable = mobileMenu.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  burgerBtn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+
+  // Close on link click
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>
