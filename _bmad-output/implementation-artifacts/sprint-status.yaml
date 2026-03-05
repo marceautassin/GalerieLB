@@ -48,7 +48,7 @@ development_status:
 
   # Epic 2: Découverte Artistes & Oeuvres
   epic-2: in-progress
-  2-1-client-api-strapi-et-types-typescript: ready-for-dev
+  2-1-client-api-strapi-et-types-typescript: done
   2-2-pages-artistes-liste-et-fiche: ready-for-dev
   2-3-pages-oeuvres-liste-et-fiche: ready-for-dev
   2-4-navigation-par-thematique: ready-for-dev
