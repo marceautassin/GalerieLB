@@ -51,7 +51,7 @@ development_status:
   2-1-client-api-strapi-et-types-typescript: done
   2-2-pages-artistes-liste-et-fiche: done
   2-3-pages-oeuvres-liste-et-fiche: done
-  2-4-navigation-par-thematique: ready-for-dev
+  2-4-navigation-par-thematique: done
   epic-2-retrospective: optional
 
   # Epic 3: Expositions & Identité de la galerie
