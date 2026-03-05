@@ -8,13 +8,10 @@
 
 ## Git Commits
 - Ne JAMAIS ajouter `Co-Authored-By: Claude` ou toute signature Claude dans les messages de commit.
-- Toujours commiter dans les **3 repos** quand c'est pertinent :
-  - `galerie-front/` pour le code front-end Astro
-  - `galerie-cms/` pour le code CMS Strapi
-  - Repo racine (`/home/marceautassin/Code/GalerieLouisBarrand/`) pour les fichiers spec (`_bmad-output/`)
+- Monorepo unique : un seul commit pour code + specs.
 
 ## Project Structure
-- Deux repos git séparés : `galerie-cms/` (Strapi v5) et `galerie-front/` (Astro). Le `.gitignore` racine exclut les deux.
+- Monorepo avec `galerie-cms/` (Strapi v5), `galerie-front/` (Astro) et `_bmad-output/` (specs).
 - Strapi v5 utilise `schema.ts` avec `export default` (pas `schema.json`).
 - Strapi v5 singleType nécessite des `singularName` et `pluralName` distincts.
 
