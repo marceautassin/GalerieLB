@@ -1,2 +1,11 @@
-galerie-cms/
-galerie-front/
+galerie-cms/node_modules/
+galerie-cms/.env
+galerie-cms/.tmp/
+galerie-cms/.cache/
+galerie-cms/dist/
+galerie-cms/build/
+galerie-cms/.strapi/
+galerie-front/node_modules/
+galerie-front/.env
+galerie-front/.astro/
+galerie-front/dist/
