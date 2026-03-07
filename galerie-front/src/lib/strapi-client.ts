@@ -6,6 +6,7 @@ import type {
   Thematique,
   Exposition,
   APropos,
+  ArticlePresse,
 } from '../types/strapi';
 
 const STRAPI_API_URL = import.meta.env.STRAPI_API_URL;
@@ -119,6 +120,17 @@ export async function fetchThematiques(): Promise<Thematique[]> {
   );
   warnIfTruncated(result.meta);
   return result.data.map(normalizeThematique);
+}
+
+// --- ArticlesPresse ---
+
+export async function fetchArticlesPresse(): Promise<ArticlePresse[]> {
+  const result = await fetchStrapi<StrapiResponse<ArticlePresse>>(
+    'articles-presse',
+    'status=published&populate[0]=fichierPdf&populate[1]=visuel&pagination[pageSize]=100',
+  );
+  warnIfTruncated(result.meta);
+  return result.data;
 }
 
 // --- APropos (single type) ---

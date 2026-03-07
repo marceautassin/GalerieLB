@@ -1,0 +1,178 @@
+---
+import { Image } from 'astro:assets';
+import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { fetchArticlesPresse } from '../lib/strapi-client';
+
+const articles = await fetchArticlesPresse();
+---
+
+<LayoutPrincipal
+  title="Presse — Galerie Louis Barrand"
+  description="Articles de presse, revues et ressources média sur la Galerie Louis Barrand et ses expositions."
+>
+  <section class="page-presse">
+    <Breadcrumb items={[
+      { label: 'Accueil', href: '/' },
+      { label: 'Presse' },
+    ]} />
+
+    <h1>Presse</h1>
+
+    {articles.length === 0 && (
+      <p class="empty">Aucun article de presse pour le moment.</p>
+    )}
+
+    {articles.length > 0 && (
+      <ul class="liste-articles">
+        {articles.map((article) => (
+          <li class="carte-article">
+            {article.visuel && (
+              <div class="carte-article-visuel">
+                <Image
+                  src={article.visuel.url}
+                  alt={article.visuel.alternativeText ?? article.titre}
+                  width={article.visuel.width}
+                  height={article.visuel.height}
+                />
+              </div>
+            )}
+            <div class="carte-article-contenu">
+              <h2>{article.titre}</h2>
+              {article.type === 'pdf' && article.fichierPdf && (
+                <a
+                  href={article.fichierPdf.url}
+                  download
+                  class="lien-article lien-pdf"
+                  aria-label={`Télécharger ${article.titre} (PDF)`}
+                >
+                  <span class="icone-type" aria-hidden="true">PDF</span>
+                  Télécharger le PDF
+                </a>
+              )}
+              {article.type === 'lien' && article.urlExterne && (
+                <a
+                  href={article.urlExterne}
+                  target="_blank"
+                  rel="noopener"
+                  class="lien-article lien-externe"
+                  aria-label={`Lire ${article.titre} (lien externe)`}
+                >
+                  <span class="icone-type" aria-hidden="true">&#8599;</span>
+                  Lire l'article
+                </a>
+              )}
+              {article.visuel && (
+                <a
+                  href={article.visuel.url}
+                  download
+                  class="lien-telecharger"
+                  aria-label={`Télécharger le visuel de ${article.titre}`}
+                >
+                  Télécharger le visuel
+                </a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .page-presse h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+  }
+
+  .page-presse {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    padding: var(--space-2xl) 0;
+  }
+
+  .liste-articles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 640px) {
+    .liste-articles {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .liste-articles {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .carte-article {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .carte-article-visuel img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .lien-telecharger {
+    display: inline-block;
+    margin-top: var(--space-xs);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fade);
+  }
+
+  .lien-telecharger:hover {
+    color: var(--color-text);
+  }
+
+  .carte-article-contenu {
+    padding: var(--space-md);
+  }
+
+  .carte-article-contenu h2 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .lien-article {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fade);
+  }
+
+  .lien-article:hover {
+    color: var(--color-text);
+  }
+
+  .icone-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 20px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+
+  .lien-externe .icone-type {
+    font-size: 0.875rem;
+    border: none;
+  }
+</style>
