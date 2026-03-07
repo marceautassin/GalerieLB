@@ -1,6 +1,6 @@
 # Story 4.1: Formulaire de contact
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -25,39 +25,39 @@ so that je puisse prendre rendez-vous ou poser une question.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 : Créer FormulaireContact.vue (AC: #1, #2, #3, #8, #9, #10)
-  - [ ] 1.1 Champs : nom (text, required), email (email, required), message (textarea, required, min 10 chars), referenceOeuvre (text, readonly si pré-rempli)
-  - [ ] 1.2 Champ honeypot caché (`<input name="website" style="display:none">`)
-  - [ ] 1.3 Validation au blur : champs requis, format email, longueur message
-  - [ ] 1.4 Re-validation au submit
-  - [ ] 1.5 Messages d'erreur en français sous chaque champ (`aria-describedby`)
-  - [ ] 1.6 Bordure `--color-error` sur les champs en erreur
-  - [ ] 1.7 Labels au-dessus des champs, légende "* Champ obligatoire"
-  - [ ] 1.8 États : idle → submitting (spinner + bouton désactivé) → success / error
-  - [ ] 1.9 Navigation Tab logique, focus visible
-  - [ ] 1.10 2 colonnes (nom/email) sur desktop, pleine largeur sur mobile
-- [ ] Task 2 : Soumission vers Strapi (AC: #4, #5, #9)
-  - [ ] 2.1 POST JSON vers `STRAPI_API_URL/api/messages-contact` (public endpoint)
-  - [ ] 2.2 Si honeypot rempli → ignorer silencieusement (pas d'erreur visible)
-  - [ ] 2.3 Gestion erreur serveur : message sobre "Un problème est survenu..."
-  - [ ] 2.4 `role="alert"` pour l'erreur serveur
-- [ ] Task 3 : Confirmation succès (AC: #7)
-  - [ ] 3.1 Remplacer le formulaire par le message de confirmation
-  - [ ] 3.2 Texte : "Votre message a été envoyé. Louis vous répondra rapidement."
-  - [ ] 3.3 Couleur `--color-success`, `role="status"`, `aria-live="polite"`
-- [ ] Task 4 : Lifecycle email Brevo (AC: #6)
-  - [ ] 4.1 Créer `src/api/message-contact/lifecycles.ts` dans galerie-cms
-  - [ ] 4.2 Hook `afterCreate` : envoyer un email à `NOTIFICATION_EMAIL` via Brevo SMTP
-  - [ ] 4.3 Contenu email : nom, email, message, référence oeuvre/expo
-  - [ ] 4.4 Utiliser nodemailer ou le module email Strapi avec les env vars SMTP
-- [ ] Task 5 : Lire le query param pour pré-remplissage (AC: #1)
-  - [ ] 5.1 Au mount, lire `URLSearchParams` pour `?oeuvre=slug` ou `?exposition=slug`
-  - [ ] 5.2 Pré-remplir le champ référence en readonly
-- [ ] Task 6 : Page contact `/contact.astro` (AC: #1, #10)
-  - [ ] 6.1 LayoutPrincipal avec titre "Contact"
-  - [ ] 6.2 Intégrer `<FormulaireContact client:visible />`
-  - [ ] 6.3 Informations pratiques sous le formulaire (adresse, horaires — optionnel)
-  - [ ] 6.4 SeoHead
+- [x] Task 1 : Créer FormulaireContact.vue (AC: #1, #2, #3, #8, #9, #10)
+  - [x] 1.1 Champs : nom (text, required), email (email, required), message (textarea, required, min 10 chars), referenceOeuvre (text, readonly si pré-rempli)
+  - [x] 1.2 Champ honeypot caché (`<input name="website" style="display:none">`)
+  - [x] 1.3 Validation au blur : champs requis, format email, longueur message
+  - [x] 1.4 Re-validation au submit
+  - [x] 1.5 Messages d'erreur en français sous chaque champ (`aria-describedby`)
+  - [x] 1.6 Bordure `--color-error` sur les champs en erreur
+  - [x] 1.7 Labels au-dessus des champs, légende "* Champ obligatoire"
+  - [x] 1.8 États : idle → submitting (bouton désactivé + texte) → success / error
+  - [x] 1.9 Navigation Tab logique, focus visible
+  - [x] 1.10 2 colonnes (nom/email) sur desktop, pleine largeur sur mobile
+- [x] Task 2 : Soumission vers Strapi (AC: #4, #5, #9)
+  - [x] 2.1 POST JSON vers `PUBLIC_STRAPI_API_URL/api/messages-contact` (public endpoint)
+  - [x] 2.2 Si honeypot rempli → ignorer silencieusement (pas d'erreur visible)
+  - [x] 2.3 Gestion erreur serveur : message sobre "Un problème est survenu..."
+  - [x] 2.4 `role="alert"` pour l'erreur serveur
+- [x] Task 3 : Confirmation succès (AC: #7)
+  - [x] 3.1 Remplacer le formulaire par le message de confirmation
+  - [x] 3.2 Texte : "Votre message a été envoyé. Louis vous répondra rapidement."
+  - [x] 3.3 Couleur `--color-success`, `role="status"`, `aria-live="polite"`
+- [x] Task 4 : Lifecycle email Brevo (AC: #6)
+  - [x] 4.1 Mise à jour `lifecycles.ts` existant dans galerie-cms (ajout afterCreate)
+  - [x] 4.2 Hook `afterCreate` : envoi email à `NOTIFICATION_EMAIL` via Brevo SMTP
+  - [x] 4.3 Contenu email : nom, email, message, référence oeuvre
+  - [x] 4.4 Utilise nodemailer avec env vars SMTP — guard si non configuré
+- [x] Task 5 : Lire le query param pour pré-remplissage (AC: #1)
+  - [x] 5.1 Au mount, lire `URLSearchParams` pour `?oeuvre=slug` ou `?exposition=slug`
+  - [x] 5.2 Pré-remplir le champ référence en readonly
+- [x] Task 6 : Page contact `/contact.astro` (AC: #1, #10)
+  - [x] 6.1 LayoutPrincipal avec titre "Contact"
+  - [x] 6.2 Intégrer `<FormulaireContact client:visible />`
+  - [x] 6.3 Informations pratiques — omises (déjà dans footer + page à-propos)
+  - [x] 6.4 SeoHead
 
 ## Dev Notes
 
@@ -113,9 +113,34 @@ export default {
 ## Dev Agent Record
 
 ### Agent Model Used
+Claude Opus 4.6
 
 ### Debug Log References
+- TypeScript check front (`tsc --noEmit`) : pass
+- TypeScript check CMS (`tsc --noEmit`) : pass
+- nodemailer + @types/nodemailer installés dans galerie-cms
 
 ### Completion Notes List
+- FormulaireContact.vue : composant Vue complet avec validation blur+submit, honeypot, états, a11y
+- POST vers Strapi via PUBLIC_STRAPI_API_URL (variable publique Astro passée en prop)
+- Lifecycle afterCreate ajouté — email nodemailer avec guard si SMTP non configuré
+- Query params ?oeuvre= et ?exposition= lus au mount pour pré-remplissage readonly
+- Page contact.astro avec FormulaireContact client:visible
+
+### Senior Developer Review (AI)
+- Date : 2026-03-07
+- Outcome : Changes Requested (1 High, 1 Medium, 1 Low)
+
+#### Action Items
+- [x] [HIGH] Focus outline supprimé — remplacé `outline: none` par `:focus-visible` pour respecter WCAG 2.4.7
+- [x] [MEDIUM] referenceExposition non envoyé — ajout champ séparé, distinction oeuvre/exposition dans le POST et l'email
+- [ ] [LOW] Pas de .env.example documentant PUBLIC_STRAPI_API_URL
 
 ### File List
+- `galerie-front/src/components/islands/FormulaireContact.vue` (nouveau)
+- `galerie-front/src/pages/contact.astro` (nouveau)
+- `galerie-front/.env` (modifié — ajout PUBLIC_STRAPI_API_URL)
+- `galerie-cms/src/api/message-contact/content-types/message-contact/lifecycles.ts` (modifié — ajout afterCreate)
+- `galerie-cms/package.json` (modifié — ajout nodemailer)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modifié)
+- `_bmad-output/implementation-artifacts/4-1-formulaire-de-contact.md` (modifié)

@@ -1,0 +1,33 @@
+---
+import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import FormulaireContact from '../components/islands/FormulaireContact.vue';
+
+const apiUrl = import.meta.env.PUBLIC_STRAPI_API_URL;
+---
+
+<LayoutPrincipal
+  title="Contact — Galerie Louis Barrand"
+  description="Contactez la Galerie Louis Barrand pour prendre rendez-vous, poser une question ou demander des informations sur une oeuvre."
+>
+  <section class="page-contact">
+    <Breadcrumb items={[
+      { label: 'Accueil', href: '/' },
+      { label: 'Contact' },
+    ]} />
+
+    <h1>Contact</h1>
+
+    <FormulaireContact client:visible apiUrl={apiUrl} />
+  </section>
+</LayoutPrincipal>
+
+<style>
+  .page-contact {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .page-contact h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+  }
+</style>

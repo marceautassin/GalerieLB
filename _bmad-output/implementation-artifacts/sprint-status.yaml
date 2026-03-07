@@ -55,7 +55,7 @@ development_status:
   epic-2-retrospective: optional
 
   # Epic 3: Expositions & Identité de la galerie
-  epic-3: in-progress
+  epic-3: done
   3-1-pages-expositions-liste-et-fiche: done
   3-2-page-a-propos: done
   3-3-section-presse: done
@@ -64,7 +64,7 @@ development_status:
 
   # Epic 4: Contact & Page d'accueil
   epic-4: in-progress
-  4-1-formulaire-de-contact: ready-for-dev
+  4-1-formulaire-de-contact: done
   4-2-cta-prendre-rendez-vous-contextuel: ready-for-dev
   4-3-page-daccueil-avec-nouveautes: ready-for-dev
   epic-4-retrospective: optional
