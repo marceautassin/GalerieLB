@@ -1,0 +1,128 @@
+---
+import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { fetchAPropos } from '../lib/strapi-client';
+
+const apropos = await fetchAPropos();
+---
+
+<LayoutPrincipal
+  title="À propos — Galerie Louis Barrand"
+  description="Découvrez le parcours de Louis Barrand, lauréat du Prix Marcus, et les informations pratiques de la Galerie Louis Barrand."
+>
+  <article class="page-a-propos">
+    <Breadcrumb items={[
+      { label: 'Accueil', href: '/' },
+      { label: 'À propos' },
+    ]} />
+
+    <h1>À propos</h1>
+
+    {!apropos && (
+      <p class="empty">Contenu en cours de rédaction.</p>
+    )}
+
+    {apropos?.biographieLouis && (
+      <section class="section-biographie">
+        <h2>Louis Barrand</h2>
+        <div class="contenu-texte">
+          {apropos.biographieLouis.split('\n').filter((p) => p.trim()).map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {apropos?.textePrixMarcus && (
+      <section class="section-prix-marcus">
+        <h2>Prix Marcus et expertise</h2>
+        <div class="contenu-texte">
+          {apropos.textePrixMarcus.split('\n').filter((p) => p.trim()).map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {(apropos?.adresse || apropos?.horaires) && (
+      <section class="section-infos-pratiques">
+        <h2>Informations pratiques</h2>
+        <div class="infos-grid">
+          {apropos.adresse && (
+            <div class="info-bloc">
+              <h3>Adresse</h3>
+              <p>{apropos.adresse}</p>
+            </div>
+          )}
+          {apropos.horaires && (
+            <div class="info-bloc">
+              <h3>Horaires</h3>
+              <p>{apropos.horaires}</p>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+  </article>
+</LayoutPrincipal>
+
+<style>
+  .page-a-propos {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .page-a-propos h1 {
+    margin: var(--space-2xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    text-align: center;
+    padding: var(--space-2xl) 0;
+  }
+
+  .section-biographie,
+  .section-prix-marcus,
+  .section-infos-pratiques {
+    margin: 0 auto var(--space-2xl);
+    max-width: 720px;
+  }
+
+  .section-biographie h2,
+  .section-prix-marcus h2,
+  .section-infos-pratiques h2 {
+    margin-bottom: var(--space-md);
+  }
+
+  .contenu-texte {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+
+  .contenu-texte p {
+    margin-bottom: var(--space-md);
+  }
+
+  .infos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .infos-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .info-bloc h3 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .info-bloc p {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+</style>

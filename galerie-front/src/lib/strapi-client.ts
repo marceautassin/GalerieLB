@@ -1,9 +1,11 @@
 import type {
   StrapiResponse,
+  StrapiSingleResponse,
   Artiste,
   Oeuvre,
   Thematique,
   Exposition,
+  APropos,
 } from '../types/strapi';
 
 const STRAPI_API_URL = import.meta.env.STRAPI_API_URL;
@@ -117,6 +119,16 @@ export async function fetchThematiques(): Promise<Thematique[]> {
   );
   warnIfTruncated(result.meta);
   return result.data.map(normalizeThematique);
+}
+
+// --- APropos (single type) ---
+
+export async function fetchAPropos(): Promise<APropos | null> {
+  const result = await fetchStrapi<StrapiSingleResponse<APropos>>(
+    'a-propos',
+    'status=published',
+  );
+  return result.data ?? null;
 }
 
 // --- Normalizers (Strapi returns null for empty media/relations) ---
