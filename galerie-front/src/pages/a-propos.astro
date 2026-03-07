@@ -63,6 +63,18 @@ const apropos = await fetchAPropos();
         </div>
       </section>
     )}
+
+    <section class="section-liens-externes">
+      <h2>Retrouvez-nous aussi sur</h2>
+      <a
+        href="https://www.proantic.com"
+        target="_blank"
+        rel="noopener"
+        class="lien-externe"
+      >
+        Proantic &#8599;
+      </a>
+    </section>
   </article>
 </LayoutPrincipal>
 
@@ -84,14 +96,16 @@ const apropos = await fetchAPropos();
 
   .section-biographie,
   .section-prix-marcus,
-  .section-infos-pratiques {
+  .section-infos-pratiques,
+  .section-liens-externes {
     margin: 0 auto var(--space-2xl);
     max-width: 720px;
   }
 
   .section-biographie h2,
   .section-prix-marcus h2,
-  .section-infos-pratiques h2 {
+  .section-infos-pratiques h2,
+  .section-liens-externes h2 {
     margin-bottom: var(--space-md);
   }
 
@@ -124,5 +138,16 @@ const apropos = await fetchAPropos();
     color: var(--color-text-secondary);
     line-height: 1.6;
     white-space: pre-line;
+  }
+
+  .lien-externe {
+    display: inline-block;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    transition: color var(--transition-fade);
+  }
+
+  .lien-externe:hover {
+    color: var(--color-text);
   }
 </style>

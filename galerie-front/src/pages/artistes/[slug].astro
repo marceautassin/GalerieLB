@@ -77,6 +77,19 @@ const description = artiste.biographie
       </section>
     )}
 
+    {artiste.slug.includes('despierre') && (
+      <section class="fiche-artiste-lien-externe">
+        <a
+          href="https://www.despierre.com"
+          target="_blank"
+          rel="noopener"
+          class="btn-primary"
+        >
+          Voir le site dédié à Jacques Despierre &#8599;
+        </a>
+      </section>
+    )}
+
     {artiste.oeuvres.length > 0 && (
       <section class="fiche-artiste-oeuvres">
         <h2>Œuvres</h2>
@@ -148,6 +161,10 @@ const description = artiste.biographie
     color: var(--color-text-secondary);
     line-height: 1.7;
     margin-bottom: var(--space-sm);
+  }
+
+  .fiche-artiste-lien-externe {
+    margin: var(--space-xl) 0;
   }
 
   .fiche-artiste-oeuvres {
