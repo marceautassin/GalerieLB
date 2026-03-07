@@ -47,7 +47,7 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Découverte Artistes & Oeuvres
-  epic-2: in-progress
+  epic-2: done
   2-1-client-api-strapi-et-types-typescript: done
   2-2-pages-artistes-liste-et-fiche: done
   2-3-pages-oeuvres-liste-et-fiche: done
@@ -63,10 +63,10 @@ development_status:
   epic-3-retrospective: optional
 
   # Epic 4: Contact & Page d'accueil
-  epic-4: in-progress
+  epic-4: done
   4-1-formulaire-de-contact: done
-  4-2-cta-prendre-rendez-vous-contextuel: ready-for-dev
-  4-3-page-daccueil-avec-nouveautes: ready-for-dev
+  4-2-cta-prendre-rendez-vous-contextuel: done
+  4-3-page-daccueil-avec-nouveautes: done
   epic-4-retrospective: optional
 
   # Epic 5: SEO & Référencement

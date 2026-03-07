@@ -88,6 +88,10 @@ const breadcrumbItems = [
       <div class="fiche-exposition-preface" set:html={exposition.preface} />
     )}
 
+    <a href={`/contact?exposition=${exposition.slug}`} class="btn-primary cta-contact">
+      Prendre rendez-vous
+    </a>
+
     {oeuvres.length > 0 && (
       <section class="fiche-exposition-oeuvres">
         <h2>Oeuvres présentées</h2>
@@ -141,6 +145,12 @@ const breadcrumbItems = [
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  .cta-contact {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: var(--space-xl);
   }
 
   .fiche-exposition-preface {

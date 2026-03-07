@@ -71,11 +71,18 @@ export async function fetchArtisteBySlug(
 
 // --- Oeuvres ---
 
-export async function fetchOeuvres(): Promise<Oeuvre[]> {
-  const result = await fetchStrapi<StrapiResponse<Oeuvre>>(
-    'oeuvres',
-    'status=published&populate[0]=visuels&populate[1]=artiste&populate[2]=thematiques&populate[3]=expositions&pagination[pageSize]=100',
-  );
+export async function fetchOeuvres(options?: {
+  sort?: string;
+  limit?: number;
+}): Promise<Oeuvre[]> {
+  let query =
+    'status=published&populate[0]=visuels&populate[1]=artiste&populate[2]=thematiques&populate[3]=expositions';
+  if (options?.sort) {
+    query += `&sort=${options.sort}`;
+  }
+  const pageSize = options?.limit ?? 100;
+  query += `&pagination[pageSize]=${pageSize}`;
+  const result = await fetchStrapi<StrapiResponse<Oeuvre>>('oeuvres', query);
   warnIfTruncated(result.meta);
   return result.data.map(normalizeOeuvre);
 }

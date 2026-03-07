@@ -1,15 +1,36 @@
 ---
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
+import CarteOeuvre from '../components/CarteOeuvre.astro';
+import { fetchOeuvres } from '../lib/strapi-client';
+
+const dernieresOeuvres = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 ---
 
 <LayoutPrincipal
   title="Galerie Louis Barrand — Art moderne et contemporain"
-  description="Galerie d'art spécialisée en peinture moderne et contemporaine à Aix-en-Provence. Expositions, artistes et oeuvres."
+  description="Galerie d'art spécialisée en peinture moderne et contemporaine à Aix-en-Provence. Découvrez les dernières acquisitions, expositions et artistes."
 >
   <section class="hero">
     <h1>Galerie Louis Barrand</h1>
+    <hr class="hero-sep" />
     <p>Art moderne et contemporain à Aix-en-Provence</p>
   </section>
+
+  {dernieresOeuvres.length > 0 && (
+    <section class="dernieres-acquisitions">
+      <h2>Dernières acquisitions</h2>
+      <ul class="grille-oeuvres">
+        {dernieresOeuvres.map((oeuvre) => (
+          <li>
+            <CarteOeuvre oeuvre={oeuvre} />
+          </li>
+        ))}
+      </ul>
+      <div class="voir-tout">
+        <a href="/oeuvres" class="btn-primary">Voir toutes les oeuvres</a>
+      </div>
+    </section>
+  )}
 </LayoutPrincipal>
 
 <style>
@@ -17,9 +38,54 @@ import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 60vh;
     text-align: center;
-    gap: var(--space-md);
+    padding: var(--space-4xl) 0 var(--space-3xl);
+  }
+
+  .hero h1 {
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-sep {
+    width: 48px;
+    border: none;
+    border-top: 1px solid var(--color-text);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero p {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .dernieres-acquisitions {
+    padding-bottom: var(--space-4xl);
+  }
+
+  .dernieres-acquisitions h2 {
+    margin-bottom: var(--space-xl);
+  }
+
+  .grille-oeuvres {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grille-oeuvres {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .voir-tout {
+    text-align: center;
+    margin-top: var(--space-2xl);
   }
 </style>
