@@ -27,7 +27,7 @@ const { title, description, ogImage, ogType, canonicalUrl } = Astro.props;
   />
   <slot name="head" />
 </head>
-<body>
+<body class="site-body">
   <Header />
   <main id="main-content">
     <div class="container">
@@ -39,6 +39,14 @@ const { title, description, ogImage, ogType, canonicalUrl } = Astro.props;
 </html>
 
 <style>
+  .site-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  #main-content {
+    flex: 1;
+  }
   .container {
     max-width: var(--max-width);
     margin: 0 auto;

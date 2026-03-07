@@ -39,7 +39,7 @@ Variables importantes :
 
 | Variable            | Description            | Dev                     |
 | ------------------- | ---------------------- | ----------------------- |
-| `DATABASE_CLIENT`   | `postgres`             | `postgres`              |
+| `DATABASE_HOST`     | Host PostgreSQL        | `localhost`             |
 | `AWS_ACCESS_KEY_ID` | Cle S3                 | `minioadmin`            |
 | `AWS_ACCESS_SECRET` | Secret S3              | `minioadmin`            |
 | `AWS_BUCKET`        | Nom du bucket          | `galerie-medias`        |

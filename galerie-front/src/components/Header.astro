@@ -11,7 +11,10 @@ const navLinks = [
 <a href="#main-content" class="skip-link">Aller au contenu</a>
 <header class="site-header" id="site-header">
   <div class="header-inner">
-    <a href="/" class="logo">Galerie Louis Barrand</a>
+    <a href="/" class="logo">
+      <img src="/logo.svg" alt="" class="logo-img" width="24" height="64" />
+      <span>Galerie Louis Barrand</span>
+    </a>
     <nav class="nav-desktop" aria-label="Navigation principale">
       <ul>
         {navLinks.map((link) => (
@@ -110,10 +113,17 @@ const navLinks = [
   }
 
   .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
     font-family: var(--font-heading);
     font-size: 1.25rem;
     font-weight: 700;
     text-decoration: none;
+  }
+  .logo-img {
+    height: 36px;
+    width: auto;
   }
 
   /* Desktop nav */

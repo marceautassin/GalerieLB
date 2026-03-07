@@ -6,8 +6,10 @@ export default ({ env }) => {
   }
 
   const providerOptions: Record<string, unknown> = {
-    accessKeyId: awsAccessKey,
-    secretAccessKey: env('AWS_ACCESS_SECRET'),
+    credentials: {
+      accessKeyId: awsAccessKey,
+      secretAccessKey: env('AWS_ACCESS_SECRET'),
+    },
     region: env('AWS_REGION'),
     params: {
       Bucket: env('AWS_BUCKET'),
@@ -17,7 +19,7 @@ export default ({ env }) => {
   const s3Endpoint = env('S3_ENDPOINT', '');
   if (s3Endpoint) {
     providerOptions.endpoint = s3Endpoint;
-    providerOptions.s3ForcePathStyle = true;
+    providerOptions.forcePathStyle = true;
   }
 
   return {

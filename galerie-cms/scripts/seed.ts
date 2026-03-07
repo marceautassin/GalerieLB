@@ -58,9 +58,12 @@ async function strapiPut(endpoint: string, data: Record<string, unknown>) {
   return res.json();
 }
 
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 async function uploadImageFromUrl(imageUrl: string, fileName: string): Promise<number | null> {
   try {
-    const res = await fetch(imageUrl);
+    await delay(300);
+    const res = await fetch(imageUrl, { redirect: 'follow' });
     if (!res.ok) {
       console.warn(`  Impossible de telecharger ${fileName}: ${res.status}`);
       return null;
@@ -94,50 +97,84 @@ const thematiques = [
   { nom: 'Paysages' },
   { nom: 'Portraits' },
   { nom: 'Natures mortes' },
-  { nom: 'Abstraction' },
+  { nom: 'Art animalier' },
   { nom: 'Scènes de genre' },
+  { nom: 'Dessins et estampes' },
+  { nom: 'Abstraction' },
 ];
 
 const artistes = [
   {
-    nom: 'Henri Despierre',
-    biographie:
-      'Henri Despierre (1920-1998) est un peintre français né à Aix-en-Provence. Formé aux Beaux-Arts de Marseille, il développe une peinture figurative lumineuse, marquée par les paysages de Provence. Son travail sur la couleur et la lumière méditerranéenne le rapproche des post-impressionnistes.',
-    contexteArtistique:
-      'Despierre appartient à la génération de peintres provençaux de l\'après-guerre qui ont su renouveler la tradition paysagiste sans jamais l\'abandonner. Ses toiles témoignent d\'une attention constante à la géologie, à la végétation et à la lumière changeante du Midi.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Self-Portrait_-_Google_Art_Project_%28454045%29.jpg/440px-Van_Gogh_-_Self-Portrait_-_Google_Art_Project_%28454045%29.jpg',
+    nom: 'Eugène Lami',
+    biographie: 'Eugène Lami (1800-1890) est un peintre, aquarelliste et lithographe français. Élève d\'Horace Vernet et du baron Gros, il se distingue par ses scènes de genre élégantes, ses compositions historiques et ses aquarelles mondaines. Peintre officiel de la cour sous Louis-Philippe, il décore les intérieurs des Tuileries et de Versailles.',
+    contexteArtistique: 'Lami est l\'un des chroniqueurs visuels les plus fins de la société parisienne du XIXe siècle. Ses aquarelles et lithographies documentent avec précision et élégance la vie aristocratique et bourgeoise de son époque.',
+    imageUrl: 'https://picsum.photos/seed/lami/400/500',
   },
   {
-    nom: 'Madeleine Roux-Abrial',
-    biographie:
-      'Madeleine Roux-Abrial (1935-2015) est une peintre et graveuse française. Élève de Jean Souverbie à l\'École des Beaux-Arts de Paris, elle développe un langage plastique où la figure humaine se mêle à l\'abstraction lyrique. Ses portraits et natures mortes se distinguent par des harmonies chromatiques sourdes et une composition rigoureuse.',
-    contexteArtistique:
-      'Roux-Abrial s\'inscrit dans la lignée de la Nouvelle École de Paris. Ses gravures sur cuivre, exposées au Salon de Mai et à la Biennale de Ljubljana, lui valent une reconnaissance internationale.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Berthe_Morisot_-_Autoportrait_de_1885_%28Mus%C3%A9e_Marmottan_Monet%29.jpg/440px-Berthe_Morisot_-_Autoportrait_de_1885_%28Mus%C3%A9e_Marmottan_Monet%29.jpg',
+    nom: 'Camille Pissarro',
+    biographie: 'Camille Pissarro (1830-1903) est un peintre et graveur franco-danois, figure fondatrice de l\'impressionnisme. Seul artiste à avoir participé aux huit expositions impressionnistes, il est considéré comme le doyen et le mentor du mouvement. Son oeuvre couvre les paysages ruraux, les scènes de marché et les vues urbaines.',
+    contexteArtistique: 'Pissarro joue un rôle central dans l\'histoire de l\'impressionnisme, tant par sa peinture que par son influence sur Cézanne, Gauguin et les néo-impressionnistes. Ses gravures, moins connues que ses toiles, témoignent d\'une maîtrise technique remarquable.',
+    imageUrl: 'https://picsum.photos/seed/pissarro/400/500',
   },
   {
-    nom: 'Pierre-Louis Moretti',
-    biographie:
-      'Pierre-Louis Moretti (1948-) est un peintre et sculpteur d\'origine corse installé en Provence depuis 1975. Son oeuvre explore les paysages intérieurs et les architectures méditerranéennes à travers une palette terreuse et des empâtements généreux. Il a exposé dans de nombreuses galeries du sud de la France.',
-    contexteArtistique:
-      'Moretti poursuit une recherche picturale centrée sur la matière et la texture. Ses toiles, souvent de grand format, oscillent entre figuration et abstraction, révélant des paysages mentaux nourris de géographie réelle.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Monet_-_Selbstportr%C3%A4t_mit_Barett.jpg/440px-Monet_-_Selbstportr%C3%A4t_mit_Barett.jpg',
+    nom: 'René Princeteau',
+    biographie: 'René Princeteau (1843-1914) est un peintre et sculpteur français spécialisé dans les sujets équestres et les scènes de chasse. Sourd de naissance, il étudie à l\'École des Beaux-Arts de Paris et devient le maître du jeune Henri de Toulouse-Lautrec. Ses toiles témoignent d\'une observation précise du mouvement animal.',
+    contexteArtistique: 'Princeteau s\'inscrit dans la grande tradition de la peinture animalière française. Son influence sur Toulouse-Lautrec est déterminante, et ses oeuvres sont présentes dans plusieurs musées français.',
+    imageUrl: 'https://picsum.photos/seed/princeteau/400/500',
   },
   {
-    nom: 'Colette Verdier',
-    biographie:
-      'Colette Verdier (1942-2020) est une peintre abstraite française. Formée à l\'atelier de Roger Chastel, elle privilégie les grands formats et les compositions où la couleur structure l\'espace. Ses séries chromatiques, déclinées sur plusieurs années, sont des méditations sur la lumière et le temps.',
-    contexteArtistique:
-      'Le travail de Verdier se situe à la croisée de l\'abstraction lyrique et de l\'art minimal. Ses toiles, présentes dans plusieurs collections publiques (FRAC PACA, musée Cantini), témoignent d\'une exigence formelle constante.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/440px-Ada_Lovelace_portrait.jpg',
+    nom: 'Henri Martin',
+    biographie: 'Henri Martin (1860-1943) est un peintre post-impressionniste français. Formé à l\'École des Beaux-Arts de Toulouse puis de Paris, il développe une technique pointilliste personnelle, appliquant la couleur en petites touches régulières. Ses paysages du Lot et ses compositions décoratives lui valent de nombreuses commandes publiques.',
+    contexteArtistique: 'Martin représente une voie singulière du post-impressionnisme français, entre néo-impressionnisme et symbolisme. Ses grandes décorations murales ornent le Capitole de Toulouse et la Sorbonne.',
+    imageUrl: 'https://picsum.photos/seed/hmartin/400/500',
   },
   {
-    nom: 'Jean-Marc Castellani',
-    biographie:
-      'Jean-Marc Castellani (1960-) est un peintre figuratif contemporain. Autodidacte, il peint principalement des scènes de la vie quotidienne en Provence : marchés, cafés, ruelles d\'Aix. Son trait précis et ses couleurs vives lui ont valu le prix de la Fondation Taylor en 2005.',
-    contexteArtistique:
-      'Castellani revendique l\'héritage des peintres de la réalité quotidienne, de Bonnard à Balthus. Ses toiles capturent des instants de vie avec une justesse qui dépasse la simple description.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Paul_C%C3%A9zanne%2C_Autoportrait.jpg/440px-Paul_C%C3%A9zanne%2C_Autoportrait.jpg',
+    nom: 'Henri Lebasque',
+    biographie: 'Henri Lebasque (1865-1937) est un peintre post-impressionniste français surnommé le « peintre de la joie et de la lumière ». Ami de Bonnard et Vuillard, il peint des scènes intimes, des jardins et des baigneuses baignés de lumière méditerranéenne après son installation sur la Côte d\'Azur en 1924.',
+    contexteArtistique: 'Lebasque se situe à la croisée du post-impressionnisme et du fauvisme modéré. Son oeuvre célèbre la vie quotidienne et la lumière du Midi avec une palette lumineuse et une touche libre.',
+    imageUrl: 'https://picsum.photos/seed/lebasque/400/500',
+  },
+  {
+    nom: 'Louis Valtat',
+    biographie: 'Louis Valtat (1869-1952) est un peintre français considéré comme un précurseur du fauvisme. Ses toiles aux couleurs vives et à la touche libre annoncent les audaces chromatiques de Matisse et Derain. Il expose au Salon des Indépendants et au Salon d\'Automne.',
+    contexteArtistique: 'Valtat occupe une place singulière entre impressionnisme tardif et fauvisme. Ses paysages méditerranéens et ses natures mortes témoignent d\'une liberté chromatique en avance sur son temps.',
+    imageUrl: 'https://picsum.photos/seed/valtat/400/500',
+  },
+  {
+    nom: 'Pierre Laprade',
+    biographie: 'Pierre Laprade (1875-1931) est un peintre français associé au post-impressionnisme. Ses intérieurs, natures mortes et paysages se caractérisent par une palette douce et une lumière tamisée. Proche de Bonnard et Vuillard, il expose régulièrement au Salon d\'Automne.',
+    contexteArtistique: 'Laprade développe un intimisme pictural raffiné, entre tradition classique et modernité douce. Ses toiles sont présentes dans les collections du musée d\'Orsay et du musée d\'Art moderne de Paris.',
+    imageUrl: 'https://picsum.photos/seed/laprade/400/500',
+  },
+  {
+    nom: 'Jacques Despierre',
+    biographie: 'Jacques Despierre (1912-1995) est un peintre et décorateur français. Formé aux Arts Décoratifs et aux Beaux-Arts de Paris, il réalise de nombreuses commandes publiques et privées. Son oeuvre se caractérise par un style figuratif moderne, entre classicisme et modernité.',
+    contexteArtistique: 'Despierre fait partie des artistes que Louis Barrand connaît le mieux — la galerie prépare actuellement son catalogue raisonné. Ses peintures murales et ses compositions décoratives témoignent d\'un sens aigu de l\'espace et de la couleur.',
+    imageUrl: 'https://picsum.photos/seed/despierre/400/500',
+  },
+  {
+    nom: 'Raymond Guerrier',
+    biographie: 'Raymond Guerrier (1920-2002) est un peintre français de l\'École de Paris. Son oeuvre, principalement composée de paysages et de natures mortes, se distingue par une construction rigoureuse et une palette sobre. Il expose à la galerie Drouant-David et dans de nombreuses galeries parisiennes.',
+    contexteArtistique: 'Guerrier appartient à la génération des peintres de tradition française qui ont maintenu une peinture figurative exigeante face à la montée de l\'abstraction dans l\'après-guerre.',
+    imageUrl: 'https://picsum.photos/seed/guerrier/400/500',
+  },
+  {
+    nom: 'Pierre Brochet',
+    biographie: 'Pierre Brochet (1922-2016) est un photographe et graveur français. Son oeuvre photographique documente la vie quotidienne, les paysages et les artistes de son temps. Ses gravures, d\'une grande finesse technique, témoignent d\'un regard poétique sur le monde.',
+    contexteArtistique: 'Brochet est un artiste polyvalent dont l\'oeuvre gravé et photographique se complètent. La Galerie Louis Barrand lui a consacré une exposition monographique.',
+    imageUrl: 'https://picsum.photos/seed/brochet/400/500',
+  },
+  {
+    nom: 'Antoine de La Boulaye',
+    biographie: 'Antoine de La Boulaye (né en 1951) est un peintre français contemporain spécialisé dans les sujets équestres et les scènes de chasse. Ses toiles, d\'un réalisme vivant, capturent le mouvement et l\'énergie du monde équestre avec une palette riche et une touche dynamique.',
+    contexteArtistique: 'La Boulaye s\'inscrit dans la tradition de la grande peinture animalière française, de Géricault à Princeteau. Ses oeuvres sont recherchées par les collectionneurs spécialisés.',
+    imageUrl: 'https://picsum.photos/seed/laboulaye/400/500',
+  },
+  {
+    nom: 'Isabelle Hennessy',
+    biographie: 'Isabelle Hennessy (née en 1958) est une artiste française contemporaine. Son travail explore les frontières entre figuration et abstraction à travers des compositions sensibles et une palette nuancée.',
+    contexteArtistique: 'Hennessy fait partie des artistes contemporains représentés par la Galerie Louis Barrand, apportant un regard féminin et contemporain à la programmation de la galerie.',
+    imageUrl: 'https://picsum.photos/seed/hennessy/400/500',
   },
 ];
 
@@ -152,207 +189,240 @@ interface OeuvreData {
 }
 
 const oeuvres: OeuvreData[] = [
-  // Despierre
+  // Pissarro
   {
-    titre: 'La Montagne Sainte-Victoire au couchant',
+    titre: 'Paysage à Pontoise',
+    technique: 'Eau-forte et aquatinte',
+    dimensions: '16 x 21 cm',
+    provenance: 'Collection particulière, Paris',
+    artisteNom: 'Camille Pissarro',
+    thematiqueNoms: ['Paysages', 'Dessins et estampes'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre1/600/450',
+  },
+  {
+    titre: 'Marché à Gisors',
+    technique: 'Eau-forte',
+    dimensions: '20 x 14 cm',
+    provenance: 'Galerie Louis Barrand',
+    artisteNom: 'Camille Pissarro',
+    thematiqueNoms: ['Scènes de genre', 'Dessins et estampes'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre2/450/600',
+  },
+  // Lami
+  {
+    titre: 'Scène de bal aux Tuileries',
+    technique: 'Aquarelle et gouache sur papier',
+    dimensions: '28 x 38 cm',
+    provenance: 'Collection particulière, Paris',
+    artisteNom: 'Eugène Lami',
+    thematiqueNoms: ['Scènes de genre'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre3/600/450',
+  },
+  // Princeteau
+  {
+    titre: 'Cavalier au galop',
     technique: 'Huile sur toile',
-    dimensions: '81 x 100 cm',
-    provenance: 'Atelier de l\'artiste, Aix-en-Provence',
-    artisteNom: 'Henri Despierre',
-    thematiqueNoms: ['Paysages'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Paul_C%C3%A9zanne_108.jpg/600px-Paul_C%C3%A9zanne_108.jpg',
+    dimensions: '65 x 81 cm',
+    provenance: 'Collection particulière',
+    artisteNom: 'René Princeteau',
+    thematiqueNoms: ['Art animalier'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre4/600/480',
   },
+  // Henri Martin
   {
-    titre: 'Calanques de Cassis',
-    technique: 'Huile sur toile',
-    dimensions: '65 x 92 cm',
-    provenance: 'Collection particulière, Marseille',
-    artisteNom: 'Henri Despierre',
-    thematiqueNoms: ['Paysages'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Claude_Monet_-_Water_Lilies_-_1906%2C_Chicago.jpg/600px-Claude_Monet_-_Water_Lilies_-_1906%2C_Chicago.jpg',
-  },
-  {
-    titre: 'Les Oliviers de Maussane',
-    technique: 'Aquarelle sur papier',
-    dimensions: '50 x 65 cm',
-    provenance: 'Atelier de l\'artiste',
-    artisteNom: 'Henri Despierre',
-    thematiqueNoms: ['Paysages'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Van_Gogh_-_Olive_Trees_with_the_Alpilles_in_the_Background.jpg/600px-Van_Gogh_-_Olive_Trees_with_the_Alpilles_in_the_Background.jpg',
-  },
-  // Roux-Abrial
-  {
-    titre: 'Portrait au fauteuil rouge',
-    technique: 'Huile sur toile',
-    dimensions: '100 x 81 cm',
-    provenance: 'Galerie Maeght, Paris',
-    artisteNom: 'Madeleine Roux-Abrial',
-    thematiqueNoms: ['Portraits'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/460px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
-  },
-  {
-    titre: 'Nature morte aux figues',
-    technique: 'Huile sur panneau',
-    dimensions: '46 x 55 cm',
-    provenance: 'Collection de l\'artiste',
-    artisteNom: 'Madeleine Roux-Abrial',
-    thematiqueNoms: ['Natures mortes'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Cezanne_-_Stilleben_mit_%C3%84pfeln_und_Pfirsichen.jpg/600px-Cezanne_-_Stilleben_mit_%C3%84pfeln_und_Pfirsichen.jpg',
-  },
-  {
-    titre: 'Gravure III — Profil perdu',
-    technique: 'Gravure sur cuivre, tirage 4/30',
-    dimensions: '38 x 28 cm',
-    provenance: 'Atelier de l\'artiste, Paris',
-    artisteNom: 'Madeleine Roux-Abrial',
-    thematiqueNoms: ['Portraits'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Eyck_madonna_rolin.jpg/537px-Eyck_madonna_rolin.jpg',
-  },
-  // Moretti
-  {
-    titre: 'Bastia, le vieux port',
-    technique: 'Huile sur toile',
-    dimensions: '120 x 80 cm',
-    provenance: 'Collection particulière, Ajaccio',
-    artisteNom: 'Pierre-Louis Moretti',
-    thematiqueNoms: ['Paysages', 'Scènes de genre'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Claude_Monet_-_Impression%2C_soleil_levant.jpg/600px-Claude_Monet_-_Impression%2C_soleil_levant.jpg',
-  },
-  {
-    titre: 'Terre rouge, ciel blanc',
-    technique: 'Technique mixte sur toile',
-    dimensions: '150 x 120 cm',
-    provenance: 'Atelier de l\'artiste, Aix-en-Provence',
-    artisteNom: 'Pierre-Louis Moretti',
-    thematiqueNoms: ['Abstraction', 'Paysages'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg/600px-Vassily_Kandinsky%2C_1913_-_Composition_7.jpg',
-  },
-  // Verdier
-  {
-    titre: 'Bleu Méditerranée n°12',
-    technique: 'Acrylique sur toile',
-    dimensions: '200 x 160 cm',
-    provenance: 'FRAC Provence-Alpes-Côte d\'Azur',
-    artisteNom: 'Colette Verdier',
-    thematiqueNoms: ['Abstraction'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Yves_Klein_-_IKB_191.jpg/450px-Yves_Klein_-_IKB_191.jpg',
-  },
-  {
-    titre: 'Variations ocres — série IV',
-    technique: 'Acrylique sur toile',
-    dimensions: '130 x 97 cm',
-    provenance: 'Musée Cantini, Marseille',
-    artisteNom: 'Colette Verdier',
-    thematiqueNoms: ['Abstraction'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/VanGogh-starry_night_ballance1.jpg/600px-VanGogh-starry_night_ballance1.jpg',
-  },
-  {
-    titre: 'Lumière d\'hiver',
-    technique: 'Acrylique et pigments sur toile',
-    dimensions: '100 x 100 cm',
-    provenance: 'Collection de l\'artiste',
-    artisteNom: 'Colette Verdier',
-    thematiqueNoms: ['Abstraction'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_Scream.jpg/440px-The_Scream.jpg',
-  },
-  // Castellani
-  {
-    titre: 'Le marché du cours Mirabeau',
+    titre: 'Les Bords du Lot',
     technique: 'Huile sur toile',
     dimensions: '73 x 92 cm',
-    provenance: 'Collection de l\'artiste',
-    artisteNom: 'Jean-Marc Castellani',
-    thematiqueNoms: ['Scènes de genre'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edouard_Manet_-_Luncheon_on_the_Grass_-_Google_Art_Project.jpg/600px-Edouard_Manet_-_Luncheon_on_the_Grass_-_Google_Art_Project.jpg',
+    provenance: 'Collection particulière, Toulouse',
+    artisteNom: 'Henri Martin',
+    thematiqueNoms: ['Paysages'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre5/600/480',
   },
+  // Lebasque
   {
-    titre: 'Terrasse de café, place de l\'Hôtel de Ville',
+    titre: 'Jeune fille au jardin',
+    technique: 'Huile sur toile',
+    dimensions: '54 x 65 cm',
+    provenance: 'Collection particulière',
+    artisteNom: 'Henri Lebasque',
+    thematiqueNoms: ['Portraits', 'Paysages'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre6/600/500',
+  },
+  // Valtat
+  {
+    titre: 'Voiliers à Arcachon',
     technique: 'Huile sur toile',
     dimensions: '60 x 73 cm',
     provenance: 'Galerie Louis Barrand',
-    artisteNom: 'Jean-Marc Castellani',
+    artisteNom: 'Louis Valtat',
+    thematiqueNoms: ['Paysages'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre7/600/480',
+  },
+  // Laprade
+  {
+    titre: 'Nature morte aux fleurs',
+    technique: 'Huile sur toile',
+    dimensions: '46 x 55 cm',
+    provenance: 'Collection particulière, Paris',
+    artisteNom: 'Pierre Laprade',
+    thematiqueNoms: ['Natures mortes'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre8/600/500',
+  },
+  // Despierre
+  {
+    titre: 'Composition murale — étude',
+    technique: 'Huile sur toile',
+    dimensions: '100 x 81 cm',
+    provenance: 'Atelier de l\'artiste',
+    artisteNom: 'Jacques Despierre',
     thematiqueNoms: ['Scènes de genre'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpg/440px-Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpg',
+    imageUrl: 'https://picsum.photos/seed/oeuvre9/600/750',
   },
   {
-    titre: 'Autoportrait à la fenêtre',
-    technique: 'Huile sur panneau',
-    dimensions: '55 x 46 cm',
-    provenance: 'Collection de l\'artiste',
-    artisteNom: 'Jean-Marc Castellani',
-    thematiqueNoms: ['Portraits'],
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Pierre-Auguste_Renoir_-_By_the_Water.jpg/440px-Pierre-Auguste_Renoir_-_By_the_Water.jpg',
+    titre: 'Nu debout',
+    technique: 'Sanguine sur papier',
+    dimensions: '63 x 48 cm',
+    provenance: 'Atelier de l\'artiste',
+    artisteNom: 'Jacques Despierre',
+    thematiqueNoms: ['Dessins et estampes', 'Portraits'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre10/450/600',
+  },
+  // Guerrier
+  {
+    titre: 'Paysage de Bourgogne',
+    technique: 'Huile sur toile',
+    dimensions: '54 x 73 cm',
+    provenance: 'Collection particulière',
+    artisteNom: 'Raymond Guerrier',
+    thematiqueNoms: ['Paysages'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre11/600/450',
+  },
+  // Brochet
+  {
+    titre: 'Gravure — Le port',
+    technique: 'Eau-forte, tirage 12/50',
+    dimensions: '30 x 40 cm',
+    provenance: 'Atelier de l\'artiste',
+    artisteNom: 'Pierre Brochet',
+    thematiqueNoms: ['Dessins et estampes', 'Paysages'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre12/600/450',
+  },
+  // La Boulaye
+  {
+    titre: 'Chevaux en liberté',
+    technique: 'Huile sur toile',
+    dimensions: '81 x 100 cm',
+    provenance: 'Galerie Louis Barrand',
+    artisteNom: 'Antoine de La Boulaye',
+    thematiqueNoms: ['Art animalier'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre13/600/480',
+  },
+  {
+    titre: 'Le départ de la chasse',
+    technique: 'Huile sur toile',
+    dimensions: '73 x 92 cm',
+    provenance: 'Collection particulière',
+    artisteNom: 'Antoine de La Boulaye',
+    thematiqueNoms: ['Art animalier', 'Scènes de genre'],
+    imageUrl: 'https://picsum.photos/seed/oeuvre14/600/480',
   },
 ];
 
 const expositions = [
   {
-    titre: 'Lumières de Provence — Henri Despierre',
-    dateDebut: '2026-03-15',
-    dateFin: '2026-05-30',
-    preface:
-      'La Galerie Louis Barrand consacre une rétrospective à Henri Despierre, figure majeure du paysagisme provençal. Vingt toiles et aquarelles retracent cinquante ans d\'une pratique picturale enracinée dans les paysages du Midi. Des premiers essais figuratifs aux compositions plus libres de la maturité, l\'exposition révèle un artiste en dialogue constant avec la lumière méditerranéenne.',
-    statut: 'en-cours' as const,
-    oeuvresTitres: [
-      'La Montagne Sainte-Victoire au couchant',
-      'Calanques de Cassis',
-      'Les Oliviers de Maussane',
-    ],
-  },
-  {
-    titre: 'Figures et silences — Madeleine Roux-Abrial',
-    dateDebut: '2025-10-01',
-    dateFin: '2025-12-20',
-    preface:
-      'Cette exposition rend hommage à Madeleine Roux-Abrial, peintre et graveuse disparue en 2015. Portraits, natures mortes et gravures sur cuivre se répondent dans un parcours intime. L\'accrochage met en lumière la rigueur compositionnelle et la palette subtile d\'une artiste restée trop méconnue.',
+    titre: 'PIERRE BROCHET — Photographe et graveur',
+    dateDebut: '2022-11-17',
+    dateFin: '2022-11-27',
+    preface: 'La Galerie Louis Barrand consacre une exposition à Pierre Brochet (1922-2016), photographe et graveur. Ses eaux-fortes et ses photographies dialoguent dans un parcours intime qui révèle un artiste attentif aux lumières du quotidien et aux paysages de son temps.',
     statut: 'passee' as const,
-    oeuvresTitres: [
-      'Portrait au fauteuil rouge',
-      'Nature morte aux figues',
-      'Gravure III — Profil perdu',
-    ],
+    oeuvresTitres: ['Gravure — Le port'],
   },
   {
-    titre: 'Matières premières — Moretti et Verdier',
-    dateDebut: '2026-06-15',
-    dateFin: '2026-09-15',
-    preface:
-      'La galerie réunit deux artistes que tout semble opposer — la figuration terreuse de Pierre-Louis Moretti et l\'abstraction chromatique de Colette Verdier — pour un dialogue autour de la matière picturale. Empâtements, glacis, pigments purs : l\'exposition invite à regarder la peinture comme surface autant que comme image.',
+    titre: 'BESTIAIRE — Art animalier, Chasse, Chevaux',
+    dateDebut: '2023-03-23',
+    dateFin: '2023-04-07',
+    preface: 'De Princeteau à La Boulaye, cette exposition explore la tradition de l\'art animalier français à travers des oeuvres représentant le monde du cheval, de la chasse et de la nature sauvage. Un parcours entre XIXe et XXIe siècle qui témoigne de la vitalité de ce genre.',
+    statut: 'passee' as const,
+    oeuvresTitres: ['Cavalier au galop', 'Chevaux en liberté', 'Le départ de la chasse'],
+  },
+  {
+    titre: 'RENÉ GRUAU — Dessinateur',
+    dateDebut: '2023-10-11',
+    dateFin: '2023-11-03',
+    preface: 'La galerie présente un ensemble de dessins et illustrations de René Gruau (1909-2004), maître du dessin de mode. Ses lignes élégantes et ses aplats de couleur ont marqué l\'histoire de l\'illustration au XXe siècle, de Dior à Fath.',
+    statut: 'passee' as const,
+    oeuvresTitres: [],
+  },
+  {
+    titre: 'Nature morte — France XXe',
+    dateDebut: '2024-03-13',
+    dateFin: '2024-03-29',
+    preface: 'Un parcours à travers la nature morte française du XXe siècle. De Laprade à Guerrier, les artistes réunis ici témoignent de la richesse et de la diversité d\'un genre qui n\'a cessé de se réinventer au fil du siècle.',
+    statut: 'passee' as const,
+    oeuvresTitres: ['Nature morte aux fleurs'],
+  },
+  {
+    titre: 'Antoine de La Boulaye — Chevaux & Cavaliers',
+    dateDebut: '2024-10-09',
+    dateFin: '2024-10-25',
+    preface: 'Antoine de La Boulaye (né en 1951) peint le monde équestre avec une énergie et une justesse rares. Ses toiles capturent le mouvement, la puissance et l\'élégance du cheval dans des compositions dynamiques aux couleurs vibrantes.',
+    statut: 'passee' as const,
+    oeuvresTitres: ['Chevaux en liberté', 'Le départ de la chasse'],
+  },
+  {
+    titre: 'Camille Pissarro — Dessinateur et Graveur',
+    dateDebut: '2025-03-18',
+    dateFin: '2025-04-11',
+    preface: 'La Galerie Louis Barrand présente un ensemble rare d\'eaux-fortes et de dessins de Camille Pissarro (1830-1903). Moins connue que sa peinture, l\'oeuvre gravé de Pissarro révèle un artiste expérimentateur, attentif aux effets de lumière et aux scènes de la vie rurale.',
+    statut: 'passee' as const,
+    oeuvresTitres: ['Paysage à Pontoise', 'Marché à Gisors'],
+  },
+  {
+    titre: 'Despierre (1912-1995)',
+    dateDebut: '2025-10-15',
+    dateFin: '2025-11-07',
+    preface: 'La galerie consacre une rétrospective à Jacques Despierre (1912-1995), peintre et décorateur dont Louis Barrand prépare le catalogue raisonné. Peintures murales, études et compositions témoignent d\'un artiste entre classicisme et modernité.',
+    statut: 'passee' as const,
+    oeuvresTitres: ['Composition murale — étude', 'Nu debout'],
+  },
+  {
+    titre: 'Foire de Chatou',
+    dateDebut: '2026-03-13',
+    dateFin: '2026-03-22',
+    preface: 'La Galerie Louis Barrand participe à la Foire de Chatou, rendez-vous incontournable des amateurs d\'art et d\'antiquités. Une sélection d\'oeuvres de la galerie est présentée sur le stand.',
     statut: 'en-cours' as const,
-    oeuvresTitres: [
-      'Terre rouge, ciel blanc',
-      'Bleu Méditerranée n°12',
-      'Variations ocres — série IV',
-      'Lumière d\'hiver',
-    ],
+    oeuvresTitres: [],
+  },
+  {
+    titre: 'Encre — Dessins français XIXe-XXe',
+    dateDebut: '2026-03-26',
+    dateFin: '2026-04-17',
+    preface: 'Un parcours à travers le dessin français des XIXe et XXe siècles. Encres, lavis, sanguines et mines de plomb : cette exposition explore la richesse du dessin comme discipline autonome et comme espace de liberté pour les artistes.',
+    statut: 'en-cours' as const,
+    oeuvresTitres: ['Nu debout'],
   },
 ];
 
 const articlesPresse = [
   {
-    titre: 'La Provence — Henri Despierre, peintre de lumière',
+    titre: 'Connaissance des Arts — Galerie Louis Barrand',
     type: 'lien' as const,
-    urlExterne: 'https://www.laprovence.com/article/exemple-despierre',
+    urlExterne: 'https://www.connaissancedesarts.com',
   },
   {
-    titre: 'Connaissance des Arts — Galerie Louis Barrand, un regard sur la modernité',
+    titre: 'La Gazette Drouot — Foire de Chatou 2026',
     type: 'lien' as const,
-    urlExterne: 'https://www.connaissancedesarts.com/article/exemple-barrand',
-  },
-  {
-    titre: 'Art Absolument — Moretti et Verdier, le dialogue des matières',
-    type: 'lien' as const,
-    urlExterne: 'https://www.artabsolument.com/article/exemple-moretti-verdier',
+    urlExterne: 'https://www.gazette-drouot.com',
   },
 ];
 
 const aPropos = {
   biographieLouis:
-    'Louis Barrand est galeriste à Aix-en-Provence depuis 1992. Formé en histoire de l\'art à l\'Université d\'Aix-Marseille, il ouvre sa galerie rue Espariat avec la conviction que l\'art moderne et contemporain peut dialoguer avec un public large. En trente ans, il a accompagné plus de cinquante artistes, organisé plus de cent expositions et constitué un fonds de référence pour la peinture provençale du XXe siècle. Lauréat du prix Marcus de l\'artisan-galeriste en 2018, il poursuit un travail de passeur entre les artistes et les collectionneurs.',
+    'Louis Barrand est spécialisé en tableaux, dessins et estampes du XIXe à l\'après-guerre. Il prépare le catalogue raisonné de Jacques Despierre (1912-1995) et poursuit le travail de Caroline Imbert sur celui d\'Eugène Lami (1800-1890).\n\nFort d\'une riche expérience au sein du marché de l\'art à Paris et à Londres, Louis Barrand a ouvert sa galerie à 27 ans au coeur du huitième arrondissement, en face du Palais de la Découverte. Il a reçu le Prix Marcus au Ministère de la Culture en 2025, récompensant son engagement pour la valorisation du patrimoine artistique français.\n\nIl réalise des expositions et conseille amateurs et collectionneurs dans leur processus d\'acquisition et de vente d\'oeuvres d\'art.',
   textePrixMarcus:
-    'Le prix Marcus de l\'artisan-galeriste récompense chaque année un galeriste français pour son engagement en faveur de la diffusion de l\'art contemporain hors des grands centres. Louis Barrand l\'a reçu en 2018 pour son travail de découverte et de fidélité envers les artistes qu\'il représente.',
-  adresse: '12, rue Espariat\n13100 Aix-en-Provence\nFrance',
-  horaires: 'Du mardi au samedi\n10h00 — 12h30\n14h30 — 19h00\nFermé dimanche et lundi',
+    'Le Prix Marcus au Ministère de la Culture récompense l\'engagement d\'un galeriste pour la valorisation du patrimoine artistique français. Louis Barrand l\'a reçu en 2025.',
+  adresse: '7, avenue Franklin Roosevelt\nParis VIIIe\nFrance',
+  horaires: 'Sur rendez-vous',
 };
 
 // ---------------------------------------------------------------------------
@@ -510,15 +580,29 @@ async function seedArticlesPresse() {
 
 async function seedAPropos() {
   console.log('\n--- A Propos ---');
-  const existing = await strapiGet('a-propos-items?status=draft');
-
-  if (existing.data?.biographieLouis) {
-    console.log('  [skip] Deja rempli');
-    return;
+  try {
+    const existing = await strapiGet('a-propos?status=draft');
+    if (existing.data?.biographieLouis) {
+      console.log('  [skip] Deja rempli');
+      return;
+    }
+  } catch {
+    // 404 = single type pas encore cree, on continue
   }
 
-  await strapiPut('a-propos-items', aPropos);
+  await strapiPut('a-propos', aPropos);
   console.log('  [updated] Page A propos');
+}
+
+async function strapiPublish(endpoint: string, documentId: string) {
+  const res = await fetch(`${STRAPI_URL}/api/${endpoint}/${documentId}/actions/publish`, {
+    method: 'POST',
+    headers,
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`PUBLISH ${endpoint}/${documentId}: ${res.status} ${text}`);
+  }
 }
 
 async function publishAll() {
@@ -527,33 +611,30 @@ async function publishAll() {
   const endpoints = ['thematiques', 'artistes', 'oeuvres', 'expositions', 'articles-presse'];
 
   for (const endpoint of endpoints) {
-    const res = await strapiGet(`${endpoint}?status=draft&pagination[pageSize]=100`);
+    const res = await strapiGet(`${endpoint}?pagination[pageSize]=100`);
     const items = res.data ?? [];
     let published = 0;
 
     for (const item of items) {
+      if (item.publishedAt) continue;
       try {
-        await strapiPut(`${endpoint}/${item.documentId}`, {
-          ...item,
-          publishedAt: new Date().toISOString(),
-        } as Record<string, unknown>);
+        await strapiPublish(endpoint, item.documentId);
         published++;
       } catch {
         // Already published or other issue — skip
       }
     }
-    console.log(`  [published] ${endpoint}: ${published} items`);
+    console.log(`  [published] ${endpoint}: ${published}/${items.length} items`);
   }
 
   // Publish single type a-propos
   try {
-    const aProposData = await strapiGet('a-propos-items?status=draft');
-    if (aProposData.data) {
-      await strapiPut('a-propos-items', {
-        ...aProposData.data,
-        publishedAt: new Date().toISOString(),
-      } as Record<string, unknown>);
+    const aProposData = await strapiGet('a-propos');
+    if (aProposData.data?.documentId && !aProposData.data?.publishedAt) {
+      await strapiPublish('a-propos', aProposData.data.documentId);
       console.log('  [published] a-propos');
+    } else {
+      console.log('  [skip] a-propos (deja publie)');
     }
   } catch {
     // skip
