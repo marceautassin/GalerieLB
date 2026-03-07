@@ -5,17 +5,30 @@ export default ({ env }) => {
     return {};
   }
 
+  const providerOptions: Record<string, unknown> = {
+    accessKeyId: awsAccessKey,
+    secretAccessKey: env('AWS_ACCESS_SECRET'),
+    region: env('AWS_REGION'),
+    params: {
+      Bucket: env('AWS_BUCKET'),
+    },
+  };
+
+  const s3Endpoint = env('S3_ENDPOINT', '');
+  if (s3Endpoint) {
+    providerOptions.endpoint = s3Endpoint;
+    providerOptions.s3ForcePathStyle = true;
+  }
+
   return {
     upload: {
       config: {
         provider: '@strapi/provider-upload-aws-s3',
-        providerOptions: {
-          accessKeyId: awsAccessKey,
-          secretAccessKey: env('AWS_ACCESS_SECRET'),
-          region: env('AWS_REGION'),
-          params: {
-            Bucket: env('AWS_BUCKET'),
-          },
+        providerOptions,
+        actionOptions: {
+          upload: {},
+          uploadStream: {},
+          delete: {},
         },
       },
     },

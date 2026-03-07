@@ -8,8 +8,8 @@ export default [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https:'],
-          'media-src': ["'self'", 'data:', 'blob:', 'https:'],
+          'img-src': ["'self'", 'data:', 'blob:', 'https:', 'http://localhost:9000'],
+          'media-src': ["'self'", 'data:', 'blob:', 'https:', 'http://localhost:9000'],
           upgradeInsecureRequests: null,
         },
       },

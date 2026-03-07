@@ -9,3 +9,7 @@ galerie-front/node_modules/
 galerie-front/.env
 galerie-front/.astro/
 galerie-front/dist/
+
+# Package manager
+galerie-cms/package-lock.json
+galerie-front/package-lock.json
