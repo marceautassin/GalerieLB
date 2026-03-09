@@ -1,3 +1,13 @@
+const S3_ORIGINS = [
+  process.env.S3_ENDPOINT,
+  'https://cellar-c2.services.clever-cloud.com',
+].filter(Boolean);
+
+const CORS_ORIGINS = [
+  'http://localhost:4321',
+  process.env.FRONT_URL,
+].filter(Boolean) as string[];
+
 export default [
   'strapi::logger',
   'strapi::errors',
@@ -8,8 +18,8 @@ export default [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https:', 'http://localhost:9000'],
-          'media-src': ["'self'", 'data:', 'blob:', 'https:', 'http://localhost:9000'],
+          'img-src': ["'self'", 'data:', 'blob:', 'https:', ...S3_ORIGINS],
+          'media-src': ["'self'", 'data:', 'blob:', 'https:', ...S3_ORIGINS],
           upgradeInsecureRequests: null,
         },
       },
@@ -18,7 +28,7 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:4321', 'https://www.galerie-louisbarrand.fr'],
+      origin: CORS_ORIGINS,
     },
   },
   'strapi::poweredBy',
