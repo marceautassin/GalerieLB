@@ -37,13 +37,13 @@ cp galerie-cms/.env.example galerie-cms/.env
 
 Variables importantes :
 
-| Variable            | Description            | Dev                     |
-| ------------------- | ---------------------- | ----------------------- |
-| `DATABASE_HOST`     | Host PostgreSQL        | `localhost`             |
-| `AWS_ACCESS_KEY_ID` | Cle S3                 | `minioadmin`            |
-| `AWS_ACCESS_SECRET` | Secret S3              | `minioadmin`            |
-| `AWS_BUCKET`        | Nom du bucket          | `galerie-medias`        |
-| `S3_ENDPOINT`       | Endpoint S3 custom     | `http://localhost:9000` |
+| Variable            | Description        | Dev                     |
+| ------------------- | ------------------ | ----------------------- |
+| `DATABASE_HOST`     | Host PostgreSQL    | `localhost`             |
+| `AWS_ACCESS_KEY_ID` | Cle S3             | `minioadmin`            |
+| `AWS_ACCESS_SECRET` | Secret S3          | `minioadmin`            |
+| `AWS_BUCKET`        | Nom du bucket      | `galerie-medias`        |
+| `S3_ENDPOINT`       | Endpoint S3 custom | `http://localhost:9000` |
 
 ### Front (Astro)
 
@@ -182,4 +182,4 @@ S3_ENDPOINT=https://cellar-c2.services.clever-cloud.com
 
 ## Licence
 
-Projet prive — Galerie Louis Barrand.
+Projet prive — Galerie Louis Barrand
