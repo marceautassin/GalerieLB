@@ -27,15 +27,8 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.CLEVER_DEPLOY_KEY }}
-
       - name: Push to Clever Cloud
         run: |
-          ssh-keyscan -t ed25519 push-n3-par-clevercloud-customers.services.clever-cloud.com >> ~/.ssh/known_hosts 2>/dev/null
-
           git config user.email "ci@galerie-louisbarrand.fr"
           git config user.name "CI Deploy"
 
@@ -43,4 +36,5 @@ jobs:
           git add -f galerie-cms/dist/
           git commit -m "ci: add built dist/ for deployment" --no-verify
 
-          git push --force git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_b62f49de-5c99-4c25-9800-1f35423c0076.git HEAD:master
+          git remote add clever https://${{ secrets.CLEVER_TOKEN }}:${{ secrets.CLEVER_SECRET }}@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_b62f49de-5c99-4c25-9800-1f35423c0076.git
+          git push clever HEAD:master --force
