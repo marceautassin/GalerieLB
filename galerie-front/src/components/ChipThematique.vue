@@ -28,7 +28,10 @@ interface Oeuvre {
 const props = defineProps<{
   thematiques: Thematique[];
   oeuvres: Oeuvre[];
+  basePath?: string;
 }>();
+
+const base = (props.basePath ?? '').replace(/\/$/, '');
 
 const activeSlug = ref<string | null>(null);
 
@@ -112,7 +115,7 @@ function getAltText(oeuvre: Oeuvre): string {
         :key="oeuvre.slug"
         :class="{ 'span-2': (index + 1) % 5 === 0 }"
       >
-        <a :href="`/oeuvres/${oeuvre.slug}`" class="carte-oeuvre">
+        <a :href="`${base}/oeuvres/${oeuvre.slug}`" class="carte-oeuvre">
           <div class="carte-oeuvre-image">
             <img
               v-if="oeuvre.visuels.length > 0"

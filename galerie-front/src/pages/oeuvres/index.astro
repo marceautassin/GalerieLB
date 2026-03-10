@@ -3,6 +3,7 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import GalerieImages from '../../components/GalerieImages.astro';
 import ChipThematique from '../../components/ChipThematique.vue';
 import { fetchOeuvres, fetchThematiques } from '../../lib/strapi-client';
+import { url } from '../../lib/base-url';
 
 const oeuvres = await fetchOeuvres();
 const thematiques = await fetchThematiques();
@@ -20,6 +21,7 @@ const thematiques = await fetchThematiques();
           client:visible
           thematiques={thematiques}
           oeuvres={oeuvres}
+          basePath={import.meta.env.BASE_URL}
         />
       ) : (
         <GalerieImages oeuvres={oeuvres} />
