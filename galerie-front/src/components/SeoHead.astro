@@ -15,6 +15,8 @@ const {
   canonicalUrl,
 } = Astro.props;
 
+import { url } from '../lib/base-url';
+
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const canonical = canonicalUrl ?? Astro.url.href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
@@ -44,4 +46,4 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 />
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+<link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
