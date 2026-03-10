@@ -2,8 +2,8 @@ import { defineConfig } from 'astro/config';
 import vue from '@astrojs/vue';
 import sitemap from '@astrojs/sitemap';
 
-const site = import.meta.env.SITE_URL || 'https://www.galerie-louisbarrand.fr';
-const base = import.meta.env.BASE_PATH || '/';
+const site = process.env.SITE_URL || 'https://www.galerie-louisbarrand.fr';
+const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   site,
