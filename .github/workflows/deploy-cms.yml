@@ -1,0 +1,47 @@
+name: Deploy CMS to Clever Cloud
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'galerie-cms/**'
+      - '.github/workflows/deploy-cms.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: galerie-cms/yarn.lock
+
+      - name: Install & build
+        working-directory: galerie-cms
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: Push to Clever Cloud
+        env:
+          CLEVER_DEPLOY_KEY: ${{ secrets.CLEVER_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$CLEVER_DEPLOY_KEY" > ~/.ssh/clever_deploy
+          chmod 600 ~/.ssh/clever_deploy
+          ssh-keyscan -t ed25519 push-n3-par-clevercloud-customers.services.clever-cloud.com >> ~/.ssh/known_hosts 2>/dev/null
+
+          git config user.email "ci@galerie-louisbarrand.fr"
+          git config user.name "CI Deploy"
+
+          # Include dist/ for Clever Cloud
+          git add -f galerie-cms/dist/
+          git commit -m "ci: add built dist/ for deployment" --no-verify
+
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/clever_deploy" \
+            git push --force git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_b62f49de-5c99-4c25-9800-1f35423c0076.git HEAD:master
