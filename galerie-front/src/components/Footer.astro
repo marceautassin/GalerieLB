@@ -1,24 +1,24 @@
 ---
+import { fetchAPropos } from '../lib/strapi-client';
+
 const currentYear = new Date().getFullYear();
+const apropos = await fetchAPropos();
 ---
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-col">
-      <h3>Galerie Louis Barrand</h3>
-      <address>
-        2 rue des Moulins<br />
-        13100 Aix-en-Provence<br />
-        France
-      </address>
-    </div>
-    <div class="footer-col">
-      <h3>Horaires</h3>
-      <p>
-        Mardi - Samedi : 10h - 18h<br />
-        Dimanche - Lundi : Fermé
-      </p>
-    </div>
+    {apropos?.adresse && (
+      <div class="footer-col">
+        <h3>Galerie Louis Barrand</h3>
+        <address set:html={apropos.adresse.replace(/\n/g, '<br />')} />
+      </div>
+    )}
+    {apropos?.horaires && (
+      <div class="footer-col">
+        <h3>Horaires</h3>
+        <p set:html={apropos.horaires.replace(/\n/g, '<br />')} />
+      </div>
+    )}
     <div class="footer-col">
       <h3>Liens</h3>
       <ul>

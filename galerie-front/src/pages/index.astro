@@ -9,12 +9,12 @@ const dernieresOeuvres = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 }
 
 <LayoutPrincipal
   title="Galerie Louis Barrand — Art moderne et contemporain"
-  description="Galerie d'art spécialisée en peinture moderne et contemporaine à Aix-en-Provence. Découvrez les dernières acquisitions, expositions et artistes."
+  description="Galerie d'art spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
 >
   <section class="hero">
     <h1>Galerie Louis Barrand</h1>
     <hr class="hero-sep" />
-    <p>Art moderne et contemporain à Aix-en-Provence</p>
+    <p>Redécouvrir les artistes oubliés des XIXe et XXe siècles</p>
   </section>
 
   {dernieresOeuvres.length > 0 && (
