@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { Exposition } from '../types/strapi';
 import { formatDateFr } from '../lib/format';
+import { url } from '../lib/base-url';
 
 interface Props {
   exposition: Exposition;
@@ -16,7 +17,7 @@ const dates = exposition.dateFin
   : `Depuis ${formatDateFr(exposition.dateDebut, 'short')}`;
 ---
 
-<a href={`/expositions/${exposition.slug}`} class="carte-exposition">
+<a href={url(`/expositions/${exposition.slug}`)} class="carte-exposition">
   <div class="carte-exposition-image">
     {visuel ? (
       <Image

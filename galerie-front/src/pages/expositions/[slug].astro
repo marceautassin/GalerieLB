@@ -7,6 +7,7 @@ import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import { fetchExpositions } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
+import { url } from '../../lib/base-url';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const expositions = await fetchExpositions();
@@ -31,7 +32,7 @@ const artistesUniques = [...new Map(
 
 const artistesLiens = artistesUniques.map((a) => ({
   label: a.nom,
-  href: `/artistes/${a.slug}`,
+  href: url(`/artistes/${a.slug}`),
 }));
 
 const dates = exposition.dateFin
@@ -50,8 +51,8 @@ if (exposition.preface) descParts.push(exposition.preface.replace(/<[^>]*>/g, ''
 const description = truncateAtWord(descParts.join(' — '), 160);
 
 const breadcrumbItems = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Expositions', href: '/expositions' },
+  { label: 'Accueil', href: url('/') },
+  { label: 'Expositions', href: url('/expositions') },
   { label: exposition.titre },
 ];
 ---
@@ -88,7 +89,7 @@ const breadcrumbItems = [
       <div class="fiche-exposition-preface" set:html={exposition.preface} />
     )}
 
-    <a href={`/contact?exposition=${exposition.slug}`} class="btn-primary cta-contact">
+    <a href={url(`/contact?exposition=${exposition.slug}`)} class="btn-primary cta-contact">
       Prendre rendez-vous
     </a>
 
@@ -109,7 +110,7 @@ const breadcrumbItems = [
       <SectionLiensRelies
         titre="Artistes"
         items={artistesLiens}
-        voirToutHref="/artistes"
+        voirToutHref={url('/artistes')}
       />
     )}
   </article>

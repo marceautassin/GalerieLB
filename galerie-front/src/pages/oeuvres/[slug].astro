@@ -5,6 +5,7 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import { fetchOeuvres } from '../../lib/strapi-client';
+import { url } from '../../lib/base-url';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const oeuvres = await fetchOeuvres();
@@ -34,20 +35,20 @@ const description = truncateAtWord(descParts.join(' — '), 160);
 
 const thematiques = (oeuvre.thematiques ?? []).map((t) => ({
   label: t.nom,
-  href: `/oeuvres?thematique=${t.slug}`,
+  href: url(`/oeuvres?thematique=${t.slug}`),
 }));
 
 const expositions = (oeuvre.expositions ?? []).map((e) => ({
   label: e.titre,
-  href: `/expositions/${e.slug}`,
+  href: url(`/expositions/${e.slug}`),
 }));
 
 const breadcrumbItems = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Œuvres', href: '/oeuvres' },
+  { label: 'Accueil', href: url('/') },
+  { label: 'Œuvres', href: url('/oeuvres') },
 ];
 if (oeuvre.artiste) {
-  breadcrumbItems.push({ label: oeuvre.artiste.nom, href: `/artistes/${oeuvre.artiste.slug}` });
+  breadcrumbItems.push({ label: oeuvre.artiste.nom, href: url(`/artistes/${oeuvre.artiste.slug}`) });
 }
 breadcrumbItems.push({ label: oeuvre.titre });
 ---
@@ -83,7 +84,7 @@ breadcrumbItems.push({ label: oeuvre.titre });
 
         {oeuvre.artiste && (
           <p class="meta-artiste">
-            <a href={`/artistes/${oeuvre.artiste.slug}`}>{oeuvre.artiste.nom}</a>
+            <a href={url(`/artistes/${oeuvre.artiste.slug}`)}>{oeuvre.artiste.nom}</a>
           </p>
         )}
 
@@ -108,7 +109,7 @@ breadcrumbItems.push({ label: oeuvre.titre });
           )}
         </dl>
 
-        <a href={`/contact?oeuvre=${oeuvre.slug}`} class="btn-primary cta-rdv">
+        <a href={url(`/contact?oeuvre=${oeuvre.slug}`)} class="btn-primary cta-rdv">
           Prendre rendez-vous
         </a>
 

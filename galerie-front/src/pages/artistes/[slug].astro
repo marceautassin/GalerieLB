@@ -6,6 +6,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import type { Artiste } from '../../types/strapi';
 import { fetchArtistes, fetchArtisteBySlug } from '../../lib/strapi-client';
+import { url } from '../../lib/base-url';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const artistes = await fetchArtistes();
@@ -40,8 +41,8 @@ const description = artiste.biographie
 >
   <article class="fiche-artiste">
     <Breadcrumb items={[
-      { label: 'Accueil', href: '/' },
-      { label: 'Artistes', href: '/artistes' },
+      { label: 'Accueil', href: url('/') },
+      { label: 'Artistes', href: url('/artistes') },
       { label: artiste.nom },
     ]} />
 

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { Oeuvre } from '../types/strapi';
+import { url } from '../lib/base-url';
 
 interface Props {
   oeuvre: Oeuvre;
@@ -12,7 +13,7 @@ const artisteNom = oeuvre.artiste?.nom ?? '';
 const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
 ---
 
-<a href={`/oeuvres/${oeuvre.slug}`} class="carte-oeuvre">
+<a href={url(`/oeuvres/${oeuvre.slug}`)} class="carte-oeuvre">
   <div class="carte-oeuvre-image">
     {visuel ? (
       <Image

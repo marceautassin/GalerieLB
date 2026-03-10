@@ -2,6 +2,7 @@
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import CarteOeuvre from '../components/CarteOeuvre.astro';
 import { fetchOeuvres } from '../lib/strapi-client';
+import { url } from '../lib/base-url';
 
 const dernieresOeuvres = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 ---
@@ -27,7 +28,7 @@ const dernieresOeuvres = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 }
         ))}
       </ul>
       <div class="voir-tout">
-        <a href="/oeuvres" class="btn-primary">Voir toutes les oeuvres</a>
+        <a href={url('/oeuvres')} class="btn-primary">Voir toutes les oeuvres</a>
       </div>
     </section>
   )}

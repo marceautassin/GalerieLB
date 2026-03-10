@@ -2,6 +2,7 @@
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import FormulaireContact from '../components/islands/FormulaireContact.vue';
+import { url } from '../lib/base-url';
 
 const apiUrl = import.meta.env.PUBLIC_STRAPI_API_URL;
 ---
@@ -12,7 +13,7 @@ const apiUrl = import.meta.env.PUBLIC_STRAPI_API_URL;
 >
   <section class="page-contact">
     <Breadcrumb items={[
-      { label: 'Accueil', href: '/' },
+      { label: 'Accueil', href: url('/') },
       { label: 'Contact' },
     ]} />
 

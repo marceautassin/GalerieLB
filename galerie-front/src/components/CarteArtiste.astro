@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { Artiste } from '../types/strapi';
+import { url } from '../lib/base-url';
 
 interface Props {
   artiste: Artiste;
@@ -10,7 +11,7 @@ const { artiste } = Astro.props;
 const hasPhoto = artiste.photo?.url;
 ---
 
-<a href={`/artistes/${artiste.slug}`} class="carte-artiste">
+<a href={url(`/artistes/${artiste.slug}`)} class="carte-artiste">
   <div class="carte-artiste-image">
     {hasPhoto ? (
       <Image

@@ -1,18 +1,20 @@
 ---
+import { url } from '../lib/base-url';
+
 const navLinks = [
-  { label: 'Artistes', href: '/artistes' },
-  { label: 'Oeuvres', href: '/oeuvres' },
-  { label: 'Expositions', href: '/expositions' },
-  { label: 'À propos', href: '/a-propos' },
-  { label: 'Presse', href: '/presse' },
+  { label: 'Artistes', href: url('/artistes') },
+  { label: 'Oeuvres', href: url('/oeuvres') },
+  { label: 'Expositions', href: url('/expositions') },
+  { label: 'À propos', href: url('/a-propos') },
+  { label: 'Presse', href: url('/presse') },
 ];
 ---
 
 <a href="#main-content" class="skip-link">Aller au contenu</a>
 <header class="site-header" id="site-header">
   <div class="header-inner">
-    <a href="/" class="logo">
-      <img src="/logo.svg" alt="" class="logo-img" width="24" height="64" />
+    <a href={url('/')} class="logo">
+      <img src={url('/logo.svg')} alt="" class="logo-img" width="24" height="64" />
       <span>Galerie Louis Barrand</span>
     </a>
     <nav class="nav-desktop" aria-label="Navigation principale">
@@ -20,7 +22,7 @@ const navLinks = [
         {navLinks.map((link) => (
           <li><a href={link.href}>{link.label}</a></li>
         ))}
-        <li><a href="/contact" class="btn-primary nav-cta">Contact</a></li>
+        <li><a href={url('/contact')} class="btn-primary nav-cta">Contact</a></li>
       </ul>
     </nav>
     <button
@@ -55,7 +57,7 @@ const navLinks = [
           <li><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
-      <a href="/contact" class="btn-primary mobile-cta">Contact</a>
+      <a href={url('/contact')} class="btn-primary mobile-cta">Contact</a>
     </nav>
   </div>
 </div>

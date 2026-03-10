@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { fetchArticlesPresse } from '../lib/strapi-client';
+import { url } from '../lib/base-url';
 
 const articles = await fetchArticlesPresse();
 ---
@@ -13,7 +14,7 @@ const articles = await fetchArticlesPresse();
 >
   <section class="page-presse">
     <Breadcrumb items={[
-      { label: 'Accueil', href: '/' },
+      { label: 'Accueil', href: url('/') },
       { label: 'Presse' },
     ]} />
 
