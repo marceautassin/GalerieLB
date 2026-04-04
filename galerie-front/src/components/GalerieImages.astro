@@ -21,12 +21,13 @@ const { oeuvres } = Astro.props;
   .galerie-images {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    gap: var(--space-xl);
   }
 
   @media (min-width: 640px) {
     .galerie-images {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2xl);
     }
   }
 
