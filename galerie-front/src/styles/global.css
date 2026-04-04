@@ -14,12 +14,14 @@
   --color-border: #E5E2DE;
   --color-surface: #FFFFFF;
   --color-black: #000000;
+  --color-accent: #3B5441;
+  --color-accent-hover: #2D4033;
   --color-success: #2D6A4F;
   --color-error: #C1292E;
 
   /* Typographie */
-  --font-heading: 'Abhaya Libre', serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-heading: 'Abhaya Libre', Georgia, serif;
+  --font-body: 'Jost', system-ui, sans-serif;
 
   /* Espacements */
   --space-xs: 4px;
@@ -61,8 +63,9 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  font-weight: 300;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -109,52 +112,51 @@ ol {
 
 h1,
 h2,
-h3,
 h4,
-h5,
-h6 {
+h5 {
   font-family: var(--font-heading);
-  line-height: 1.2;
+  font-weight: 500;
+  line-height: 1.15;
 }
 
 h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
 }
 
 h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
 }
 
 h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.3;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
 }
 
 h4 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.35;
+  font-size: 1.375rem;
 }
 
 h5 {
   font-size: 1.125rem;
-  font-weight: 600;
 }
 
 h6 {
-  font-size: 1rem;
-  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* ---------- Focus Visible Global ---------- */
 
 :focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* ---------- Sélection ---------- */
