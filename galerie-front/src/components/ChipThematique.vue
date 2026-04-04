@@ -148,39 +148,56 @@ function getAltText(oeuvre: Oeuvre): string {
 </template>
 
 <style scoped>
-/* --- Chips --- */
+/* --- Filtres thématiques --- */
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-xl);
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-lg);
 }
 
 .chip {
-  display: inline-block;
-  padding: 6px 16px;
-  border: 1px solid var(--color-border);
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
   cursor: pointer;
-  transition: var(--transition-default);
   user-select: none;
+  background: none;
+  border: none;
+  padding: 0 var(--space-lg) 0 0;
+  transition: color 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  position: relative;
+}
+
+.chip::after {
+  content: '/';
+  position: absolute;
+  right: calc(var(--space-lg) / 2 - 4px);
+  color: var(--color-border);
+  pointer-events: none;
+}
+
+.chip:last-child::after {
+  display: none;
 }
 
 .chip:hover {
-  border-color: var(--color-text);
   color: var(--color-text);
 }
 
 .chip.active {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
+  color: var(--color-accent);
 }
 
 .chip:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* --- Empty state --- */
@@ -193,12 +210,13 @@ function getAltText(oeuvre: Oeuvre): string {
 .galerie-images {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
 }
 
 @media (min-width: 640px) {
   .galerie-images {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2xl);
   }
 }
 
@@ -244,11 +262,11 @@ function getAltText(oeuvre: Oeuvre): string {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform var(--transition-default);
+  transition: transform 600ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .carte-oeuvre:hover .carte-oeuvre-image img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .carte-oeuvre-placeholder {
@@ -269,10 +287,10 @@ function getAltText(oeuvre: Oeuvre): string {
   display: none;
   flex-direction: column;
   justify-content: flex-end;
-  padding: var(--space-md);
-  background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.6));
+  padding: var(--space-lg);
+  background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.55));
   opacity: 0;
-  transition: opacity var(--transition-default);
+  transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
   color: var(--color-bg);
 }
 
@@ -288,13 +306,18 @@ function getAltText(oeuvre: Oeuvre): string {
 
 .carte-oeuvre-overlay .carte-oeuvre-titre {
   font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
 .carte-oeuvre-overlay .carte-oeuvre-artiste {
-  font-size: 0.875rem;
-  opacity: 0.85;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-top: 2px;
 }
 
 .carte-oeuvre-info-mobile {
@@ -312,12 +335,17 @@ function getAltText(oeuvre: Oeuvre): string {
 .carte-oeuvre-info-mobile .carte-oeuvre-titre {
   font-family: var(--font-heading);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text);
 }
 
 .carte-oeuvre-info-mobile .carte-oeuvre-artiste {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
 }
 </style>
