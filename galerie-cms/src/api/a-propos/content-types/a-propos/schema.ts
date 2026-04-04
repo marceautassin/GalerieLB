@@ -24,5 +24,20 @@ export default {
     horaires: {
       type: "text",
     },
+    telephone: {
+      type: "string",
+    },
+    email: {
+      type: "email",
+    },
+    linkedin: {
+      type: "string",
+    },
+    vuesGalerie: {
+      type: "media",
+      multiple: true,
+      required: false,
+      allowedTypes: ["images"],
+    },
   },
 };

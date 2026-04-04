@@ -5,7 +5,9 @@ import { fetchExpositions } from '../../lib/strapi-client';
 
 const expositions = await fetchExpositions();
 const enCours = expositions.filter((e) => e.statut === 'en-cours');
-const passees = expositions.filter((e) => e.statut === 'passee');
+const passees = expositions
+  .filter((e) => e.statut === 'passee')
+  .sort((a, b) => new Date(b.dateDebut).getTime() - new Date(a.dateDebut).getTime());
 ---
 
 <LayoutPrincipal

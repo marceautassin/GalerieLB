@@ -403,14 +403,18 @@ export interface ApiAProposAPropos extends Struct.SingleTypeSchema {
     biographieLouis: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
     horaires: Schema.Attribute.Text;
+    linkedin: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::a-propos.a-propos'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    telephone: Schema.Attribute.String;
     textePrixMarcus: Schema.Attribute.RichText;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    vuesGalerie: Schema.Attribute.Media<'images', true>;
   };
 }
 

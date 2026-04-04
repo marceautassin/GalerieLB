@@ -28,6 +28,11 @@ const apropos = await fetchAPropos();
         <li>
           <a href="https://www.proantic.com/galerie/galerie-louis-barrand" target="_blank" rel="noopener">Proantic</a>
         </li>
+        {apropos?.linkedin && (
+          <li>
+            <a href={apropos.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+          </li>
+        )}
       </ul>
     </div>
   </div>

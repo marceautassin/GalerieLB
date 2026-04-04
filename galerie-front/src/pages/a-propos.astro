@@ -45,7 +45,7 @@ const apropos = await fetchAPropos();
       </section>
     )}
 
-    {(apropos?.adresse || apropos?.horaires) && (
+    {(apropos?.adresse || apropos?.horaires || apropos?.telephone || apropos?.email) && (
       <section class="section-infos-pratiques">
         <h2>Informations pratiques</h2>
         <div class="infos-grid">
@@ -59,6 +59,17 @@ const apropos = await fetchAPropos();
             <div class="info-bloc">
               <h3>Horaires</h3>
               <p>{apropos.horaires}</p>
+            </div>
+          )}
+          {(apropos.telephone || apropos.email) && (
+            <div class="info-bloc">
+              <h3>Contact</h3>
+              {apropos.telephone && (
+                <p><a href={`tel:${apropos.telephone}`}>{apropos.telephone}</a></p>
+              )}
+              {apropos.email && (
+                <p><a href={`mailto:${apropos.email}`}>{apropos.email}</a></p>
+              )}
             </div>
           )}
         </div>
@@ -139,6 +150,15 @@ const apropos = await fetchAPropos();
     color: var(--color-text-secondary);
     line-height: 1.6;
     white-space: pre-line;
+  }
+
+  .info-bloc a {
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fade);
+  }
+
+  .info-bloc a:hover {
+    color: var(--color-text);
   }
 
   .lien-externe {

@@ -145,9 +145,13 @@ export async function fetchArticlesPresse(): Promise<ArticlePresse[]> {
 export async function fetchAPropos(): Promise<APropos | null> {
   const result = await fetchStrapi<StrapiSingleResponse<APropos>>(
     'a-propos',
-    'status=published',
+    'status=published&populate[0]=vuesGalerie',
   );
-  return result.data ?? null;
+  const data = result.data ?? null;
+  if (data && !data.vuesGalerie) {
+    data.vuesGalerie = [];
+  }
+  return data;
 }
 
 // --- Normalizers (Strapi returns null for empty media/relations) ---

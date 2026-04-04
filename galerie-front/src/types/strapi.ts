@@ -110,6 +110,10 @@ export interface APropos {
   textePrixMarcus: string | null;
   adresse: string | null;
   horaires: string | null;
+  telephone: string | null;
+  email: string | null;
+  linkedin: string | null;
+  vuesGalerie: StrapiMedia[];
 }
 
 export interface MessageContact {
