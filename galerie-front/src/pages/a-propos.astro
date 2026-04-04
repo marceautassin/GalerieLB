@@ -47,15 +47,16 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     )}
 
     {vuesGalerie.length > 0 && (
-      <div class="bandeau-galerie" aria-hidden="true">
-        <div class="bandeau-track">
-          {[...vuesGalerie, ...vuesGalerie].map((img) => (
-            <div class="bandeau-item">
-              <img src={img.url} alt="" loading="lazy" />
+      <section class="section-galerie">
+        <h2>La galerie</h2>
+        <div class="galerie-vues">
+          {vuesGalerie.slice(0, 3).map((img) => (
+            <div class="galerie-vue">
+              <img src={img.url} alt="Vue de la Galerie Louis Barrand" loading="lazy" />
             </div>
           ))}
         </div>
-      </div>
+      </section>
     )}
 
     {(apropos?.adresse || apropos?.horaires || apropos?.telephone || apropos?.email) && (
@@ -174,47 +175,58 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     color: var(--color-text);
   }
 
-  /* Bandeau déroulant — vues de la galerie */
-  .bandeau-galerie {
-    overflow: hidden;
+  /* Vues de la galerie */
+  .section-galerie {
+    margin: 0 auto var(--space-2xl);
+    max-width: 720px;
+  }
+
+  .section-galerie h2 {
+    margin-bottom: var(--space-md);
+  }
+
+  .galerie-vues {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    margin-bottom: var(--space-2xl);
+    padding: 0 var(--space-lg);
   }
 
-  .bandeau-track {
-    display: flex;
-    gap: var(--space-md);
-    width: max-content;
-    animation: defilement 40s linear infinite;
-  }
-
-  .bandeau-track:hover {
-    animation-play-state: paused;
-  }
-
-  .bandeau-item {
-    flex-shrink: 0;
-    height: 240px;
-    overflow: hidden;
-  }
-
-  .bandeau-item img {
-    height: 100%;
-    width: auto;
-    object-fit: cover;
-    display: block;
-  }
-
-  @keyframes defilement {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+  @media (min-width: 640px) {
+    .galerie-vues {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
   }
 
   @media (min-width: 768px) {
-    .bandeau-item {
-      height: 320px;
+    .galerie-vues {
+      padding: 0 var(--space-2xl);
     }
+  }
+
+  @media (min-width: 1440px) {
+    .galerie-vues {
+      padding: 0;
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+  }
+
+  .galerie-vue {
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+
+  .galerie-vue img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .lien-externe {
