@@ -13,3 +13,4 @@ galerie-front/dist/
 # Package manager
 galerie-cms/package-lock.json
 galerie-front/package-lock.json
+.playwright-mcp/
