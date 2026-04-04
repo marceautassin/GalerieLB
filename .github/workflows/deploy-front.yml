@@ -6,6 +6,10 @@ on:
     paths:
       - 'galerie-front/**'
       - '.github/workflows/deploy-front.yml'
+  workflow_run:
+    workflows: ["Deploy CMS to Clever Cloud"]
+    types: [completed]
+    branches: [master]
   repository_dispatch:
     types: [strapi-content-update]
 
@@ -21,6 +25,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
 
