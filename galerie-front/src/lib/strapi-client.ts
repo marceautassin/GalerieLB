@@ -145,7 +145,7 @@ export async function fetchArticlesPresse(): Promise<ArticlePresse[]> {
 export async function fetchAPropos(): Promise<APropos | null> {
   const result = await fetchStrapi<StrapiSingleResponse<APropos>>(
     'a-propos',
-    'status=published&populate[0]=vuesGalerie&populate[oeuvresMisesEnAvant][populate][0]=visuels&populate[oeuvresMisesEnAvant][populate][1]=artiste',
+    'status=published&populate[vuesGalerie]=true&populate[oeuvresMisesEnAvant][populate][0]=visuels&populate[oeuvresMisesEnAvant][populate][1]=artiste',
   );
   const data = result.data ?? null;
   if (data) {

@@ -6,7 +6,6 @@ import { url } from '../lib/base-url';
 
 const acquisitionsRecentes = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 const apropos = await fetchAPropos();
-const vuesGalerie = apropos?.vuesGalerie ?? [];
 const oeuvresMisesEnAvant = apropos?.oeuvresMisesEnAvant ?? [];
 const oeuvreHero = oeuvresMisesEnAvant[0] ?? acquisitionsRecentes[0] ?? null;
 const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
@@ -40,22 +39,6 @@ const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
       <a href={url('/oeuvres')} class="hero-lien">Explorer la collection</a>
     </div>
   </section>
-
-  {vuesGalerie.length > 0 && (
-    <div class="bandeau-galerie" aria-hidden="true">
-      <div class="bandeau-track">
-        {[...vuesGalerie, ...vuesGalerie].map((img, i) => (
-          <div class="bandeau-item">
-            <img
-              src={img.url}
-              alt=""
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  )}
 
   {acquisitionsRecentes.length > 0 && (
     <section class="acquisitions-recentes">
@@ -182,50 +165,6 @@ const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
 
   .hero-lien:hover::after {
     transform: translateX(4px);
-  }
-
-  /* ---- Bandeau déroulant ---- */
-
-  .bandeau-galerie {
-    overflow: hidden;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-bottom: var(--space-4xl);
-  }
-
-  .bandeau-track {
-    display: flex;
-    gap: var(--space-md);
-    width: max-content;
-    animation: defilement 40s linear infinite;
-  }
-
-  .bandeau-track:hover {
-    animation-play-state: paused;
-  }
-
-  .bandeau-item {
-    flex-shrink: 0;
-    height: 280px;
-    overflow: hidden;
-  }
-
-  .bandeau-item img {
-    height: 100%;
-    width: auto;
-    object-fit: cover;
-    display: block;
-  }
-
-  @keyframes defilement {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  @media (min-width: 768px) {
-    .bandeau-item {
-      height: 360px;
-    }
   }
 
   /* ---- Acquisitions récentes ---- */

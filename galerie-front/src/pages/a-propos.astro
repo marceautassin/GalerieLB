@@ -5,6 +5,7 @@ import { fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 
 const apropos = await fetchAPropos();
+const vuesGalerie = apropos?.vuesGalerie ?? [];
 ---
 
 <LayoutPrincipal
@@ -43,6 +44,18 @@ const apropos = await fetchAPropos();
           ))}
         </div>
       </section>
+    )}
+
+    {vuesGalerie.length > 0 && (
+      <div class="bandeau-galerie" aria-hidden="true">
+        <div class="bandeau-track">
+          {[...vuesGalerie, ...vuesGalerie].map((img) => (
+            <div class="bandeau-item">
+              <img src={img.url} alt="" loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
     )}
 
     {(apropos?.adresse || apropos?.horaires || apropos?.telephone || apropos?.email) && (
@@ -159,6 +172,49 @@ const apropos = await fetchAPropos();
 
   .info-bloc a:hover {
     color: var(--color-text);
+  }
+
+  /* Bandeau déroulant — vues de la galerie */
+  .bandeau-galerie {
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .bandeau-track {
+    display: flex;
+    gap: var(--space-md);
+    width: max-content;
+    animation: defilement 40s linear infinite;
+  }
+
+  .bandeau-track:hover {
+    animation-play-state: paused;
+  }
+
+  .bandeau-item {
+    flex-shrink: 0;
+    height: 240px;
+    overflow: hidden;
+  }
+
+  .bandeau-item img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  @keyframes defilement {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (min-width: 768px) {
+    .bandeau-item {
+      height: 320px;
+    }
   }
 
   .lien-externe {
