@@ -7,7 +7,8 @@ import { url } from '../lib/base-url';
 const acquisitionsRecentes = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 const apropos = await fetchAPropos();
 const vuesGalerie = apropos?.vuesGalerie ?? [];
-const oeuvreHero = acquisitionsRecentes[0] ?? null;
+const oeuvresMisesEnAvant = apropos?.oeuvresMisesEnAvant ?? [];
+const oeuvreHero = oeuvresMisesEnAvant[0] ?? acquisitionsRecentes[0] ?? null;
 const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
 ---
 

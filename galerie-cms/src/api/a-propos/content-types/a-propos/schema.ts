@@ -39,5 +39,10 @@ export default {
       required: false,
       allowedTypes: ["images"],
     },
+    oeuvresMisesEnAvant: {
+      type: "relation",
+      relation: "manyToMany",
+      target: "api::oeuvre.oeuvre",
+    },
   },
 };

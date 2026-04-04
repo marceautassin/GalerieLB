@@ -145,11 +145,12 @@ export async function fetchArticlesPresse(): Promise<ArticlePresse[]> {
 export async function fetchAPropos(): Promise<APropos | null> {
   const result = await fetchStrapi<StrapiSingleResponse<APropos>>(
     'a-propos',
-    'status=published&populate[0]=vuesGalerie',
+    'status=published&populate[0]=vuesGalerie&populate[oeuvresMisesEnAvant][populate][0]=visuels&populate[oeuvresMisesEnAvant][populate][1]=artiste',
   );
   const data = result.data ?? null;
-  if (data && !data.vuesGalerie) {
-    data.vuesGalerie = [];
+  if (data) {
+    data.vuesGalerie = data.vuesGalerie ?? [];
+    data.oeuvresMisesEnAvant = data.oeuvresMisesEnAvant ?? [];
   }
   return data;
 }

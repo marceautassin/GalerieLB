@@ -114,6 +114,7 @@ export interface APropos {
   email: string | null;
   linkedin: string | null;
   vuesGalerie: StrapiMedia[];
+  oeuvresMisesEnAvant: Oeuvre[];
 }
 
 export interface MessageContact {
