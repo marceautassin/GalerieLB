@@ -7,6 +7,8 @@ import { url } from '../lib/base-url';
 const acquisitionsRecentes = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 const apropos = await fetchAPropos();
 const vuesGalerie = apropos?.vuesGalerie ?? [];
+const oeuvreHero = acquisitionsRecentes[0] ?? null;
+const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
 ---
 
 <LayoutPrincipal
@@ -14,9 +16,28 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   description="Galerie d'art spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
 >
   <section class="hero">
-    <h1>Galerie Louis Barrand</h1>
-    <hr class="hero-sep" />
-    <p>Tableaux — Dessins — Estampes XIX-XXème</p>
+    {visuelHero ? (
+      <a
+        href={oeuvreHero ? url(`/oeuvres/${oeuvreHero.slug}`) : '#'}
+        class="hero-image-link"
+        aria-label={oeuvreHero ? `Voir l'œuvre : ${oeuvreHero.titre}` : undefined}
+      >
+        <img
+          src={visuelHero.url}
+          alt={oeuvreHero ? `${oeuvreHero.titre}${oeuvreHero.artiste ? `, ${oeuvreHero.artiste.nom}` : ''}` : ''}
+          loading="eager"
+          class="hero-img"
+        />
+      </a>
+    ) : (
+      <div class="hero-image-placeholder" aria-hidden="true"></div>
+    )}
+
+    <div class="hero-texte">
+      <p class="hero-surtitre">Tableaux — Dessins — Estampes XIX-XXème</p>
+      <h1>Galerie<br />Louis Barrand</h1>
+      <a href={url('/oeuvres')} class="hero-lien">Explorer la collection</a>
+    </div>
   </section>
 
   {vuesGalerie.length > 0 && (
@@ -27,7 +48,7 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
             <img
               src={img.url}
               alt=""
-              loading={i < vuesGalerie.length ? 'eager' : 'lazy'}
+              loading="lazy"
             />
           </div>
         ))}
@@ -53,41 +74,121 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
 </LayoutPrincipal>
 
 <style>
+  /* ---- Hero ---- */
+
   .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 80vh;
+    margin-bottom: var(--space-4xl);
+    /* Full-bleed : sort du conteneur */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      grid-template-columns: 3fr 2fr;
+      min-height: 85vh;
+    }
+  }
+
+  /* Image */
+  .hero-image-link,
+  .hero-image-placeholder {
+    display: block;
+    overflow: hidden;
+    min-height: 50vw;
+  }
+
+  @media (min-width: 768px) {
+    .hero-image-link,
+    .hero-image-placeholder {
+      min-height: unset;
+    }
+  }
+
+  .hero-image-placeholder {
+    background: var(--color-border);
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 800ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .hero-image-link:hover .hero-img {
+    transform: scale(1.03);
+  }
+
+  /* Texte */
+  .hero-texte {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--space-4xl) 0 var(--space-3xl);
+    justify-content: flex-end;
+    padding: var(--space-2xl) var(--space-lg);
+    background: var(--color-bg);
   }
 
-  .hero h1 {
-    font-size: clamp(2.75rem, 6vw, 5rem);
-    font-weight: 300;
-    letter-spacing: -0.01em;
-    margin-bottom: var(--space-md);
+  @media (min-width: 768px) {
+    .hero-texte {
+      padding: var(--space-4xl) var(--space-3xl);
+      justify-content: center;
+    }
   }
 
-  .hero-sep {
-    width: 48px;
-    border: none;
-    border-top: 1px solid var(--color-text);
-    margin-bottom: var(--space-md);
-  }
-
-  .hero p {
+  .hero-surtitre {
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-lg);
   }
 
-  /* Bandeau déroulant */
+  .hero-texte h1 {
+    font-size: clamp(2.75rem, 5vw, 4.5rem);
+    font-weight: 500;
+    line-height: 1.05;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .hero-lien {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    transition: color 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .hero-lien::after {
+    content: '→';
+    transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .hero-lien:hover {
+    color: var(--color-accent);
+  }
+
+  .hero-lien:hover::after {
+    transform: translateX(4px);
+  }
+
+  /* ---- Bandeau déroulant ---- */
+
   .bandeau-galerie {
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     margin-bottom: var(--space-4xl);
   }
 
@@ -105,7 +206,6 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   .bandeau-item {
     flex-shrink: 0;
     height: 280px;
-    width: auto;
     overflow: hidden;
   }
 
@@ -127,7 +227,8 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     }
   }
 
-  /* Acquisitions récentes */
+  /* ---- Acquisitions récentes ---- */
+
   .acquisitions-recentes {
     padding-bottom: var(--space-4xl);
   }
