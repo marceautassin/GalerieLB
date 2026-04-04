@@ -184,14 +184,17 @@ breadcrumbItems.push({ label: oeuvre.titre });
   }
 
   .meta-artiste a {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    text-decoration: underline;
-    transition: color var(--transition-fade);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    transition: color 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .meta-artiste a:hover {
-    color: var(--color-text);
+    color: var(--color-accent);
   }
 
   .meta-details {
@@ -213,8 +216,27 @@ breadcrumbItems.push({ label: oeuvre.titre });
   }
 
   .cta-rdv {
-    display: block;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: none;
+    color: var(--color-text);
+    border: 1px solid var(--color-text);
+    padding: 14px 28px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     margin-bottom: var(--space-xl);
+    transition: background 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
+                color 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
+                border-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .cta-rdv:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
   }
 </style>
