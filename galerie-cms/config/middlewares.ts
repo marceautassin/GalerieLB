@@ -35,6 +35,11 @@ export default [
   'strapi::query',
   'strapi::body',
   'strapi::session',
-  'strapi::favicon',
+  {
+    name: 'strapi::favicon',
+    config: {
+      path: 'public/favicon.svg',
+    },
+  },
   'strapi::public',
 ];
