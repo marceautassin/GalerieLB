@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import CarteOeuvre from '../components/CarteOeuvre.astro';
 import { fetchOeuvres, fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
+import { HERO_HOME } from '../lib/image-presets';
 
 const acquisitionsRecentes = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8 });
 const apropos = await fetchAPropos();
@@ -22,10 +24,15 @@ const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
         class="hero-image-link"
         aria-label={oeuvreHero ? `Voir l'œuvre : ${oeuvreHero.titre}` : undefined}
       >
-        <img
+        <Image
           src={visuelHero.url}
           alt={oeuvreHero ? `${oeuvreHero.titre}${oeuvreHero.artiste ? `, ${oeuvreHero.artiste.nom}` : ''}` : ''}
+          width={visuelHero.width}
+          height={visuelHero.height}
+          widths={HERO_HOME.widths}
+          sizes={HERO_HOME.sizes}
           loading="eager"
+          fetchpriority="high"
           class="hero-img"
         />
       </a>

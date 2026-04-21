@@ -7,6 +7,7 @@ import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import type { Artiste } from '../../types/strapi';
 import { fetchArtistes, fetchArtisteBySlug } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
+import { PORTRAIT_ARTISTE } from '../../lib/image-presets';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const artistes = await fetchArtistes();
@@ -54,6 +55,9 @@ const description = artiste.biographie
             alt={`Portrait de ${artiste.nom}`}
             width={artiste.photo.width}
             height={artiste.photo.height}
+            widths={PORTRAIT_ARTISTE.widths}
+            sizes={PORTRAIT_ARTISTE.sizes}
+            loading="lazy"
           />
         </div>
       )}

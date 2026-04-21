@@ -8,6 +8,7 @@ import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import { fetchExpositions } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
 import { url } from '../../lib/base-url';
+import { FICHE_VISUEL } from '../../lib/image-presets';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const expositions = await fetchExpositions();
@@ -72,13 +73,17 @@ const breadcrumbItems = [
 
     {visuels.length > 0 && (
       <div class="fiche-exposition-visuels">
-        {visuels.map((v) => (
+        {visuels.map((v, i) => (
           <div class="fiche-exposition-visuel">
             <Image
               src={v.url}
               alt={v.alternativeText ?? exposition.titre}
               width={v.width}
               height={v.height}
+              widths={FICHE_VISUEL.widths}
+              sizes={FICHE_VISUEL.sizes}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
             />
           </div>
         ))}

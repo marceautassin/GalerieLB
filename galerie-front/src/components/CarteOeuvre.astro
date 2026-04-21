@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { Oeuvre } from '../types/strapi';
 import { url } from '../lib/base-url';
+import { CARTE_GRILLE } from '../lib/image-presets';
 
 interface Props {
   oeuvre: Oeuvre;
@@ -21,6 +22,8 @@ const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
         alt={altText}
         width={visuel.width}
         height={visuel.height}
+        widths={CARTE_GRILLE.widths}
+        sizes={CARTE_GRILLE.sizes}
         loading="lazy"
       />
     ) : (

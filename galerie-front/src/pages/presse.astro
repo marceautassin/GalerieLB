@@ -4,6 +4,7 @@ import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { fetchArticlesPresse } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
+import { CARTE_GRILLE_3 } from '../lib/image-presets';
 
 const articles = await fetchArticlesPresse();
 ---
@@ -28,13 +29,16 @@ const articles = await fetchArticlesPresse();
       <ul class="liste-articles">
         {articles.map((article) => (
           <li class="carte-article">
-            {article.visuel && (
+            {article.visuel?.mime?.startsWith('image/') && (
               <div class="carte-article-visuel">
                 <Image
                   src={article.visuel.url}
                   alt={article.visuel.alternativeText ?? article.titre}
                   width={article.visuel.width}
                   height={article.visuel.height}
+                  widths={CARTE_GRILLE_3.widths}
+                  sizes={CARTE_GRILLE_3.sizes}
+                  loading="lazy"
                 />
               </div>
             )}

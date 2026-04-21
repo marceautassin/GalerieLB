@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
+import { PORTRAIT_A_PROPOS, VUE_GALERIE } from '../lib/image-presets';
 
 const apropos = await fetchAPropos();
 const vuesGalerie = apropos?.vuesGalerie ?? [];
@@ -29,9 +31,12 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
         <h2>Louis Barrand</h2>
         <div class="biographie-contenu">
           {apropos.photoLouis && (
-            <img
+            <Image
               src={apropos.photoLouis.url}
               alt={apropos.photoLouis.alternativeText ?? 'Louis Barrand, galeriste'}
+              width={PORTRAIT_A_PROPOS.width}
+              height={Math.round((PORTRAIT_A_PROPOS.width * 5) / 4)}
+              densities={PORTRAIT_A_PROPOS.densities}
               class="biographie-photo"
               loading="eager"
               fetchpriority="high"
@@ -61,9 +66,17 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
       <section class="section-galerie">
         <h2>La galerie</h2>
         <div class="galerie-vues">
-          {vuesGalerie.slice(0, 3).map((img) => (
+          {vuesGalerie.slice(0, 3).map((img, i) => (
             <div class="galerie-vue">
-              <img src={img.url} alt="Vue de la Galerie Louis Barrand" loading="lazy" />
+              <Image
+                src={img.url}
+                alt={img.alternativeText ?? `Vue ${i + 1} de la Galerie Louis Barrand`}
+                width={img.width}
+                height={img.height}
+                widths={VUE_GALERIE.widths}
+                sizes={VUE_GALERIE.sizes}
+                loading="lazy"
+              />
             </div>
           ))}
         </div>

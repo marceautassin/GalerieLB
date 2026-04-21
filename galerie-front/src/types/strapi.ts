@@ -35,6 +35,7 @@ export interface StrapiMedia {
   id: number;
   url: string;
   alternativeText: string | null;
+  mime: string | null;
   width: number;
   height: number;
   formats: {
