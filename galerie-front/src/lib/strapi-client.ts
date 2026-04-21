@@ -63,7 +63,7 @@ export async function fetchArtisteBySlug(
 ): Promise<Artiste | null> {
   const result = await fetchStrapi<StrapiResponse<Artiste>>(
     'artistes',
-    `status=published&filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=photo&populate[oeuvres][populate][0]=visuels`,
+    `status=published&filters[slug][$eq]=${encodeURIComponent(slug)}&populate[photo]=true&populate[oeuvres][populate][visuels]=true`,
   );
   const artiste = result.data[0];
   return artiste ? normalizeArtiste(artiste) : null;
@@ -101,7 +101,7 @@ export async function fetchOeuvreBySlug(slug: string): Promise<Oeuvre | null> {
 export async function fetchExpositions(): Promise<Exposition[]> {
   const result = await fetchStrapi<StrapiResponse<Exposition>>(
     'expositions',
-    'status=published&populate[0]=visuels&populate[oeuvres][populate][0]=visuels&populate[oeuvres][populate][1]=artiste&pagination[pageSize]=100',
+    'status=published&populate[visuels]=true&populate[oeuvres][populate][visuels]=true&populate[oeuvres][populate][artiste]=true&pagination[pageSize]=100',
   );
   warnIfTruncated(result.meta);
   return result.data.map(normalizeExposition);
@@ -112,7 +112,7 @@ export async function fetchExpositionBySlug(
 ): Promise<Exposition | null> {
   const result = await fetchStrapi<StrapiResponse<Exposition>>(
     'expositions',
-    `status=published&filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=visuels&populate[oeuvres][populate][0]=visuels&populate[oeuvres][populate][1]=artiste`,
+    `status=published&filters[slug][$eq]=${encodeURIComponent(slug)}&populate[visuels]=true&populate[oeuvres][populate][visuels]=true&populate[oeuvres][populate][artiste]=true`,
   );
   const exposition = result.data[0];
   return exposition ? normalizeExposition(exposition) : null;
@@ -145,7 +145,7 @@ export async function fetchArticlesPresse(): Promise<ArticlePresse[]> {
 export async function fetchAPropos(): Promise<APropos | null> {
   const result = await fetchStrapi<StrapiSingleResponse<APropos>>(
     'a-propos',
-    'status=published&populate[vuesGalerie]=true&populate[oeuvresMisesEnAvant][populate][0]=visuels&populate[oeuvresMisesEnAvant][populate][1]=artiste',
+    'status=published&populate[vuesGalerie]=true&populate[oeuvresMisesEnAvant][populate][visuels]=true&populate[oeuvresMisesEnAvant][populate][artiste]=true',
   );
   const data = result.data ?? null;
   if (data) {
