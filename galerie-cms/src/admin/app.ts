@@ -1,3 +1,5 @@
+import { installUploadInterceptor } from './upload-interceptor';
+
 export default {
   config: {
     locales: ['fr'],
@@ -5,5 +7,7 @@ export default {
       favicon: './extensions/favicon.svg',
     },
   },
-  bootstrap() {},
+  bootstrap() {
+    installUploadInterceptor();
+  },
 };

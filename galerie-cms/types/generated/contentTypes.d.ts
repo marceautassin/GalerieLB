@@ -405,11 +405,13 @@ export interface ApiAProposAPropos extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     email: Schema.Attribute.Email;
     horaires: Schema.Attribute.Text;
+    instagram: Schema.Attribute.String;
     linkedin: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::a-propos.a-propos'> &
       Schema.Attribute.Private;
     oeuvresMisesEnAvant: Schema.Attribute.Relation<'manyToMany', 'api::oeuvre.oeuvre'>;
+    photoLouis: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     telephone: Schema.Attribute.String;
     textePrixMarcus: Schema.Attribute.RichText;
