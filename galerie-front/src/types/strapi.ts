@@ -107,12 +107,14 @@ export interface APropos {
   id: number;
   documentId: string;
   biographieLouis: string | null;
+  photoLouis: StrapiMedia | null;
   textePrixMarcus: string | null;
   adresse: string | null;
   horaires: string | null;
   telephone: string | null;
   email: string | null;
   linkedin: string | null;
+  instagram: string | null;
   vuesGalerie: StrapiMedia[];
   oeuvresMisesEnAvant: Oeuvre[];
 }

@@ -15,6 +15,13 @@ export default {
     biographieLouis: {
       type: "richtext",
     },
+    photoLouis: {
+      type: "media",
+      multiple: false,
+      required: false,
+      allowedTypes: ["images"],
+      description: "Portrait du galeriste, ratio 4:5 recommandé, visage cadré avec un peu d'espace au-dessus.",
+    },
     textePrixMarcus: {
       type: "richtext",
     },
@@ -32,6 +39,11 @@ export default {
     },
     linkedin: {
       type: "string",
+    },
+    instagram: {
+      type: "string",
+      regex: "^https?://.+",
+      description: "URL complète du profil, commençant par https://",
     },
     vuesGalerie: {
       type: "media",

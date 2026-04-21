@@ -27,10 +27,21 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     {apropos?.biographieLouis && (
       <section class="section-biographie">
         <h2>Louis Barrand</h2>
-        <div class="contenu-texte">
-          {apropos.biographieLouis.split('\n').filter((p) => p.trim()).map((p) => (
-            <p>{p}</p>
-          ))}
+        <div class="biographie-contenu">
+          {apropos.photoLouis && (
+            <img
+              src={apropos.photoLouis.url}
+              alt={apropos.photoLouis.alternativeText ?? 'Louis Barrand, galeriste'}
+              class="biographie-photo"
+              loading="eager"
+              fetchpriority="high"
+            />
+          )}
+          <div class="contenu-texte">
+            {apropos.biographieLouis.split('\n').filter((p) => p.trim()).map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
         </div>
       </section>
     )}
@@ -92,14 +103,32 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
 
     <section class="section-liens-externes">
       <h2>Retrouvez-nous aussi sur</h2>
-      <a
-        href="https://www.proantic.com/galerie/galerie-louis-barrand"
-        target="_blank"
-        rel="noopener"
-        class="lien-externe"
-      >
-        Proantic &#8599;
-      </a>
+      <ul class="liens-externes-liste" role="list">
+        <li>
+          <a
+            href="https://www.proantic.com/galerie/galerie-louis-barrand"
+            target="_blank"
+            rel="noopener"
+            class="lien-externe"
+          >
+            Proantic &#8599;
+          </a>
+        </li>
+        {apropos?.instagram && (
+          <li>
+            <a href={apropos.instagram} target="_blank" rel="noopener" class="lien-externe">
+              Instagram &#8599;
+            </a>
+          </li>
+        )}
+        {apropos?.linkedin && (
+          <li>
+            <a href={apropos.linkedin} target="_blank" rel="noopener" class="lien-externe">
+              LinkedIn &#8599;
+            </a>
+          </li>
+        )}
+      </ul>
     </section>
   </article>
 </LayoutPrincipal>
@@ -142,6 +171,60 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
 
   .contenu-texte p {
     margin-bottom: var(--space-md);
+  }
+
+  .biographie-contenu {
+    display: block;
+  }
+
+  .biographie-photo {
+    display: block;
+    width: 60%;
+    max-width: 240px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 25%;
+    margin-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 640px) and (max-width: 1023.98px) {
+    .biographie-photo {
+      float: left;
+      width: 240px;
+      max-width: 240px;
+      margin-right: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .biographie-contenu::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .biographie-contenu {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    .biographie-photo {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+  }
+
+  .liens-externes-liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
   }
 
   .infos-grid {
