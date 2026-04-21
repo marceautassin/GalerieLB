@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { Image } from 'astro:assets';
 import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import Lightbox from '../../components/Lightbox.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import { fetchOeuvres } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
@@ -65,18 +65,16 @@ breadcrumbItems.push({ label: oeuvre.titre });
     <div class="fiche-oeuvre">
       <div class="fiche-oeuvre-visuel">
         {visuel ? (
-          <a href={visuel.url} target="_blank" rel="noopener" class="visuel-link">
-            <Image
-              src={visuel.url}
-              alt={altText}
-              width={visuel.width}
-              height={visuel.height}
-              widths={FICHE_OEUVRE.widths}
-              sizes={FICHE_OEUVRE.sizes}
-              loading="eager"
-              fetchpriority="high"
-            />
-          </a>
+          <Lightbox
+            src={visuel.url}
+            alt={altText}
+            width={visuel.width}
+            height={visuel.height}
+            thumbWidths={FICHE_OEUVRE.widths}
+            thumbSizes={FICHE_OEUVRE.sizes}
+            loading="eager"
+            fetchpriority="high"
+          />
         ) : (
           <div class="fiche-oeuvre-placeholder" aria-hidden="true">
             <span>{oeuvre.titre.charAt(0)}</span>
@@ -155,17 +153,6 @@ breadcrumbItems.push({ label: oeuvre.titre });
 
   .fiche-oeuvre-visuel {
     overflow: hidden;
-  }
-
-  .visuel-link {
-    display: block;
-    cursor: zoom-in;
-  }
-
-  .visuel-link img {
-    width: 100%;
-    height: auto;
-    display: block;
   }
 
   .fiche-oeuvre-placeholder {

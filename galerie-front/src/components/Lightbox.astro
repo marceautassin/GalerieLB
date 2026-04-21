@@ -1,0 +1,196 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  thumbWidths: number[];
+  thumbSizes: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  thumbWidths,
+  thumbSizes,
+  loading = 'lazy',
+  fetchpriority,
+  class: className,
+} = Astro.props;
+
+const id = `lb-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<button
+  type="button"
+  class:list={['lightbox-trigger', className]}
+  data-lightbox-trigger={id}
+  aria-label={`Agrandir : ${alt}`}
+>
+  <Image
+    src={src}
+    alt=""
+    width={width}
+    height={height}
+    widths={thumbWidths}
+    sizes={thumbSizes}
+    loading={loading}
+    fetchpriority={fetchpriority}
+  />
+</button>
+
+<dialog class="lightbox" id={id}>
+  <button type="button" class="lightbox-close" aria-label="Fermer l’image agrandie">
+    <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
+  <Image
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    widths={[1200, 1600, 2000, 2400]}
+    sizes="95vw"
+    loading="lazy"
+    class="lightbox-image"
+  />
+</dialog>
+
+<style>
+  .lightbox-trigger {
+    all: unset;
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+  }
+
+  .lightbox-trigger:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+  }
+
+  .lightbox-trigger :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(12, 12, 12, 0.94);
+    color: #fff;
+    border: none;
+    overflow: hidden;
+    cursor: zoom-out;
+  }
+
+  :global(html:has(dialog.lightbox[open])) {
+    overflow: hidden;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(12, 12, 12, 0.94);
+  }
+
+  .lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-image {
+    display: block;
+    max-width: 95vw;
+    max-height: 95vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    cursor: default;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top, 16px));
+    right: max(16px, env(safe-area-inset-right, 16px));
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.75;
+    transition: opacity 200ms;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-close:focus-visible {
+    opacity: 1;
+  }
+
+  .lightbox-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  function openLightbox(dlg: HTMLDialogElement, fallbackSrc: string | null) {
+    if (typeof dlg.showModal === 'function') {
+      dlg.showModal();
+    } else if (fallbackSrc) {
+      // Safari < 15.4 : pas de <dialog> natif, on retombe sur l'ouverture directe.
+      window.open(fallbackSrc, '_blank', 'noopener');
+    }
+  }
+
+  function initLightboxes() {
+    document.querySelectorAll<HTMLButtonElement>('[data-lightbox-trigger]').forEach((btn) => {
+      if (btn.dataset.lightboxReady === '1') return;
+      btn.dataset.lightboxReady = '1';
+      const id = btn.getAttribute('data-lightbox-trigger');
+      if (!id) return;
+      const dlg = document.getElementById(id) as HTMLDialogElement | null;
+      if (!dlg) return;
+      const fallbackSrc = dlg.querySelector('img')?.currentSrc ?? dlg.querySelector('img')?.src ?? null;
+      btn.addEventListener('click', () => openLightbox(dlg, fallbackSrc));
+    });
+
+    document.querySelectorAll<HTMLDialogElement>('dialog.lightbox').forEach((dlg) => {
+      if (dlg.dataset.lightboxReady === '1') return;
+      dlg.dataset.lightboxReady = '1';
+      const close = dlg.querySelector<HTMLButtonElement>('.lightbox-close');
+      close?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dlg.close();
+      });
+      // Backdrop click : n'accepte que si mousedown ET click ont eu lieu hors zone image.
+      // Évite la fermeture accidentelle sur un drag image → backdrop.
+      let mousedownOnBackdrop = false;
+      dlg.addEventListener('mousedown', (e) => {
+        mousedownOnBackdrop = e.target === dlg;
+      });
+      dlg.addEventListener('click', (e) => {
+        if (e.target === dlg && mousedownOnBackdrop) dlg.close();
+      });
+    });
+  }
+
+  initLightboxes();
+  document.addEventListener('astro:page-load', initLightboxes);
+</script>
