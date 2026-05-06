@@ -13,4 +13,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://www.galerie-louisbarrand.fr/sitemap-index.xml
+Sitemap: https://www.galerielouisbarrand.fr/sitemap-index.xml

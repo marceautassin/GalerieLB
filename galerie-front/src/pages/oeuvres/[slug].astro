@@ -7,6 +7,7 @@ import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import { fetchOeuvres } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
 import { FICHE_OEUVRE } from '../../lib/image-presets';
+import { buildVisualArtworkSchema, getSiteUrl } from '../../lib/seo-utils';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const oeuvres = await fetchOeuvres();
@@ -52,12 +53,19 @@ if (oeuvre.artiste) {
   breadcrumbItems.push({ label: oeuvre.artiste.nom, href: url(`/artistes/${oeuvre.artiste.slug}`) });
 }
 breadcrumbItems.push({ label: oeuvre.titre });
+
+const siteUrl = getSiteUrl(Astro.site);
+const schema = buildVisualArtworkSchema({ siteUrl, oeuvre });
+const titreSeo = artisteNom
+  ? `${oeuvre.titre} — ${artisteNom} — Galerie Louis Barrand`
+  : `${oeuvre.titre} — Galerie Louis Barrand`;
 ---
 
 <LayoutPrincipal
-  title={`${oeuvre.titre} — Galerie Louis Barrand`}
+  title={titreSeo}
   description={description}
   ogImage={visuel?.url}
+  schema={schema}
 >
   <article class="fiche-oeuvre-page">
     <Breadcrumb items={breadcrumbItems} />

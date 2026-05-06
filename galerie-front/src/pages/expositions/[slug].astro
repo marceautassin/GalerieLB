@@ -5,10 +5,11 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
-import { fetchExpositions } from '../../lib/strapi-client';
+import { fetchExpositions, fetchAPropos } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
 import { url } from '../../lib/base-url';
 import { FICHE_VISUEL } from '../../lib/image-presets';
+import { buildExhibitionEventSchema, getSiteUrl, stripHtml } from '../../lib/seo-utils';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const expositions = await fetchExpositions();
@@ -48,7 +49,7 @@ function truncateAtWord(text: string, maxLen: number): string {
 }
 
 const descParts = [exposition.titre, dates];
-if (exposition.preface) descParts.push(exposition.preface.replace(/<[^>]*>/g, ''));
+if (exposition.preface) descParts.push(stripHtml(exposition.preface));
 const description = truncateAtWord(descParts.join(' — '), 160);
 
 const breadcrumbItems = [
@@ -56,12 +57,17 @@ const breadcrumbItems = [
   { label: 'Expositions', href: url('/expositions') },
   { label: exposition.titre },
 ];
+
+const apropos = await fetchAPropos();
+const siteUrl = getSiteUrl(Astro.site);
+const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
 ---
 
 <LayoutPrincipal
   title={`${exposition.titre} — Galerie Louis Barrand`}
   description={description}
   ogImage={visuelPrincipal?.url}
+  schema={schema}
 >
   <article class="fiche-exposition-page">
     <Breadcrumb items={breadcrumbItems} />

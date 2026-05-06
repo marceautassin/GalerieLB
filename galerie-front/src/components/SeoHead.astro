@@ -5,21 +5,24 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   canonicalUrl?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
   description,
-  ogImage = '/og-default.jpg',
+  ogImage = '/logo.svg',
   ogType = 'website',
   canonicalUrl,
+  schema,
 } = Astro.props;
 
 import { url } from '../lib/base-url';
+import { getSiteUrl, jsonLdSafe } from '../lib/seo-utils';
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const siteUrl = getSiteUrl(Astro.site);
 const canonical = canonicalUrl ?? Astro.url.href;
-const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+const ogImageUrl = /^https?:\/\//i.test(ogImage) ? ogImage : `${siteUrl}${ogImage}`;
 ---
 
 <meta charset="utf-8" />
@@ -47,3 +50,7 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+
+{schema && (
+  <script type="application/ld+json" is:inline set:html={jsonLdSafe(schema)} />
+)}

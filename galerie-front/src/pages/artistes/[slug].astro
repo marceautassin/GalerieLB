@@ -8,6 +8,7 @@ import type { Artiste } from '../../types/strapi';
 import { fetchArtistes, fetchArtisteBySlug } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
 import { PORTRAIT_ARTISTE } from '../../lib/image-presets';
+import { buildPersonSchema, getSiteUrl } from '../../lib/seo-utils';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const artistes = await fetchArtistes();
@@ -34,11 +35,15 @@ function truncateAtWord(text: string, maxLen: number): string {
 const description = artiste.biographie
   ? truncateAtWord(artiste.biographie, 160)
   : `Découvrez ${artiste.nom} à la Galerie Louis Barrand.`;
+
+const siteUrl = getSiteUrl(Astro.site);
+const schema = buildPersonSchema({ siteUrl, artiste });
 ---
 
 <LayoutPrincipal
   title={`${artiste.nom} — Galerie Louis Barrand`}
   description={description}
+  schema={schema}
 >
   <article class="fiche-artiste">
     <Breadcrumb items={[

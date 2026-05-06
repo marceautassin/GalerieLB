@@ -10,9 +10,10 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   canonicalUrl?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, ogImage, ogType, canonicalUrl } = Astro.props;
+const { title, description, ogImage, ogType, canonicalUrl, schema } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -24,6 +25,7 @@ const { title, description, ogImage, ogType, canonicalUrl } = Astro.props;
     ogImage={ogImage}
     ogType={ogType}
     canonicalUrl={canonicalUrl}
+    schema={schema}
   />
   <slot name="head" />
 </head>

@@ -1,20 +1,20 @@
 # Galerie Louis Barrand
 
-## About
-Galerie Louis Barrand is an art gallery based in France, specializing in modern and contemporary art.
+> Galerie d'art parisienne fondée par Louis Barrand, lauréat du Prix Marcus, spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles. Peinture, dessin, estampe.
 
-## Content
-- Artists: Biographies and portfolios of represented artists
-- Works: Paintings, sculptures, and other artworks with detailed descriptions
-- Exhibitions: Current and past exhibitions with dates and descriptions
-- Press: Press articles and media coverage
-- About: Gallery history, Marcus Prize, and practical information
-- Contact: Inquiry form for appointments and information
+## Pages principales
 
-## Site Structure
-- /artistes - Artist listings and individual profiles
-- /oeuvres - Artwork catalog with thematic navigation
-- /expositions - Exhibition listings and details
-- /a-propos - About the gallery
-- /presse - Press section
-- /contact - Contact form
+- [Artistes](https://www.galerielouisbarrand.fr/artistes): Artistes représentés par la galerie — biographies et portfolios
+- [Œuvres](https://www.galerielouisbarrand.fr/oeuvres): Catalogue complet des œuvres disponibles — peintures, dessins, estampes
+- [Expositions](https://www.galerielouisbarrand.fr/expositions): Expositions en cours et passées
+- [À propos](https://www.galerielouisbarrand.fr/a-propos): Histoire de la galerie, parcours de Louis Barrand, Prix Marcus
+- [Presse](https://www.galerielouisbarrand.fr/presse): Articles de presse et couverture média
+- [Contact](https://www.galerielouisbarrand.fr/contact): Formulaire de prise de rendez-vous
+
+## Contenu détaillé
+
+- [llms-full.txt](https://www.galerielouisbarrand.fr/llms-full.txt): Contenu intégral du site — listes complètes d'artistes, œuvres, expositions et informations sur la galerie
+
+## Spécialité
+
+Redécouverte et mise en valeur d'artistes oubliés des XIXe et XXe siècles. La galerie propose des œuvres de peinture, de dessin et d'estampe, avec une expertise reconnue (Prix Marcus). Située à Paris, elle organise des expositions thématiques régulières et accompagne collectionneurs et institutions dans la constitution de leurs ensembles.
