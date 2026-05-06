@@ -41,8 +41,7 @@ jobs:
           STRAPI_API_URL: ${{ secrets.STRAPI_API_URL }}
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
           PUBLIC_STRAPI_API_URL: ${{ secrets.STRAPI_API_URL }}
-          SITE_URL: https://marceautassin.github.io
-          BASE_PATH: /GalerieLB
+          SITE_URL: https://www.galerielouisbarrand.fr
         run: |
           yarn install --frozen-lockfile
           yarn build
