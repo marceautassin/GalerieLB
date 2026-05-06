@@ -11,8 +11,8 @@ export default {
   async afterCreate(event: { result: Record<string, string | null> }) {
     const { result } = event;
 
-    const { SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, NOTIFICATION_EMAIL } = process.env;
-    if (!SMTP_HOST || !SMTP_USERNAME || !SMTP_PASSWORD || !NOTIFICATION_EMAIL) {
+    const { SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, NOTIFICATION_EMAIL, EMAIL_FROM } = process.env;
+    if (!SMTP_HOST || !SMTP_USERNAME || !SMTP_PASSWORD || !NOTIFICATION_EMAIL || !EMAIL_FROM) {
       console.warn('[message-contact] SMTP non configuré — email de notification non envoyé.');
       return;
     }
@@ -28,7 +28,7 @@ export default {
 
     try {
       await transporter.sendMail({
-        from: `"Galerie Louis Barrand" <${SMTP_USERNAME}>`,
+        from: EMAIL_FROM,
         to: NOTIFICATION_EMAIL,
         subject: `Nouveau message de ${result.nom}`,
         text: [
