@@ -74,11 +74,15 @@ export async function fetchArtisteBySlug(
 export async function fetchOeuvres(options?: {
   sort?: string;
   limit?: number;
+  hasVisuels?: boolean;
 }): Promise<Oeuvre[]> {
   let query =
     'status=published&populate[0]=visuels&populate[1]=artiste&populate[2]=thematiques&populate[3]=expositions';
   if (options?.sort) {
     query += `&sort=${options.sort}`;
+  }
+  if (options?.hasVisuels) {
+    query += '&filters[visuels][id][$notNull]=true';
   }
   const pageSize = options?.limit ?? 100;
   query += `&pagination[pageSize]=${pageSize}`;
