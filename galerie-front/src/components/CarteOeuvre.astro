@@ -31,12 +31,8 @@ const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
         <span>{oeuvre.titre.charAt(0)}</span>
       </div>
     )}
-    <div class="carte-oeuvre-overlay">
-      <span class="carte-oeuvre-titre">{oeuvre.titre}</span>
-      {artisteNom && <span class="carte-oeuvre-artiste">{artisteNom}</span>}
-    </div>
   </div>
-  <div class="carte-oeuvre-info-mobile">
+  <div class="carte-oeuvre-info">
     <span class="carte-oeuvre-titre">{oeuvre.titre}</span>
     {artisteNom && <span class="carte-oeuvre-artiste">{artisteNom}</span>}
   </div>
@@ -64,11 +60,11 @@ const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 600ms cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: transform 800ms cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .carte-oeuvre:hover .carte-oeuvre-image img {
-    transform: scale(1.04);
+    transform: scale(1.02);
   }
 
   .carte-oeuvre-placeholder {
@@ -83,73 +79,27 @@ const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
     font-weight: 700;
   }
 
-  /* Desktop overlay */
-  .carte-oeuvre-overlay {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: var(--space-lg);
-    background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.55));
-    opacity: 0;
-    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
-    color: var(--color-bg);
-  }
-
-  @media (min-width: 768px) {
-    .carte-oeuvre-overlay {
-      display: flex;
-    }
-  }
-
-  .carte-oeuvre:hover .carte-oeuvre-overlay {
-    opacity: 1;
-  }
-
-  .carte-oeuvre-overlay .carte-oeuvre-titre {
-    font-family: var(--font-heading);
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-
-  .carte-oeuvre-overlay .carte-oeuvre-artiste {
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.75;
-    margin-top: 2px;
-  }
-
-  /* Mobile info (always visible) */
-  .carte-oeuvre-info-mobile {
+  /* Info sous l'image, toujours visible (mobile + desktop) */
+  .carte-oeuvre-info {
     display: flex;
     flex-direction: column;
-    padding: var(--space-sm) 0;
+    padding: var(--space-md) 0 var(--space-sm);
   }
 
-  @media (min-width: 768px) {
-    .carte-oeuvre-info-mobile {
-      display: none;
-    }
-  }
-
-  .carte-oeuvre-info-mobile .carte-oeuvre-titre {
+  .carte-oeuvre-info .carte-oeuvre-titre {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: 500;
     color: var(--color-text);
   }
 
-  .carte-oeuvre-info-mobile .carte-oeuvre-artiste {
+  .carte-oeuvre-info .carte-oeuvre-artiste {
     font-family: var(--font-body);
     font-size: 0.6875rem;
     font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-text-tertiary);
-    margin-top: 2px;
+    margin-top: 4px;
   }
 </style>

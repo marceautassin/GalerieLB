@@ -154,6 +154,33 @@ const navLinks = [
     padding: 8px 20px;
   }
 
+  /* iPad portrait & petits desktop : compact mode */
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .logo {
+      font-size: 1.125rem;
+    }
+    .logo-img {
+      height: 32px;
+    }
+    .nav-desktop ul {
+      gap: var(--space-md);
+    }
+    .nav-desktop a {
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
+    .nav-cta {
+      background: none;
+      color: var(--color-text);
+      border: none;
+      padding: 8px 0;
+    }
+    .nav-cta:hover {
+      background: none;
+      color: var(--color-text-secondary);
+    }
+  }
+
   /* Burger button */
   .burger {
     display: flex;
