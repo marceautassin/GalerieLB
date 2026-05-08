@@ -86,10 +86,10 @@ development_status:
   # Epic Upload Images (ajouté hors plan initial)
   # Spec : _bmad-output/planning-artifacts/epic-upload-images.md
   # Stories : _bmad-output/planning-artifacts/stories/
-  epic-upload-images: in-progress
-  upload-1-patch-upload-guideline: in-progress
+  epic-upload-images: done  # clôturé 2026-05-08 — upload validé par Louis, RAM non bloquante
+  upload-1-patch-upload-guideline: done
   upload-2-resize-navigateur: done
   upload-3-astro-image: done
-  upload-4-investigation-ram: backlog
-  upload-5-optimisation-ram: backlog  # conditionnelle (dépend de Story 4)
+  upload-4-investigation-ram: cancelled  # plus nécessaire — pas de crash en pratique
+  upload-5-optimisation-ram: cancelled
   epic-upload-images-retrospective: optional

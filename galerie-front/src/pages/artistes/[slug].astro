@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CarteOeuvre from '../../components/CarteOeuvre.astro';
+import RichText from '../../components/RichText.astro';
 import type { Artiste } from '../../types/strapi';
 import { fetchArtistes, fetchArtisteBySlug } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
@@ -70,9 +71,7 @@ const schema = buildPersonSchema({ siteUrl, artiste });
         <h1>{artiste.nom}</h1>
         {artiste.biographie && (
           <div class="fiche-artiste-bio">
-            {artiste.biographie.split('\n').filter((p) => p.trim()).map((p) => (
-              <p>{p}</p>
-            ))}
+            <RichText content={artiste.biographie} />
           </div>
         )}
       </div>
@@ -81,9 +80,7 @@ const schema = buildPersonSchema({ siteUrl, artiste });
     {artiste.contexteArtistique && (
       <section class="fiche-artiste-contexte">
         <h2>Contexte artistique</h2>
-        {artiste.contexteArtistique.split('\n').filter((p) => p.trim()).map((p) => (
-          <p>{p}</p>
-        ))}
+        <RichText content={artiste.contexteArtistique} />
       </section>
     )}
 
@@ -150,27 +147,12 @@ const schema = buildPersonSchema({ siteUrl, artiste });
     margin-bottom: var(--space-md);
   }
 
-  .fiche-artiste-bio {
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-  }
-
-  .fiche-artiste-bio p {
-    margin-bottom: var(--space-sm);
-  }
-
   .fiche-artiste-contexte {
     margin: var(--space-2xl) 0;
   }
 
   .fiche-artiste-contexte h2 {
     margin-bottom: var(--space-md);
-  }
-
-  .fiche-artiste-contexte p {
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-    margin-bottom: var(--space-sm);
   }
 
   .fiche-artiste-lien-externe {

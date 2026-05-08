@@ -217,3 +217,61 @@ h6 {
   width: 100vw;
   margin-inline: calc(50% - 50vw);
 }
+
+/* ---------- Rich Text (Markdown rendu depuis Strapi) ---------- */
+
+.rich-text {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.rich-text > * + * {
+  margin-top: var(--space-md);
+}
+
+.rich-text strong {
+  font-weight: 500;
+}
+
+.rich-text em {
+  font-style: italic;
+}
+
+.rich-text ul,
+.rich-text ol {
+  padding-left: var(--space-lg);
+}
+
+.rich-text ul {
+  list-style: disc;
+}
+
+.rich-text ol {
+  list-style: decimal;
+}
+
+.rich-text li + li {
+  margin-top: var(--space-xs);
+}
+
+.rich-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--transition-default);
+}
+
+.rich-text a:hover {
+  color: var(--color-accent);
+}
+
+.rich-text blockquote {
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--color-border);
+  font-style: italic;
+  color: var(--color-text-secondary);
+}

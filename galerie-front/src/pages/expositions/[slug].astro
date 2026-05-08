@@ -5,6 +5,7 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
+import RichText from '../../components/RichText.astro';
 import { fetchExpositions, fetchAPropos } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
 import { url } from '../../lib/base-url';
@@ -97,7 +98,9 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
     )}
 
     {exposition.preface && (
-      <div class="fiche-exposition-preface" set:html={exposition.preface} />
+      <div class="fiche-exposition-preface">
+        <RichText content={exposition.preface} />
+      </div>
     )}
 
     <a href={url(`/contact?exposition=${exposition.slug}`)} class="btn-primary cta-contact">
@@ -166,9 +169,6 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
   }
 
   .fiche-exposition-preface {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: var(--color-text);
     margin-bottom: var(--space-2xl);
     max-width: 75ch;
   }

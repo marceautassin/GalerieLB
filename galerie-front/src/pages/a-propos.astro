@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import RichText from '../components/RichText.astro';
 import { fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 import { PORTRAIT_A_PROPOS, VUE_GALERIE } from '../lib/image-presets';
@@ -43,9 +44,7 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
             />
           )}
           <div class="contenu-texte">
-            {apropos.biographieLouis.split('\n').filter((p) => p.trim()).map((p) => (
-              <p>{p}</p>
-            ))}
+            <RichText content={apropos.biographieLouis} />
           </div>
         </div>
       </section>
@@ -55,9 +54,7 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
       <section class="section-prix-marcus">
         <h2>Prix Marcus et expertise</h2>
         <div class="contenu-texte">
-          {apropos.textePrixMarcus.split('\n').filter((p) => p.trim()).map((p) => (
-            <p>{p}</p>
-          ))}
+          <RichText content={apropos.textePrixMarcus} />
         </div>
       </section>
     )}
@@ -174,15 +171,6 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   .section-prix-marcus h2,
   .section-infos-pratiques h2,
   .section-liens-externes h2 {
-    margin-bottom: var(--space-md);
-  }
-
-  .contenu-texte {
-    color: var(--color-text-secondary);
-    line-height: 1.8;
-  }
-
-  .contenu-texte p {
     margin-bottom: var(--space-md);
   }
 

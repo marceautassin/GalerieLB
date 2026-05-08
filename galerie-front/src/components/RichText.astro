@@ -1,0 +1,26 @@
+---
+import { marked } from 'marked';
+import DOMPurify from 'isomorphic-dompurify';
+
+interface Props {
+  content?: string | null;
+}
+
+const { content } = Astro.props;
+
+const ALLOWED_TAGS = ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'a', 'blockquote'];
+const ALLOWED_ATTR = ['href', 'target', 'rel'];
+
+let html: string | null = null;
+
+if (content && content.trim().length > 0) {
+  const raw = marked.parse(content, { breaks: true, gfm: true, async: false }) as string;
+  const withTargets = raw.replace(
+    /<a href="(https?:\/\/[^"]+)"/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer"'
+  );
+  html = DOMPurify.sanitize(withTargets, { ALLOWED_TAGS, ALLOWED_ATTR });
+}
+---
+
+{html && <div class="rich-text" set:html={html} />}

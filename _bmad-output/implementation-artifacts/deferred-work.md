@@ -1,5 +1,24 @@
 # Deferred Work
 
+## Defered le 2026-05-08 — Durcissement composant `<RichText>` (post-review)
+
+Findings de la review adversariale de la spec `rich-text-cms` (blind + edge case hunters), classés `defer` car bord de cas et impact faible — Louis ne saisit que du Markdown éditorial classique.
+
+### Robustesse de la regex post-process des liens
+Dans `RichText.astro`, la regex qui ajoute `target="_blank" rel="noopener noreferrer"` est `/<a href="(https?:\/\/[^"]+)"/g`. Limites identifiées :
+- Si `marked` change l'ordre des attributs (ex: `<a title="x" href="...">`), la regex ne matche plus → pas d'ajout `target/rel`. Aujourd'hui marked v18 émet bien `href` en premier, mais c'est fragile.
+- URL contenant un guillemet échappé (`https://x.com/?q="evil`) : la regex tronque au premier `"`. Cas extrême, lien cassé silencieusement.
+- Pas d'ajout de `target/rel` sur `mailto:` / `tel:` (volontaire — comportement OK).
+- **Action** : remplacer la regex par un walker DOM (`linkedom` ou DOMPurify hook `uponSanitizeAttribute`) lors d'une passe sécurité.
+
+### Vérification du filtre URI DOMPurify
+DOMPurify v3 bloque `javascript:` / `data:` / `vbscript:` par défaut via `ALLOWED_URI_REGEXP`, mais ce n'est pas explicite dans la config. À confirmer par un test d'injection (`[click](javascript:alert(1))`) après mise en prod.
+
+### Régression potentielle sur `exposition.preface`
+Le rendu précédent utilisait `set:html` brut → si une préface en base contient du HTML inline (ex: `<h2>`, `<img>`, `<iframe>`), elle est désormais strippée par DOMPurify. Marceau a testé en local et validé visuellement, mais surveiller en prod sur les anciennes expositions.
+
+---
+
 ## Defered le 2026-05-07 — Findings de review spec `gabrielle-containers-hasvisuels`
 
 Surfacés par les 3 reviewers (blind / edge / acceptance) lors du step-04. Classés `defer` car non causés par cette spec ou explicitement hors scope.
