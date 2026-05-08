@@ -12,8 +12,17 @@ export default {
   },
   pluginOptions: {},
   attributes: {
+    accroche: {
+      type: "text",
+    },
     biographieLouis: {
       type: "richtext",
+    },
+    citation: {
+      type: "richtext",
+    },
+    citationAuteur: {
+      type: "string",
     },
     photoLouis: {
       type: "media",

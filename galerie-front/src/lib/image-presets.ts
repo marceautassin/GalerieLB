@@ -56,10 +56,10 @@ export const PORTRAIT_ARTISTE: ImagePreset = {
   sizes: '(max-width: 768px) 100vw, 320px',
 };
 
-/** Portrait galeriste sur /a-propos — taille fixe 240/280 px, variations par DPR. */
+/** Portrait galeriste sur /a-propos — taille fixe ~520 px desktop (grid 3fr/5fr), variations par DPR. */
 export const PORTRAIT_A_PROPOS: DensityPreset = {
   densities: [1, 2, 3],
-  width: 280,
+  width: 520,
 };
 
 /** Vues galerie en bandeau 3 colonnes full-bleed. */

@@ -3,12 +3,16 @@ import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import RichText from '../components/RichText.astro';
+import Citation from '../components/Citation.astro';
 import { fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 import { PORTRAIT_A_PROPOS, VUE_GALERIE } from '../lib/image-presets';
 
 const apropos = await fetchAPropos();
 const vuesGalerie = apropos?.vuesGalerie ?? [];
+const accroche = apropos?.accroche?.trim() ? apropos.accroche : null;
+const showCitation = !!(apropos?.citation?.trim() && apropos?.citationAuteur?.trim());
+const hasPhotoLouis = !!apropos?.photoLouis;
 ---
 
 <LayoutPrincipal
@@ -16,44 +20,67 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   description="Découvrez le parcours de Louis Barrand, lauréat du Prix Marcus, et les informations pratiques de la Galerie Louis Barrand."
 >
   <article class="page-a-propos">
-    <Breadcrumb items={[
-      { label: 'Accueil', href: url('/') },
-      { label: 'À propos' },
-    ]} />
+    <div class="container--edge">
+      <Breadcrumb items={[
+        { label: 'Accueil', href: url('/') },
+        { label: 'À propos' },
+      ]} />
+    </div>
 
-    <h1>À propos</h1>
+    <section class="section-entete">
+      <div class="container--edge">
+        <h1>À propos</h1>
+        {accroche && (
+          <p class="accroche">{accroche}</p>
+        )}
+      </div>
+    </section>
 
     {!apropos && (
-      <p class="empty">Contenu en cours de rédaction.</p>
+      <div class="container--prose">
+        <p class="empty">Contenu en cours de rédaction.</p>
+      </div>
     )}
 
     {apropos?.biographieLouis && (
       <section class="section-biographie">
-        <h2>Louis Barrand</h2>
-        <div class="biographie-contenu">
-          {apropos.photoLouis && (
-            <Image
-              src={apropos.photoLouis.url}
-              alt={apropos.photoLouis.alternativeText ?? 'Louis Barrand, galeriste'}
-              width={PORTRAIT_A_PROPOS.width}
-              height={Math.round((PORTRAIT_A_PROPOS.width * 5) / 4)}
-              densities={PORTRAIT_A_PROPOS.densities}
-              class="biographie-photo"
-              loading="eager"
-              fetchpriority="high"
-            />
-          )}
-          <div class="contenu-texte">
-            <RichText content={apropos.biographieLouis} />
+        <div class="container--edge">
+          <div class={`biographie-grid${hasPhotoLouis ? '' : ' biographie-grid--solo'}`}>
+            {apropos.photoLouis && (
+              <div class="biographie-photo-wrap">
+                <Image
+                  src={apropos.photoLouis.url}
+                  alt={apropos.photoLouis.alternativeText ?? 'Louis Barrand, galeriste'}
+                  width={PORTRAIT_A_PROPOS.width}
+                  height={Math.round((PORTRAIT_A_PROPOS.width * 5) / 4)}
+                  densities={PORTRAIT_A_PROPOS.densities}
+                  class="biographie-photo"
+                  loading="eager"
+                  fetchpriority="high"
+                />
+              </div>
+            )}
+            <div class="biographie-texte">
+              <h2>Louis Barrand</h2>
+              <RichText content={apropos.biographieLouis} />
+            </div>
           </div>
+        </div>
+      </section>
+    )}
+
+    {showCitation && (
+      <section class="section-citation">
+        <div class="container--prose">
+          <Citation texte={apropos!.citation!} auteur={apropos!.citationAuteur!} />
         </div>
       </section>
     )}
 
     {apropos?.textePrixMarcus && (
       <section class="section-prix-marcus">
-        <h2>Prix Marcus et expertise</h2>
-        <div class="contenu-texte">
+        <div class="container--edge">
+          <h2>Prix Marcus et expertise</h2>
           <RichText content={apropos.textePrixMarcus} />
         </div>
       </section>
@@ -61,97 +88,186 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
 
     {vuesGalerie.length > 0 && (
       <section class="section-galerie">
-        <h2>La galerie</h2>
-        <div class="galerie-vues">
-          {vuesGalerie.slice(0, 3).map((img, i) => (
-            <div class="galerie-vue">
-              <Image
-                src={img.url}
-                alt={img.alternativeText ?? `Vue ${i + 1} de la Galerie Louis Barrand`}
-                width={img.width}
-                height={img.height}
-                widths={VUE_GALERIE.widths}
-                sizes={VUE_GALERIE.sizes}
-                loading="lazy"
-              />
-            </div>
-          ))}
+        <div class="container--edge">
+          <h2>La galerie</h2>
+          <div class="galerie-vues">
+            {vuesGalerie.slice(0, 3).map((img, i) => (
+              <div class="galerie-vue">
+                <Image
+                  src={img.url}
+                  alt={img.alternativeText ?? `Vue ${i + 1} de la Galerie Louis Barrand`}
+                  width={img.width}
+                  height={img.height}
+                  widths={VUE_GALERIE.widths}
+                  sizes={VUE_GALERIE.sizes}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     )}
 
     {(apropos?.adresse || apropos?.horaires || apropos?.telephone || apropos?.email) && (
       <section class="section-infos-pratiques">
-        <h2>Informations pratiques</h2>
-        <div class="infos-grid">
-          {apropos.adresse && (
-            <div class="info-bloc">
-              <h3>Adresse</h3>
-              <p>{apropos.adresse}</p>
-            </div>
-          )}
-          {apropos.horaires && (
-            <div class="info-bloc">
-              <h3>Horaires</h3>
-              <p>{apropos.horaires}</p>
-            </div>
-          )}
-          {(apropos.telephone || apropos.email) && (
-            <div class="info-bloc">
-              <h3>Contact</h3>
-              {apropos.telephone && (
-                <p><a href={`tel:${apropos.telephone}`}>{apropos.telephone}</a></p>
-              )}
-              {apropos.email && (
-                <p><a href={`mailto:${apropos.email}`}>{apropos.email}</a></p>
-              )}
-            </div>
-          )}
+        <div class="container--edge">
+          <h2>Informations pratiques</h2>
+          <div class="infos-grid">
+            {apropos.adresse && (
+              <div class="info-bloc">
+                <h3>Adresse</h3>
+                <p>{apropos.adresse}</p>
+              </div>
+            )}
+            {apropos.horaires && (
+              <div class="info-bloc">
+                <h3>Horaires</h3>
+                <p>{apropos.horaires}</p>
+              </div>
+            )}
+            {(apropos.telephone || apropos.email) && (
+              <div class="info-bloc">
+                <h3>Contact</h3>
+                {apropos.telephone && (
+                  <p><a href={`tel:${apropos.telephone}`}>{apropos.telephone}</a></p>
+                )}
+                {apropos.email && (
+                  <p><a href={`mailto:${apropos.email}`}>{apropos.email}</a></p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
     )}
 
     <section class="section-liens-externes">
-      <h2>Retrouvez-nous aussi sur</h2>
-      <ul class="liens-externes-liste" role="list">
-        <li>
-          <a
-            href="https://www.proantic.com/galerie/galerie-louis-barrand"
-            target="_blank"
-            rel="noopener"
-            class="lien-externe"
-          >
-            Proantic &#8599;
-          </a>
-        </li>
-        {apropos?.instagram && (
+      <div class="container--edge">
+        <h2>Retrouvez-nous aussi sur</h2>
+        <ul class="liens-externes-liste" role="list">
           <li>
-            <a href={apropos.instagram} target="_blank" rel="noopener" class="lien-externe">
-              Instagram &#8599;
+            <a
+              href="https://www.proantic.com/galerie/galerie-louis-barrand"
+              target="_blank"
+              rel="noopener"
+              class="lien-externe"
+            >
+              Proantic &#8599;
             </a>
           </li>
-        )}
-        {apropos?.linkedin && (
-          <li>
-            <a href={apropos.linkedin} target="_blank" rel="noopener" class="lien-externe">
-              LinkedIn &#8599;
-            </a>
-          </li>
-        )}
-      </ul>
+          {apropos?.instagram && (
+            <li>
+              <a href={apropos.instagram} target="_blank" rel="noopener" class="lien-externe">
+                Instagram &#8599;
+              </a>
+            </li>
+          )}
+          {apropos?.linkedin && (
+            <li>
+              <a href={apropos.linkedin} target="_blank" rel="noopener" class="lien-externe">
+                LinkedIn &#8599;
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
     </section>
   </article>
 </LayoutPrincipal>
 
 <style>
   .page-a-propos {
-    padding-bottom: var(--space-2xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  /* ---------- Section 1 — En-tête éditorial ---------- */
+
+  .section-entete {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-4xl);
   }
 
   .page-a-propos h1 {
-    margin: var(--space-2xl) 0 var(--space-xl);
-    text-align: center;
+    text-align: left;
+    margin: 0 0 var(--space-xl);
   }
+
+  .accroche {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    max-width: 28em;
+    margin: 0;
+  }
+
+  /* ---------- Sections — espacement éditorial ---------- */
+
+  .section-biographie,
+  .section-citation,
+  .section-prix-marcus,
+  .section-galerie,
+  .section-infos-pratiques,
+  .section-liens-externes {
+    margin-bottom: var(--space-4xl);
+  }
+
+  .section-biographie h2,
+  .section-prix-marcus h2,
+  .section-galerie h2,
+  .section-infos-pratiques h2,
+  .section-liens-externes h2 {
+    margin-bottom: var(--space-xl);
+  }
+
+  /* ---------- Section 2 — Bio Louis (grid 3fr/5fr) ---------- */
+
+  .biographie-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .biographie-photo-wrap {
+    width: 100%;
+  }
+
+  .biographie-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .biographie-texte {
+    max-width: 56ch;
+  }
+
+  .biographie-texte h2 {
+    /* Compense le leading (line-height 1.15) pour aligner le cap-top du
+       titre avec le bord supérieur de la photo. */
+    margin-top: -0.12em;
+    margin-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 900px) {
+    .biographie-grid {
+      grid-template-columns: 3fr 5fr;
+      gap: var(--space-2xl);
+    }
+
+    .biographie-grid--solo {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Section "empty" ---------- */
 
   .empty {
     color: var(--color-text-secondary);
@@ -159,89 +275,23 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     padding: var(--space-2xl) 0;
   }
 
-  .section-biographie,
-  .section-prix-marcus,
-  .section-infos-pratiques,
-  .section-liens-externes {
-    margin: 0 auto var(--space-2xl);
-    max-width: 720px;
-  }
-
-  .section-biographie h2,
-  .section-prix-marcus h2,
-  .section-infos-pratiques h2,
-  .section-liens-externes h2 {
-    margin-bottom: var(--space-md);
-  }
-
-  .biographie-contenu {
-    display: block;
-  }
-
-  .biographie-photo {
-    display: block;
-    width: 60%;
-    max-width: 240px;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: center 25%;
-    margin-bottom: var(--space-lg);
-  }
-
-  @media (min-width: 640px) and (max-width: 1023.98px) {
-    .biographie-photo {
-      float: left;
-      width: 240px;
-      max-width: 240px;
-      margin-right: var(--space-lg);
-      margin-bottom: var(--space-md);
-    }
-
-    .biographie-contenu::after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .biographie-contenu {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: var(--space-xl);
-      align-items: start;
-    }
-
-    .biographie-photo {
-      width: 100%;
-      max-width: none;
-      margin: 0;
-    }
-  }
-
-  .liens-externes-liste {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md) var(--space-lg);
-  }
+  /* ---------- Section 6 — Infos pratiques ---------- */
 
   .infos-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    gap: var(--space-xl);
   }
 
   @media (min-width: 640px) {
     .infos-grid {
       grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
     }
   }
 
   .info-bloc h3 {
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-md);
   }
 
   .info-bloc p {
@@ -256,48 +306,25 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   }
 
   .info-bloc a:hover {
-    color: var(--color-text);
+    color: var(--color-accent);
   }
 
-  /* Vues de la galerie */
-  .section-galerie {
-    margin: 0 auto var(--space-2xl);
-    max-width: 720px;
-  }
+  /* ---------- Section 5 — Vues galerie ---------- */
 
   .section-galerie h2 {
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-2xl);
   }
 
   .galerie-vues {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    padding: 0 var(--space-lg);
   }
 
   @media (min-width: 640px) {
     .galerie-vues {
       grid-template-columns: repeat(3, 1fr);
       gap: var(--space-lg);
-    }
-  }
-
-  @media (min-width: 768px) {
-    .galerie-vues {
-      padding: 0 var(--space-2xl);
-    }
-  }
-
-  @media (min-width: 1440px) {
-    .galerie-vues {
-      padding: 0;
-      max-width: var(--max-width);
-      margin-left: auto;
-      margin-right: auto;
-      width: 100%;
     }
   }
 
@@ -313,6 +340,17 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
     display: block;
   }
 
+  /* ---------- Section 7 — Réseaux ---------- */
+
+  .liens-externes-liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
+  }
+
   .lien-externe {
     display: inline-block;
     color: var(--color-text-secondary);
@@ -321,6 +359,6 @@ const vuesGalerie = apropos?.vuesGalerie ?? [];
   }
 
   .lien-externe:hover {
-    color: var(--color-text);
+    color: var(--color-accent);
   }
 </style>

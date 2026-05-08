@@ -107,8 +107,11 @@ export interface ArticlePresse {
 export interface APropos {
   id: number;
   documentId: string;
+  accroche: string | null;
   biographieLouis: string | null;
   photoLouis: StrapiMedia | null;
+  citation: string | null;
+  citationAuteur: string | null;
   textePrixMarcus: string | null;
   adresse: string | null;
   horaires: string | null;

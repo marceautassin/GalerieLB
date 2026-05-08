@@ -1,5 +1,16 @@
 # Deferred Work
 
+## Defered le 2026-05-08 — Bord de cas page À propos (post-review)
+
+Findings classés `defer` car tolérables en pratique (Louis maîtrise la saisie éditoriale et ne va pas exploiter ces edge cases).
+
+- **Accroche très longue** : pas de limite verticale (`max-width: 28em` borne juste la largeur). Si Louis colle un paragraphe dans le champ accroche, mur italique avant le contenu. Mitigation possible : `line-clamp` 3 lignes ou validation côté CMS (max 280 caractères).
+- **Accroche avec `\n` (sauts de ligne)** : `type: text` Strapi autorise les sauts mais le rendu `<p class="accroche">` n'a pas `white-space: pre-line` — les retours sont écrasés en espaces. À ajouter si Louis veut des retours.
+- **Photo Louis source < 520 px** : Astro upscale à `width=520` × densités [1, 2, 3] = jusqu'à 1560 px générés. Aucun garde-fou. Mitigation : préciser dans le guide CMS qu'il faut une photo source ≥ 1500 px (cf. `Guide-CMS-Galerie-Louis-Barrand.docx`).
+- **Citation contenant listes/blockquote Markdown** : `<RichText>` les autorise mais le styling `font-family: heading italique` sur listes est inadapté, et un `<blockquote>` imbriqué dans `<blockquote class="citation">` est sémantiquement douteux. Si Louis fait ça volontairement, surcharger le scope `.citation-texte ul/ol/blockquote` ou restreindre la whitelist Markdown du composant Citation.
+
+---
+
 ## Defered le 2026-05-08 — Durcissement composant `<RichText>` (post-review)
 
 Findings de la review adversariale de la spec `rich-text-cms` (blind + edge case hunters), classés `defer` car bord de cas et impact faible — Louis ne saisit que du Markdown éditorial classique.

@@ -1,0 +1,69 @@
+---
+import RichText from './RichText.astro';
+
+interface Props {
+  texte?: string | null;
+  auteur?: string | null;
+}
+
+const { texte, auteur } = Astro.props;
+const visible = texte && texte.trim() && auteur && auteur.trim();
+---
+
+{visible && (
+  <blockquote class="citation">
+    <div class="citation-texte">
+      <RichText content={texte} />
+    </div>
+    <cite class="citation-auteur">— {auteur}</cite>
+  </blockquote>
+)}
+
+<style>
+  .citation {
+    margin: var(--space-4xl) 0;
+    text-align: center;
+  }
+
+  .citation-texte {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+
+  .citation-texte :global(p) {
+    margin: 0;
+  }
+
+  .citation-texte :global(p + p) {
+    margin-top: var(--space-md);
+  }
+
+  .citation-texte :global(p:first-child)::before {
+    content: '« ';
+    color: var(--color-text-tertiary);
+    font-size: 1.1em;
+  }
+
+  .citation-texte :global(p:last-child)::after {
+    content: ' »';
+    color: var(--color-text-tertiary);
+    font-size: 1.1em;
+  }
+
+  .citation-auteur {
+    display: block;
+    margin: var(--space-lg) auto 0;
+    max-width: 32em;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+  }
+</style>

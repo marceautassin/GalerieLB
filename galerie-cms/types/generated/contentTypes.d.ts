@@ -399,8 +399,11 @@ export interface ApiAProposAPropos extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    accroche: Schema.Attribute.Text;
     adresse: Schema.Attribute.Text;
     biographieLouis: Schema.Attribute.RichText;
+    citation: Schema.Attribute.RichText;
+    citationAuteur: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     email: Schema.Attribute.Email;
