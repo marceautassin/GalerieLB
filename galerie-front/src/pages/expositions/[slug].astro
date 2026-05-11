@@ -70,7 +70,7 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
   ogImage={visuelPrincipal?.url}
   schema={schema}
 >
-  <article class="fiche-exposition-page">
+  <article class="fiche-exposition-page container--edge">
     <Breadcrumb items={breadcrumbItems} />
 
     <header class="fiche-exposition-header">
@@ -81,7 +81,7 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
     {visuels.length > 0 && (
       <div class="fiche-exposition-visuels">
         {visuels.map((v, i) => (
-          <div class="fiche-exposition-visuel">
+          <div class="fiche-exposition-visuel fiche-exposition-mur">
             <Image
               src={v.url}
               alt={v.alternativeText ?? exposition.titre}
@@ -148,18 +148,40 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
 
   .fiche-exposition-visuels {
     display: grid;
-    gap: var(--space-md);
-    margin-bottom: var(--space-xl);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
   }
 
   .fiche-exposition-visuel {
     overflow: hidden;
   }
 
+  .fiche-exposition-mur {
+    background: var(--color-mur);
+    padding: var(--space-lg);
+    max-width: 1000px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .fiche-exposition-mur {
+      padding: var(--space-2xl);
+    }
+  }
+
   .fiche-exposition-visuel img {
-    width: 100%;
+    /* `max-width` + `width: auto` permet aux images portrait de garder leur
+       ratio naturel sans être étirées à toute la largeur du mur ;
+       `max-height: 80vh` cap la hauteur pour les visuels très hauts. */
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
     height: auto;
     display: block;
+    margin-inline: auto;
   }
 
   .cta-contact {

@@ -1,5 +1,14 @@
 # Deferred Work
 
+## Deferred from: code review patch fiche exposition (2026-05-11)
+
+- **Image source < dimensions cibles** : `.fiche-exposition-mur img` n'a pas de garde contre l'upscaling. Si Louis upload une photo < 900 px de large, le rendu sera flou. Mitigation : guideline CMS (déjà partiellement traitée dans le Guide CMS) + à terme un warning build.
+- **Image panoramique extra-large (ratio > 3:1)** : sans `min-height`, devient minuscule en hauteur sur viewport étroit. Cosmétique ; à reprendre si Louis ajoute des panoramas de vernissage.
+- **Plusieurs visuels d'exposition** : actuellement empilés verticalement (grid 1 col). Si Louis publie 3+ visuels, layout 2 colonnes desktop serait plus efficace. Comportement actuel OK pour 1-2 visuels.
+- **alt vide silencieux** : fallback `?? exposition.titre` peut donner un alt vide si titre absent (cas extrême). Préexistant, à durcir lors de la passe a11y globale.
+
+---
+
 ## Deferred from: code review of spec-oeuvre-fiche-polish (2026-05-08)
 
 - **Filtre `$notNull` sur relation media v5** : `filters[visuels][id][$notNull]=true` est utilisé dans `fetchOeuvresByArtiste` pour masquer les œuvres sans visuel. Le pattern fonctionne en prod (déjà utilisé par `fetchOeuvres` du home avec `hasVisuels: true`), mais reste non-documenté côté Strapi v5 pour les relations media. À durcir avec un filtre côté JS post-fetch si un bug est un jour observé.

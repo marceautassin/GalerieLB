@@ -46,8 +46,9 @@ export const FICHE_OEUVRE: ImagePreset = {
 
 /** Visuel contenu dans le conteneur article (~720-800px desktop) : fiche expo visuels, presse. */
 export const FICHE_VISUEL: ImagePreset = {
-  widths: [600, 900, 1200, 1600],
-  sizes: '(max-width: 768px) 100vw, 80vw',
+  /* 1800 garde la netteté sur écrans haute densité (DPR 2x) avec un sizes desktop de 900px. */
+  widths: [600, 900, 1200, 1800],
+  sizes: '(max-width: 768px) 100vw, 900px',
 };
 
 /** Portrait artiste sur fiche (fullwidth mobile, 320px desktop). */
