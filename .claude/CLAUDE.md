@@ -20,4 +20,4 @@
 - Permissions API stockées en DB uniquement (volatiles) — risque documenté pour Story 6.1.
 
 ## Admin Dev
-- Credentials dev : `admin@galerie.test` / `Admin12345` (SQLite)
+- Credentials dev : voir mémoire locale (hors repo). Strapi en SQLite local.

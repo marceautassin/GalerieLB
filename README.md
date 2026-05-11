@@ -82,10 +82,7 @@ yarn develop
 
 Strapi demarre sur http://localhost:1337.
 
-Au premier lancement, creer le compte admin :
-
-- Email : `admin@galerie.test`
-- Mot de passe : `Admin12345`
+Au premier lancement, creer le compte admin avec l'email et mot de passe de ton choix (Strapi te propose un formulaire au premier load de `/admin`).
 
 Puis creer un **API Token** (Settings > API Tokens) :
 

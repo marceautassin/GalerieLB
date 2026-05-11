@@ -14,3 +14,21 @@ galerie-front/dist/
 galerie-cms/package-lock.json
 galerie-front/package-lock.json
 .playwright-mcp/
+
+# Locks/temp éditeurs (LibreOffice, vim, etc.)
+.~lock.*#
+*.swp
+*.swo
+
+# Artefacts BMad et livrables clients (contenu spécifique à la galerie)
+# Le repo est public ; on garde le code source mais pas les specs/PRD nominatifs,
+# les guides livrés au client, ni les notes design propriétaires.
+_bmad-output/
+_bmad-custom/
+_bmad/_memory/
+_bmad/_config/custom/galerie/
+docs/Logo_*
+docs/SITE*.pdf
+docs/guide-strapi-louis.md
+docs/*.pdf
+scripts/generate-guide-louis.py
