@@ -1,5 +1,14 @@
 # Deferred Work
 
+## Deferred from: code review of spec-oeuvre-fiche-polish (2026-05-08)
+
+- **Filtre `$notNull` sur relation media v5** : `filters[visuels][id][$notNull]=true` est utilisé dans `fetchOeuvresByArtiste` pour masquer les œuvres sans visuel. Le pattern fonctionne en prod (déjà utilisé par `fetchOeuvres` du home avec `hasVisuels: true`), mais reste non-documenté côté Strapi v5 pour les relations media. À durcir avec un filtre côté JS post-fetch si un bug est un jour observé.
+- **N+1 requests au build SSG** : la page `oeuvres/[slug].astro` exécute `fetchOeuvresByArtiste` pour chaque œuvre du catalogue → 1 requête API par fiche × ~100 œuvres = 100 requêtes série au build. Acceptable aujourd'hui mais à surveiller si le build dépasse 30 s. Mitigation : pré-fetcher tous les artistes une fois dans `getStaticPaths` et passer la liste en props.
+- **Contraste `--color-mur` vs `--color-bg`** : `#fffcf7` vs `#faf8f5` = différence très subtile (≈ 1% sur la luminosité). Le design veut une variation chaude perceptible derrière l'image. À évaluer visuellement en prod ; si imperceptible, soit augmenter l'écart (ex. `#fffaf0`), soit retirer le wrapper et laisser l'image flotter sur `--color-bg`.
+- **XSS potentiel sur `oeuvre.slug` dans `href`** : `href={url(\`/contact?oeuvre=${oeuvre.slug}\`)}` injecte le slug brut. Préexistant à cette spec mais surfacé par la review. À durcir avec `encodeURIComponent(oeuvre.slug)` lors d'une passe sécurité (idem dans tous les `href` qui interpolent des champs Strapi).
+
+---
+
 ## Defered le 2026-05-08 — Bord de cas page À propos (post-review)
 
 Findings classés `defer` car tolérables en pratique (Louis maîtrise la saisie éditoriale et ne va pas exploiter ces edge cases).

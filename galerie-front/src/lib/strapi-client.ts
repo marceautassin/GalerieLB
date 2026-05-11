@@ -91,6 +91,31 @@ export async function fetchOeuvres(options?: {
   return result.data.map(normalizeOeuvre);
 }
 
+export async function fetchOeuvresByArtiste(
+  artisteSlug: string,
+  opts: { excludeSlug?: string; limit?: number } = {},
+): Promise<Oeuvre[]> {
+  const limit = opts.limit ?? 4;
+  let query =
+    `status=published&populate[0]=visuels&populate[1]=artiste&populate[2]=thematiques&populate[3]=expositions` +
+    `&filters[artiste][slug][$eq]=${encodeURIComponent(artisteSlug)}` +
+    `&filters[visuels][id][$notNull]=true` +
+    `&pagination[pageSize]=${limit}`;
+  if (opts.excludeSlug) {
+    query += `&filters[slug][$ne]=${encodeURIComponent(opts.excludeSlug)}`;
+  }
+  try {
+    const result = await fetchStrapi<StrapiResponse<Oeuvre>>('oeuvres', query);
+    return result.data.map(normalizeOeuvre);
+  } catch (err) {
+    console.warn(
+      `[strapi] fetchOeuvresByArtiste(${artisteSlug}) failed — section "Du même artiste" sera masquée.`,
+      err,
+    );
+    return [];
+  }
+}
+
 export async function fetchOeuvreBySlug(slug: string): Promise<Oeuvre | null> {
   const result = await fetchStrapi<StrapiResponse<Oeuvre>>(
     'oeuvres',

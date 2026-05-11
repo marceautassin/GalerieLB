@@ -4,7 +4,8 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
-import { fetchOeuvres } from '../../lib/strapi-client';
+import CarteOeuvre from '../../components/CarteOeuvre.astro';
+import { fetchOeuvres, fetchOeuvresByArtiste } from '../../lib/strapi-client';
 import { url } from '../../lib/base-url';
 import { FICHE_OEUVRE } from '../../lib/image-presets';
 import { buildVisualArtworkSchema, getSiteUrl } from '../../lib/seo-utils';
@@ -21,6 +22,14 @@ const { oeuvre } = Astro.props;
 const visuel = oeuvre.visuels?.[0];
 const artisteNom = oeuvre.artiste?.nom ?? '';
 const altText = artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
+
+const memeArtiste = oeuvre.artiste?.slug
+  ? await fetchOeuvresByArtiste(oeuvre.artiste.slug, {
+      excludeSlug: oeuvre.slug,
+      limit: 4,
+    })
+  : [];
+const showMemeArtiste = memeArtiste.length >= 2;
 
 function truncateAtWord(text: string, maxLen: number): string {
   if (text.length <= maxLen) return text;
@@ -67,27 +76,29 @@ const titreSeo = artisteNom
   ogImage={visuel?.url}
   schema={schema}
 >
-  <article class="fiche-oeuvre-page">
+  <article class="fiche-oeuvre-page container--edge">
     <Breadcrumb items={breadcrumbItems} />
 
     <div class="fiche-oeuvre">
       <div class="fiche-oeuvre-visuel">
-        {visuel ? (
-          <Lightbox
-            src={visuel.url}
-            alt={altText}
-            width={visuel.width}
-            height={visuel.height}
-            thumbWidths={FICHE_OEUVRE.widths}
-            thumbSizes={FICHE_OEUVRE.sizes}
-            loading="eager"
-            fetchpriority="high"
-          />
-        ) : (
-          <div class="fiche-oeuvre-placeholder" aria-hidden="true">
-            <span>{oeuvre.titre.charAt(0)}</span>
-          </div>
-        )}
+        <div class="fiche-oeuvre-mur">
+          {visuel ? (
+            <Lightbox
+              src={visuel.url}
+              alt={altText}
+              width={visuel.width}
+              height={visuel.height}
+              thumbWidths={FICHE_OEUVRE.widths}
+              thumbSizes={FICHE_OEUVRE.sizes}
+              loading="eager"
+              fetchpriority="high"
+            />
+          ) : (
+            <div class="fiche-oeuvre-placeholder" aria-hidden="true">
+              <span>{oeuvre.titre.charAt(0)}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div class="fiche-oeuvre-meta">
@@ -120,8 +131,9 @@ const titreSeo = artisteNom
           )}
         </dl>
 
-        <a href={url(`/contact?oeuvre=${oeuvre.slug}`)} class="btn-primary cta-rdv">
+        <a href={url(`/contact?oeuvre=${oeuvre.slug}`)} class="cta-rdv">
           Prendre rendez-vous
+          <span aria-hidden="true">→</span>
         </a>
 
         <SectionLiensRelies
@@ -136,6 +148,17 @@ const titreSeo = artisteNom
         />
       </div>
     </div>
+
+    {showMemeArtiste && (
+      <section class="section-meme-artiste">
+        <h2>Du même artiste</h2>
+        <ul class="grille-meme-artiste">
+          {memeArtiste.map((o) => (
+            <li><CarteOeuvre oeuvre={o} /></li>
+          ))}
+        </ul>
+      </section>
+    )}
   </article>
 </LayoutPrincipal>
 
@@ -151,9 +174,9 @@ const titreSeo = artisteNom
     margin-top: var(--space-xl);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 900px) {
     .fiche-oeuvre {
-      grid-template-columns: 3fr 2fr;
+      grid-template-columns: 5fr 3fr;
       gap: var(--space-2xl);
       align-items: start;
     }
@@ -163,8 +186,17 @@ const titreSeo = artisteNom
     overflow: hidden;
   }
 
+  .fiche-oeuvre-mur {
+    background: var(--color-mur);
+    padding: var(--space-2xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .fiche-oeuvre-placeholder {
     aspect-ratio: 4 / 3;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -219,24 +251,54 @@ const titreSeo = artisteNom
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
-    background: none;
-    color: var(--color-text);
-    border: 1px solid var(--color-text);
-    padding: 14px 28px;
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-text);
+    padding-bottom: 4px;
     margin-bottom: var(--space-xl);
-    transition: background 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
-                color 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    transition: color 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
                 border-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .cta-rdv:hover {
-    background: var(--color-accent);
+    color: var(--color-accent);
     border-color: var(--color-accent);
-    color: var(--color-bg);
+  }
+
+  .cta-rdv span {
+    transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .cta-rdv:hover span {
+    transform: translateX(4px);
+  }
+
+  .section-meme-artiste {
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-meme-artiste h2 {
+    margin-bottom: var(--space-xl);
+  }
+
+  .grille-meme-artiste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .grille-meme-artiste {
+      /* auto-fill évite les colonnes vides quand l'artiste a 2-3 œuvres
+         (au lieu de 4 colonnes étirées sur peu d'éléments). */
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
   }
 </style>
