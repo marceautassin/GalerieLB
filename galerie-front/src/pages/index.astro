@@ -19,7 +19,7 @@ const schema = buildArtGallerySchema({ siteUrl, apropos });
 
 <LayoutPrincipal
   title="Galerie Louis Barrand — Galerie d'art à Paris, XIXe-XXe siècles"
-  description="Galerie d'art spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
+  description="Galerie d'art spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
   schema={schema}
 >
   <section class="hero container--bleed">
@@ -56,7 +56,7 @@ const schema = buildArtGallerySchema({ siteUrl, apropos });
 
   {acquisitionsRecentes.length > 0 && (
     <section class="container--edge acquisitions-recentes">
-      <p class="acquisitions-eyebrow">Une galerie consacrée à la redécouverte d'artistes oubliés des XIXᵉ et XXᵉ siècles, au cœur du 8ᵉ arrondissement de Paris.</p>
+      <p class="acquisitions-eyebrow">Une galerie consacrée à la redécouverte d'artistes des XIXᵉ et XXᵉ siècles, au cœur du 8ᵉ arrondissement de Paris.</p>
       <h2>Acquisitions récentes</h2>
       <ul class="grille-oeuvres">
         {acquisitionsRecentes.map((oeuvre) => (

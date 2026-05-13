@@ -1,6 +1,6 @@
 # Galerie Louis Barrand
 
-> Galerie d'art parisienne fondée par Louis Barrand, lauréat du Prix Marcus, spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles. Peinture, dessin, estampe.
+> Galerie d'art parisienne fondée par Louis Barrand, lauréat du Prix Marcus, spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles. Peinture, dessin, estampe.
 
 ## Pages principales
 
@@ -17,4 +17,4 @@
 
 ## Spécialité
 
-Redécouverte et mise en valeur d'artistes oubliés des XIXe et XXe siècles. La galerie propose des œuvres de peinture, de dessin et d'estampe, avec une expertise reconnue (Prix Marcus). Située à Paris, elle organise des expositions thématiques régulières et accompagne collectionneurs et institutions dans la constitution de leurs ensembles.
+Redécouverte et mise en valeur d'artistes des XIXe et XXe siècles. La galerie propose des œuvres de peinture, de dessin et d'estampe, avec une expertise reconnue (Prix Marcus). Située à Paris, elle organise des expositions thématiques régulières et accompagne collectionneurs et institutions dans la constitution de leurs ensembles.

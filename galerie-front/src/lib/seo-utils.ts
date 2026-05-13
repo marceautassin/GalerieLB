@@ -80,10 +80,7 @@ function parseAdresse(adresse: string | null | undefined): JsonLd | undefined {
   });
 }
 
-export function buildArtGallerySchema(opts: {
-  siteUrl: string;
-  apropos: APropos | null;
-}): JsonLd {
+export function buildArtGallerySchema(opts: { siteUrl: string; apropos: APropos | null }): JsonLd {
   const { siteUrl, apropos } = opts;
   return compact({
     '@context': 'https://schema.org',
@@ -92,7 +89,7 @@ export function buildArtGallerySchema(opts: {
     url: siteUrl,
     logo: absoluteUrl(siteUrl, '/logo.svg'),
     description:
-      "Galerie d'art parisienne spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles — peinture, dessin, estampe.",
+      "Galerie d'art parisienne spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles — peinture, dessin, estampe.",
     address: parseAdresse(apropos?.adresse),
     email: apropos?.email ?? undefined,
     telephone: apropos?.telephone ?? undefined,
@@ -100,10 +97,7 @@ export function buildArtGallerySchema(opts: {
   });
 }
 
-export function buildPersonSchema(opts: {
-  siteUrl: string;
-  artiste: Artiste;
-}): JsonLd {
+export function buildPersonSchema(opts: { siteUrl: string; artiste: Artiste }): JsonLd {
   const { siteUrl, artiste } = opts;
   return compact({
     '@context': 'https://schema.org',
@@ -115,10 +109,7 @@ export function buildPersonSchema(opts: {
   });
 }
 
-export function buildVisualArtworkSchema(opts: {
-  siteUrl: string;
-  oeuvre: Oeuvre;
-}): JsonLd {
+export function buildVisualArtworkSchema(opts: { siteUrl: string; oeuvre: Oeuvre }): JsonLd {
   const { siteUrl, oeuvre } = opts;
   const visuel = oeuvre.visuels?.[0];
   const creator = oeuvre.artiste

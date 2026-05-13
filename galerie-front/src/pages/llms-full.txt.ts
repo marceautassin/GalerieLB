@@ -1,10 +1,5 @@
 import type { APIRoute } from 'astro';
-import {
-  fetchArtistes,
-  fetchOeuvres,
-  fetchExpositions,
-  fetchAPropos,
-} from '../lib/strapi-client';
+import { fetchArtistes, fetchOeuvres, fetchExpositions, fetchAPropos } from '../lib/strapi-client';
 import type { Artiste, Oeuvre, Exposition, APropos } from '../types/strapi';
 import { stripHtml } from '../lib/seo-utils';
 
@@ -72,7 +67,7 @@ export const GET: APIRoute = async () => {
   const sections: string[] = [
     '# Galerie Louis Barrand — Contenu intégral',
     '',
-    "Galerie d'art parisienne spécialisée dans la redécouverte d'artistes oubliés des XIXe et XXe siècles.",
+    "Galerie d'art parisienne spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles.",
     '',
     '## À propos de la galerie',
     '',
