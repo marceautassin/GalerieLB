@@ -8,6 +8,7 @@ const base = process.env.BASE_PATH || '/';
 export default defineConfig({
   site,
   base,
+  compressHTML: true,
   integrations: [vue(), sitemap()],
   image: {
     remotePatterns: [

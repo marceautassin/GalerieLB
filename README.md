@@ -9,7 +9,7 @@ Site vitrine de la Galerie Louis Barrand, galerie d'art spécialisée en peintur
 
 ## Prerequis
 
-- [Node.js](https://nodejs.org/) >= 20
+- [Node.js](https://nodejs.org/) 24 (>= 24.16, cf. `.nvmrc`) — utilisé par le CMS et le front
 - [Yarn](https://classic.yarnpkg.com/) >= 1.22
 - [Docker](https://www.docker.com/) et Docker Compose (pour PostgreSQL et Minio)
 
