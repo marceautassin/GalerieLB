@@ -409,10 +409,26 @@ describe('YouTube video fields', () => {
       'https://youtu.be/7A5fZwF773s?si=du5sTGVrPS7dlrBZ',
       'https://www.youtube.com/watch?v=7A5fZwF773s',
       'https://youtube.com/shorts/7A5fZwF773s',
+      'https://m.youtube.com/watch?si=abc&v=7A5fZwF773s&t=42s',
+      'https://www.youtube.com/embed/7A5fZwF773s',
+      'https://www.youtube.com/live/7A5fZwF773s?feature=share',
+      'https://www.youtube-nocookie.com/embed/7A5fZwF773s',
     ]) {
       it(`accepts ${url}`, () => assert.ok(re.test(url)));
     }
-    for (const url of ['https://vimeo.com/123', 'https://evil.com/youtube.com/x', '']) {
+    for (const url of [
+      'https://vimeo.com/123',
+      'https://evil.com/youtube.com/x',
+      '',
+      'https://www.youtube.com/channel/UCabcdefghijk',
+      'https://youtu.be/x',
+      'https://youtu.be/7A5fZwF773sTOOLONG',
+      'https://youtube.com.evil.com/watch?v=7A5fZwF773s',
+      'https://www.youtube.com/watch',
+      ' https://youtu.be/7A5fZwF773s',
+      'https://youtu.be/7A5fZwF773s&feature=share',
+      'https://www.youtube.com/watch?v=7A5fZwF773s/x',
+    ]) {
       it(`rejects "${url}"`, () => assert.ok(!re.test(url)));
     }
   });

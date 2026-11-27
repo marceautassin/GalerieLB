@@ -1,13 +1,18 @@
-const REBUILD_COOLDOWN_MS = 30_000; // 30s debounce
-let lastRebuild = 0;
+// Debounce « trailing » : on attend la fin d'une rafale d'écritures pour déclencher un seul
+// rebuild, avec les données à jour. Un rebuild en trop est sans risque (deploy-front.yml
+// annule le run en cours via `concurrency`).
+const REBUILD_DEBOUNCE_MS = 15_000;
+let rebuildTimer: ReturnType<typeof setTimeout> | undefined;
+
+function scheduleFrontRebuild() {
+  if (!process.env.WEBHOOK_FRONT_REBUILD_URL) return;
+  clearTimeout(rebuildTimer);
+  rebuildTimer = setTimeout(() => void triggerFrontRebuild(), REBUILD_DEBOUNCE_MS);
+}
 
 async function triggerFrontRebuild() {
   const webhookUrl = process.env.WEBHOOK_FRONT_REBUILD_URL;
   if (!webhookUrl) return;
-
-  const now = Date.now();
-  if (now - lastRebuild < REBUILD_COOLDOWN_MS) return;
-  lastRebuild = now;
 
   try {
     const res = await fetch(webhookUrl, {
@@ -32,9 +37,9 @@ export default {
   register() {},
   bootstrap() {
     strapi.db?.lifecycles.subscribe({
-      afterCreate: triggerFrontRebuild,
-      afterUpdate: triggerFrontRebuild,
-      afterDelete: triggerFrontRebuild,
+      afterCreate: scheduleFrontRebuild,
+      afterUpdate: scheduleFrontRebuild,
+      afterDelete: scheduleFrontRebuild,
     });
   },
 };

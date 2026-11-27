@@ -182,7 +182,7 @@ export function buildVideoObjectSchema(opts: {
     description: description || name,
     thumbnailUrl: youtubeThumbnail(videoId),
     embedUrl: youtubeEmbedUrl(videoId),
-    contentUrl: youtubeWatchUrl(videoId),
+    url: youtubeWatchUrl(videoId),
     uploadDate: uploadDate ?? undefined,
   });
 }
