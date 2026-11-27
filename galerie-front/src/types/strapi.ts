@@ -46,6 +46,9 @@ export interface StrapiMedia {
   } | null;
 }
 
+/** Média réduit à ce qu'il faut pour générer une image (ex. image de partage). */
+export type MediaImage = Pick<StrapiMedia, 'url' | 'width' | 'height'>;
+
 // --- Content types ---
 
 export interface Artiste {

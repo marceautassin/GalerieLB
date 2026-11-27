@@ -1,8 +1,17 @@
 ---
+import type { MediaImage } from '../types/strapi';
+import { getImage } from 'astro:assets';
+import ogDefault from '../assets/og-default.jpg';
+import { url } from '../lib/base-url';
+import { absoluteUrl, getSiteUrl, jsonLdSafe } from '../lib/seo-utils';
+import { ogImageSize } from '../lib/og-image';
+
 interface Props {
   title: string;
   description: string;
-  ogImage?: string;
+  /** Visuel de partage (média Strapi) ; à défaut, l'image par défaut de la galerie. */
+  ogImage?: MediaImage | null;
+  ogImageAlt?: string;
   ogType?: string;
   canonicalUrl?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
@@ -11,18 +20,26 @@ interface Props {
 const {
   title,
   description,
-  ogImage = '/logo.svg',
+  ogImage,
+  ogImageAlt,
   ogType = 'website',
   canonicalUrl,
   schema,
 } = Astro.props;
 
-import { url } from '../lib/base-url';
-import { getSiteUrl, jsonLdSafe } from '../lib/seo-utils';
-
 const siteUrl = getSiteUrl(Astro.site);
 const canonical = canonicalUrl ?? Astro.url.href;
-const ogImageUrl = /^https?:\/\//i.test(ogImage) ? ogImage : `${siteUrl}${ogImage}`;
+
+// Variante ~1200 px en JPEG (mieux lu par les réseaux sociaux que WebP, et bien plus légère que l'original).
+const ogAlt = ogImage && ogImageAlt ? ogImageAlt : 'Galerie Louis Barrand';
+const ogSize = ogImage ? ogImageSize(ogImage) : ogImageSize(ogDefault);
+const ogOptimisee = await getImage({
+  src: ogImage ? ogImage.url : ogDefault,
+  ...ogSize,
+  format: 'jpeg',
+  quality: 72,
+});
+const ogImageUrl = absoluteUrl(siteUrl, ogOptimisee.src) as string;
 ---
 
 <meta charset="utf-8" />
@@ -36,9 +53,19 @@ const ogImageUrl = /^https?:\/\//i.test(ogImage) ? ogImage : `${siteUrl}${ogImag
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content={String(ogSize.width)} />
+<meta property="og:image:height" content={String(ogSize.height)} />
+<meta property="og:image:alt" content={ogAlt} />
 <meta property="og:type" content={ogType} />
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="fr_FR" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content={ogAlt} />
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />

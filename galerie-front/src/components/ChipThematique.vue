@@ -1,46 +1,40 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-
-interface StrapiMedia {
-  url: string;
-  width: number;
-  height: number;
-}
-
-interface Artiste {
-  nom: string;
-  slug: string;
-}
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { etatCartes, parseThematiques, thematiqueValide } from '../lib/filtre-thematique';
 
 interface Thematique {
   nom: string;
   slug: string;
 }
 
-interface Oeuvre {
-  titre: string;
-  slug: string;
-  visuels: StrapiMedia[];
-  artiste: Artiste | null;
-  thematiques: Thematique[];
-}
-
+/**
+ * Filtre par thématique du catalogue. La grille est rendue en Astro (images optimisées) :
+ * l'îlot ne reçoit que les thématiques et agit sur les cartes `li[data-thematiques]`
+ * de `#grille-oeuvres`.
+ */
 const props = defineProps<{
   thematiques: Thematique[];
-  oeuvres: Oeuvre[];
-  basePath?: string;
 }>();
 
-const base = (props.basePath ?? '').replace(/\/$/, '');
-
 const activeSlug = ref<string | null>(null);
+const vide = ref(false);
 
-const filteredOeuvres = computed(() => {
-  if (!activeSlug.value) return props.oeuvres;
-  return props.oeuvres.filter((o) =>
-    o.thematiques.some((t) => t.slug === activeSlug.value),
+function appliquerFiltre() {
+  const grille = document.getElementById('grille-oeuvres');
+  if (!grille) return;
+  const cartes = Array.from(grille.querySelectorAll<HTMLElement>('li[data-thematiques]'));
+  const etats = etatCartes(
+    cartes.map((li) => parseThematiques(li.dataset.thematiques)),
+    activeSlug.value,
   );
-});
+  cartes.forEach((li, i) => {
+    li.hidden = !etats[i].visible;
+    li.classList.toggle('span-2', etats[i].span2);
+  });
+  vide.value = !etats.some((e) => e.visible);
+}
+
+watch(activeSlug, appliquerFiltre);
 
 function toggleThematique(slug: string) {
   const newSlug = activeSlug.value === slug ? null : slug;
@@ -62,18 +56,19 @@ function handleKeydown(event: KeyboardEvent, slug: string) {
   }
 }
 
-// --- URL sync (Task 3) ---
-function onPopstate() {
+// --- URL sync ---
+function slugDepuisUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
-  activeSlug.value = params.get('thematique') ?? null;
+  return thematiqueValide(params.get('thematique'), props.thematiques);
+}
+
+function onPopstate() {
+  activeSlug.value = slugDepuisUrl();
 }
 
 onMounted(() => {
-  const params = new URLSearchParams(window.location.search);
-  const thematique = params.get('thematique');
-  if (thematique && props.thematiques.some((t) => t.slug === thematique)) {
-    activeSlug.value = thematique;
-  }
+  activeSlug.value = slugDepuisUrl();
+  appliquerFiltre();
 
   window.addEventListener('popstate', onPopstate);
 });
@@ -81,11 +76,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('popstate', onPopstate);
 });
-
-function getAltText(oeuvre: Oeuvre): string {
-  const artisteNom = oeuvre.artiste?.nom ?? '';
-  return artisteNom ? `${oeuvre.titre}, ${artisteNom}` : oeuvre.titre;
-}
 </script>
 
 <template>
@@ -105,45 +95,9 @@ function getAltText(oeuvre: Oeuvre): string {
       </span>
     </div>
 
-    <p v-if="filteredOeuvres.length === 0" class="empty">
+    <p v-if="vide" class="empty">
       Aucune oeuvre dans cette thématique pour le moment.
     </p>
-
-    <ul v-else class="galerie-images">
-      <li
-        v-for="(oeuvre, index) in filteredOeuvres"
-        :key="oeuvre.slug"
-        :class="{ 'span-2': (index + 1) % 5 === 0 }"
-      >
-        <a :href="`${base}/oeuvres/${oeuvre.slug}`" class="carte-oeuvre">
-          <div class="carte-oeuvre-image">
-            <img
-              v-if="oeuvre.visuels.length > 0"
-              :src="oeuvre.visuels[0].url"
-              :alt="getAltText(oeuvre)"
-              :width="oeuvre.visuels[0].width"
-              :height="oeuvre.visuels[0].height"
-              loading="lazy"
-            />
-            <div v-else class="carte-oeuvre-placeholder" aria-hidden="true">
-              <span>{{ oeuvre.titre.charAt(0) }}</span>
-            </div>
-            <div class="carte-oeuvre-overlay">
-              <span class="carte-oeuvre-titre">{{ oeuvre.titre }}</span>
-              <span v-if="oeuvre.artiste" class="carte-oeuvre-artiste">
-                {{ oeuvre.artiste.nom }}
-              </span>
-            </div>
-          </div>
-          <div class="carte-oeuvre-info-mobile">
-            <span class="carte-oeuvre-titre">{{ oeuvre.titre }}</span>
-            <span v-if="oeuvre.artiste" class="carte-oeuvre-artiste">
-              {{ oeuvre.artiste.nom }}
-            </span>
-          </div>
-        </a>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -176,7 +130,7 @@ function getAltText(oeuvre: Oeuvre): string {
 }
 
 .chip::after {
-  content: '/';
+  content: '/' / '';
   position: absolute;
   right: calc(var(--space-lg) / 2 - 4px);
   color: var(--color-border);
@@ -204,148 +158,5 @@ function getAltText(oeuvre: Oeuvre): string {
 .empty {
   color: var(--color-text-secondary);
   padding: var(--space-2xl) 0;
-}
-
-/* --- Grille oeuvres (réplique GalerieImages) --- */
-.galerie-images {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-xl);
-}
-
-@media (min-width: 640px) {
-  .galerie-images {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2xl);
-  }
-}
-
-@media (min-width: 1024px) {
-  .galerie-images {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .galerie-images .span-2 {
-    grid-column: span 2;
-  }
-}
-
-@media (min-width: 1280px) {
-  .galerie-images {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .galerie-images .span-2 {
-    grid-column: span 1;
-  }
-}
-
-/* --- Carte oeuvre (réplique CarteOeuvre.astro) --- */
-.carte-oeuvre {
-  display: block;
-  text-decoration: none;
-  overflow: hidden;
-}
-
-.carte-oeuvre:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
-}
-
-.carte-oeuvre-image {
-  position: relative;
-  overflow: hidden;
-  background: var(--color-border);
-}
-
-.carte-oeuvre-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 600ms cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-
-.carte-oeuvre:hover .carte-oeuvre-image img {
-  transform: scale(1.04);
-}
-
-.carte-oeuvre-placeholder {
-  aspect-ratio: 4 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-border);
-  color: var(--color-text-tertiary);
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 700;
-}
-
-.carte-oeuvre-overlay {
-  position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: var(--space-lg);
-  background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.55));
-  opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
-  color: var(--color-bg);
-}
-
-@media (min-width: 768px) {
-  .carte-oeuvre-overlay {
-    display: flex;
-  }
-}
-
-.carte-oeuvre:hover .carte-oeuvre-overlay {
-  opacity: 1;
-}
-
-.carte-oeuvre-overlay .carte-oeuvre-titre {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-.carte-oeuvre-overlay .carte-oeuvre-artiste {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.75;
-  margin-top: 2px;
-}
-
-.carte-oeuvre-info-mobile {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-sm) 0;
-}
-
-@media (min-width: 768px) {
-  .carte-oeuvre-info-mobile {
-    display: none;
-  }
-}
-
-.carte-oeuvre-info-mobile .carte-oeuvre-titre {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.carte-oeuvre-info-mobile .carte-oeuvre-artiste {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  margin-top: 2px;
 }
 </style>

@@ -3,10 +3,9 @@ import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import GalerieImages from '../../components/GalerieImages.astro';
 import ChipThematique from '../../components/ChipThematique.vue';
 import { fetchOeuvres, fetchThematiques } from '../../lib/strapi-client';
-import { url } from '../../lib/base-url';
 
 const oeuvres = await fetchOeuvres();
-const thematiques = await fetchThematiques();
+const thematiques = (await fetchThematiques()).map(({ nom, slug }) => ({ nom, slug }));
 ---
 
 <LayoutPrincipal
@@ -17,12 +16,10 @@ const thematiques = await fetchThematiques();
     <h1>Œuvres</h1>
     {oeuvres.length > 0 ? (
       thematiques.length > 0 ? (
-        <ChipThematique
-          client:visible
-          thematiques={thematiques}
-          oeuvres={oeuvres}
-          basePath={import.meta.env.BASE_URL}
-        />
+        <>
+          <ChipThematique client:visible thematiques={thematiques} />
+          <GalerieImages oeuvres={oeuvres} filtrable />
+        </>
       ) : (
         <GalerieImages oeuvres={oeuvres} />
       )

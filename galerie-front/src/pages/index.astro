@@ -38,6 +38,8 @@ const schema = [
 <LayoutPrincipal
   title="Galerie Louis Barrand — Galerie d'art à Paris, XIXe-XXe siècles"
   description="Galerie d'art spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
+  ogImage={visuelHero}
+  ogImageAlt={oeuvreHero ? `${oeuvreHero.titre}${oeuvreHero.artiste ? `, ${oeuvreHero.artiste.nom}` : ''}` : undefined}
   schema={schema}
 >
   <section class="hero container--bleed">

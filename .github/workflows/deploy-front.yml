@@ -39,6 +39,15 @@ jobs:
           cache: yarn
           cache-dependency-path: galerie-front/yarn.lock
 
+      # Cache des images optimisées par astro:assets : évite de tout régénérer à chaque build
+      # (rebuild quotidien, mises à jour CMS).
+      - uses: actions/cache@v4
+        with:
+          path: galerie-front/node_modules/.astro
+          key: astro-assets-${{ runner.os }}-${{ hashFiles('galerie-front/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            astro-assets-${{ runner.os }}-${{ hashFiles('galerie-front/yarn.lock') }}-
+
       - name: Install & build
         working-directory: galerie-front
         env:

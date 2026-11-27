@@ -4,9 +4,11 @@ import { parseYoutubeId, youtubeThumbnail, youtubeWatchUrl } from '../lib/youtub
 interface Props {
   url: string | null | undefined;
   titre: string;
+  /** Vidéo au-dessus de la ligne de flottaison (élément LCP) : miniature chargée sans différé. */
+  eager?: boolean;
 }
 
-const { url, titre } = Astro.props;
+const { url, titre, eager = false } = Astro.props;
 const id = parseYoutubeId(url);
 ---
 
@@ -18,7 +20,8 @@ const id = parseYoutubeId(url);
       width="480"
       height="360"
       alt=""
-      loading="lazy"
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
       decoding="async"
     />
     <a

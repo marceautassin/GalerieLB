@@ -88,7 +88,8 @@ const schema = [
 <LayoutPrincipal
   title={`${exposition.titre} — Galerie Louis Barrand`}
   description={description}
-  ogImage={visuelPrincipal?.url}
+  ogImage={visuelPrincipal}
+  ogImageAlt={visuelPrincipal?.alternativeText ?? exposition.titre}
   schema={schema}
 >
   <article class="fiche-exposition-page container--edge">
@@ -128,7 +129,7 @@ const schema = [
 
     {videoId && (
       <div class="fiche-exposition-video">
-        <VideoYoutube url={exposition.videoYoutube} titre={exposition.titre} />
+        <VideoYoutube url={exposition.videoYoutube} titre={exposition.titre} eager={visuels.length === 0} />
       </div>
     )}
 

@@ -10,7 +10,8 @@
   --color-bg: #faf8f5;
   --color-text: #1a1a1a;
   --color-text-secondary: #4a4a4a;
-  --color-text-tertiary: #7a7a7a;
+  --color-text-tertiary: #707070; /* 4,67:1 sur --color-bg (AA) */
+  --color-text-on-dark-muted: #7a7a7a; /* texte secondaire sur fond noir (footer) : 4,9:1 */
   --color-border: #e5e2de;
   --color-surface: #ffffff;
   --color-black: #000000;

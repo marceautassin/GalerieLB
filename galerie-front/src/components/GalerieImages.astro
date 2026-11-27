@@ -1,18 +1,24 @@
 ---
 import type { Oeuvre } from '../types/strapi';
 import CarteOeuvre from './CarteOeuvre.astro';
+import { CATALOGUE_GRILLE } from '../lib/image-presets';
 
 interface Props {
   oeuvres: Oeuvre[];
+  /** Catalogue filtrable : cartes marquées `data-thematiques`, cible de l'îlot `ChipThematique`. */
+  filtrable?: boolean;
 }
 
-const { oeuvres } = Astro.props;
+const { oeuvres, filtrable = false } = Astro.props;
 ---
 
-<ul class="galerie-images">
+<ul class="galerie-images" id={filtrable ? 'grille-oeuvres' : undefined}>
   {oeuvres.map((oeuvre, index) => (
-    <li class:list={[(index + 1) % 5 === 0 && 'span-2']}>
-      <CarteOeuvre oeuvre={oeuvre} />
+    <li
+      class:list={[(index + 1) % 5 === 0 && 'span-2']}
+      data-thematiques={filtrable ? (oeuvre.thematiques ?? []).map((t) => t.slug).join(' ') : undefined}
+    >
+      <CarteOeuvre oeuvre={oeuvre} overlay={filtrable} imagePreset={CATALOGUE_GRILLE} />
     </li>
   ))}
 </ul>
