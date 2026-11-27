@@ -1,9 +1,11 @@
 import imageCompression from 'browser-image-compression';
+import { installXhrInterceptor } from './xhr-interceptor';
 
 /**
  * Intercepts browser fetch to compress images client-side before Strapi upload.
  * Strapi v5 on Clever Cloud 1 Go RAM can't resize HD photos server-side without OOM,
  * so we shift the work to the content editor's browser.
+ * Covers both fetch (older admin) and XMLHttpRequest (Strapi >= 5.6x media library uploads via XHR).
  */
 
 const MAX_SIZE_MB = 2;
@@ -167,6 +169,8 @@ export function installUploadInterceptor(): void {
   const w = window as Window & { __galerieUploadInterceptorInstalled?: boolean };
   if (w.__galerieUploadInterceptorInstalled) return;
   w.__galerieUploadInterceptorInstalled = true;
+
+  installXhrInterceptor(XMLHttpRequest.prototype, compressFormData, (url) => UPLOAD_PATH_PATTERN.test(url));
 
   const originalFetch = window.fetch.bind(window);
 
