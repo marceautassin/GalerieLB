@@ -1,4 +1,5 @@
 import type { APropos, Artiste, Exposition, Oeuvre } from '../types/strapi';
+import { youtubeEmbedUrl, youtubeThumbnail, youtubeWatchUrl } from './youtube';
 
 type JsonLd = Record<string, unknown>;
 
@@ -164,6 +165,25 @@ export function buildExhibitionEventSchema(opts: {
     description,
     image: absoluteUrl(siteUrl, visuel?.url),
     url: absoluteUrl(siteUrl, `/expositions/${exposition.slug}`),
+  });
+}
+
+export function buildVideoObjectSchema(opts: {
+  videoId: string;
+  name: string;
+  description?: string | null;
+  uploadDate?: string | null;
+}): JsonLd {
+  const { videoId, name, description, uploadDate } = opts;
+  return compact({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name,
+    description: description || name,
+    thumbnailUrl: youtubeThumbnail(videoId),
+    embedUrl: youtubeEmbedUrl(videoId),
+    contentUrl: youtubeWatchUrl(videoId),
+    uploadDate: uploadDate ?? undefined,
   });
 }
 

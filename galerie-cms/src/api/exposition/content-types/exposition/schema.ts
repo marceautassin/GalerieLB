@@ -1,3 +1,5 @@
+import { YOUTUBE_URL_REGEX } from "../../../../lib/youtube-regex";
+
 export default {
   kind: "collectionType",
   collectionName: "expositions",
@@ -40,6 +42,12 @@ export default {
     slug: {
       type: "uid",
       targetField: "titre",
+    },
+    videoYoutube: {
+      type: "string",
+      required: false,
+      regex: YOUTUBE_URL_REGEX,
+      description: "URL YouTube de la vidéo de l'exposition (youtube.com, youtu.be ou youtube-nocookie.com).",
     },
     oeuvres: {
       type: "relation",

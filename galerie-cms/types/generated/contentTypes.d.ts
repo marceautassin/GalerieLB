@@ -468,6 +468,31 @@ export interface ApiAProposAPropos extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiAccueilAccueil extends Struct.SingleTypeSchema {
+  collectionName: 'accueil';
+  info: {
+    description: "Page d'accueil de la Galerie Louis Barrand";
+    displayName: 'Accueil';
+    pluralName: 'accueils';
+    singularName: 'accueil';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::accueil.accueil'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    titreVideo: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    videoYoutube: Schema.Attribute.String;
+  };
+}
+
 export interface ApiArticlePresseArticlePresse extends Struct.CollectionTypeSchema {
   collectionName: 'articles-presse';
   info: {
@@ -553,6 +578,7 @@ export interface ApiExpositionExposition extends Struct.CollectionTypeSchema {
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    videoYoutube: Schema.Attribute.String;
     visuels: Schema.Attribute.Media<'images', true>;
   };
 }
@@ -1096,6 +1122,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::a-propos.a-propos': ApiAProposAPropos;
+      'api::accueil.accueil': ApiAccueilAccueil;
       'api::article-presse.article-presse': ApiArticlePresseArticlePresse;
       'api::artiste.artiste': ApiArtisteArtiste;
       'api::exposition.exposition': ApiExpositionExposition;

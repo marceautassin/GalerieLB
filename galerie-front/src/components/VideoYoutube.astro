@@ -1,0 +1,128 @@
+---
+import { parseYoutubeId, youtubeThumbnail, youtubeWatchUrl } from '../lib/youtube';
+
+interface Props {
+  url: string | null | undefined;
+  titre: string;
+}
+
+const { url, titre } = Astro.props;
+const id = parseYoutubeId(url);
+---
+
+{id && (
+  <div class="video-youtube" data-video-youtube data-video-id={id} data-video-title={titre}>
+    <img
+      class="video-youtube-miniature"
+      src={youtubeThumbnail(id)}
+      width="480"
+      height="360"
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+    <a
+      class="video-youtube-lecture"
+      href={youtubeWatchUrl(id)}
+      aria-label={`Lire la vidéo : ${titre}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path d="M26 21 L44 32 L26 43 Z" fill="currentColor" />
+      </svg>
+    </a>
+  </div>
+)}
+
+<style>
+  .video-youtube {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--color-text);
+    overflow: hidden;
+  }
+
+  .video-youtube-miniature {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 800ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .video-youtube:hover .video-youtube-miniature {
+    transform: scale(1.02);
+  }
+
+  .video-youtube-lecture {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-bg);
+  }
+
+  .video-youtube-lecture svg {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1),
+                background-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .video-youtube-lecture:hover svg {
+    transform: scale(1.08);
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .video-youtube-lecture:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -4px;
+  }
+
+  .video-youtube :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-youtube-miniature,
+    .video-youtube-lecture svg {
+      transition: none;
+    }
+
+    .video-youtube:hover .video-youtube-miniature,
+    .video-youtube-lecture:hover svg {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { youtubeEmbedUrl } from '../lib/youtube';
+
+  // Délégation : un seul écouteur pour toutes les façades de la page.
+  document.addEventListener('click', (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = event.target as Element | null;
+    const lien = target?.closest<HTMLAnchorElement>('.video-youtube-lecture');
+    const facade = lien?.closest<HTMLElement>('[data-video-youtube]');
+    const id = facade?.dataset.videoId;
+    if (!facade || !id) return;
+
+    event.preventDefault();
+    const iframe = document.createElement('iframe');
+    iframe.src = `${youtubeEmbedUrl(id)}?autoplay=1&rel=0`;
+    iframe.title = facade.dataset.videoTitle ?? '';
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    facade.replaceChildren(iframe);
+    iframe.focus();
+  });
+</script>

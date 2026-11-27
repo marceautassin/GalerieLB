@@ -6,11 +6,13 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import RichText from '../../components/RichText.astro';
+import VideoYoutube from '../../components/VideoYoutube.astro';
 import { fetchExpositions, fetchAPropos } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
 import { url } from '../../lib/base-url';
 import { FICHE_VISUEL } from '../../lib/image-presets';
-import { buildExhibitionEventSchema, getSiteUrl, stripHtml } from '../../lib/seo-utils';
+import { buildExhibitionEventSchema, buildVideoObjectSchema, getSiteUrl, stripHtml } from '../../lib/seo-utils';
+import { parseYoutubeId } from '../../lib/youtube';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const expositions = await fetchExpositions();
@@ -61,7 +63,20 @@ const breadcrumbItems = [
 
 const apropos = await fetchAPropos();
 const siteUrl = getSiteUrl(Astro.site);
-const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
+const videoId = parseYoutubeId(exposition.videoYoutube);
+const schema = [
+  buildExhibitionEventSchema({ siteUrl, exposition, apropos }),
+  ...(videoId
+    ? [
+        buildVideoObjectSchema({
+          videoId,
+          name: exposition.titre,
+          description: exposition.preface ? stripHtml(exposition.preface) : null,
+          uploadDate: exposition.publishedAt,
+        }),
+      ]
+    : []),
+];
 ---
 
 <LayoutPrincipal
@@ -100,6 +115,12 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
     {exposition.preface && (
       <div class="fiche-exposition-preface">
         <RichText content={exposition.preface} />
+      </div>
+    )}
+
+    {videoId && (
+      <div class="fiche-exposition-video">
+        <VideoYoutube url={exposition.videoYoutube} titre={exposition.titre} />
       </div>
     )}
 
@@ -193,6 +214,12 @@ const schema = buildExhibitionEventSchema({ siteUrl, exposition, apropos });
   .fiche-exposition-preface {
     margin-bottom: var(--space-2xl);
     max-width: 75ch;
+  }
+
+  .fiche-exposition-video {
+    max-width: 1000px;
+    margin-inline: auto;
+    margin-bottom: var(--space-2xl);
   }
 
   .fiche-exposition-oeuvres {

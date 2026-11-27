@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
+    "test": "node --test src/lib/*.test.ts",
     "format": "prettier --write \"src/**/*.{astro,ts,vue,css}\""
   },
   "dependencies": {

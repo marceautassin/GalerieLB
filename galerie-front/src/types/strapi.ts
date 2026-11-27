@@ -92,6 +92,8 @@ export interface Exposition {
   statut: 'en-cours' | 'passee';
   slug: string;
   oeuvres: Oeuvre[];
+  videoYoutube: string | null;
+  publishedAt: string | null;
 }
 
 export interface ArticlePresse {
@@ -121,6 +123,14 @@ export interface APropos {
   instagram: string | null;
   vuesGalerie: StrapiMedia[];
   oeuvresMisesEnAvant: Oeuvre[];
+}
+
+export interface Accueil {
+  id: number;
+  documentId: string;
+  videoYoutube: string | null;
+  titreVideo: string | null;
+  publishedAt: string | null;
 }
 
 export interface MessageContact {

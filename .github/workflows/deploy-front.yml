@@ -45,6 +45,7 @@ jobs:
           SITE_URL: https://www.galerielouisbarrand.fr
         run: |
           yarn install --frozen-lockfile
+          yarn test
           yarn build
 
       - uses: actions/upload-pages-artifact@v3
