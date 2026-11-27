@@ -2,18 +2,20 @@
 import SeoHead from '../components/SeoHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import type { MediaImage } from '../types/strapi';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
-  ogImage?: string;
+  ogImage?: MediaImage | null;
+  ogImageAlt?: string;
   ogType?: string;
   canonicalUrl?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, ogImage, ogType, canonicalUrl, schema } = Astro.props;
+const { title, description, ogImage, ogImageAlt, ogType, canonicalUrl, schema } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -23,6 +25,7 @@ const { title, description, ogImage, ogType, canonicalUrl, schema } = Astro.prop
     title={title}
     description={description}
     ogImage={ogImage}
+    ogImageAlt={ogImageAlt}
     ogType={ogType}
     canonicalUrl={canonicalUrl}
     schema={schema}

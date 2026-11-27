@@ -6,11 +6,22 @@ import type {
   Thematique,
   Exposition,
   APropos,
+  Accueil,
   ArticlePresse,
 } from '../types/strapi';
 
 const STRAPI_API_URL = import.meta.env.STRAPI_API_URL;
 const STRAPI_API_TOKEN = import.meta.env.STRAPI_API_TOKEN;
+
+class StrapiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+    this.name = 'StrapiError';
+  }
+}
 
 async function fetchStrapi<T>(
   endpoint: string,
@@ -31,8 +42,9 @@ async function fetchStrapi<T>(
   });
 
   if (!response.ok) {
-    throw new Error(
+    throw new StrapiError(
       `Strapi API error: ${response.status} ${response.statusText} on ${endpoint}`,
+      response.status,
     );
   }
 
@@ -182,6 +194,19 @@ export async function fetchAPropos(): Promise<APropos | null> {
     data.oeuvresMisesEnAvant = data.oeuvresMisesEnAvant ?? [];
   }
   return data;
+}
+
+// --- Accueil (single type) ---
+
+/** `null` tant que le singleType n'a jamais été publié (404). Les autres erreurs remontent. */
+export async function fetchAccueil(): Promise<Accueil | null> {
+  try {
+    const result = await fetchStrapi<StrapiSingleResponse<Accueil>>('accueil', 'status=published');
+    return result.data ?? null;
+  } catch (error) {
+    if (error instanceof StrapiError && error.status === 404) return null;
+    throw error;
+  }
 }
 
 // --- Normalizers (Strapi returns null for empty media/relations) ---

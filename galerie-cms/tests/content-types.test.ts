@@ -8,6 +8,8 @@ import expositionSchema from '../src/api/exposition/content-types/exposition/sch
 import articlePresseSchema from '../src/api/article-presse/content-types/article-presse/schema';
 import messageContactSchema from '../src/api/message-contact/content-types/message-contact/schema';
 import aProposSchema from '../src/api/a-propos/content-types/a-propos/schema';
+import accueilSchema from '../src/api/accueil/content-types/accueil/schema';
+import { YOUTUBE_URL_REGEX } from '../src/lib/youtube-regex';
 
 // --- Helpers ---
 
@@ -366,5 +368,76 @@ describe('APropos schema', () => {
   it('has draftAndPublish enabled', () => {
     const options = aProposSchema.options as Record<string, boolean>;
     assert.equal(options.draftAndPublish, true);
+  });
+});
+
+// --- Vidéos YouTube ---
+
+describe('YouTube video fields', () => {
+  const attrsOf = (schema: Record<string, unknown>) =>
+    schema.attributes as Record<string, Record<string, unknown>>;
+
+  it('Exposition has optional videoYoutube string with shared regex', () => {
+    assertHasAttribute(expositionSchema, 'videoYoutube', 'string');
+    const attr = attrsOf(expositionSchema).videoYoutube;
+    assert.notEqual(attr.required, true);
+    assert.equal(attr.regex, YOUTUBE_URL_REGEX);
+  });
+
+  it('Exposition has optional lieu (string) and adresseLieu (text) for off-site exhibitions', () => {
+    assertHasAttribute(expositionSchema, 'lieu', 'string');
+    assertHasAttribute(expositionSchema, 'adresseLieu', 'text');
+    const attrs = attrsOf(expositionSchema);
+    assert.notEqual(attrs.lieu.required, true);
+    assert.notEqual(attrs.adresseLieu.required, true);
+  });
+
+  it('Accueil is a singleType with correct naming', () => {
+    assert.equal(accueilSchema.kind, 'singleType');
+    assert.equal(accueilSchema.collectionName, 'accueil');
+    const info = accueilSchema.info as Record<string, string>;
+    assert.equal(info.singularName, 'accueil');
+    assert.equal(info.pluralName, 'accueils');
+    assert.equal(info.displayName, 'Accueil');
+    assert.equal((accueilSchema.options as Record<string, boolean>).draftAndPublish, true);
+  });
+
+  it('Accueil has optional videoYoutube and titreVideo strings', () => {
+    assertHasAttribute(accueilSchema, 'videoYoutube', 'string');
+    assertHasAttribute(accueilSchema, 'titreVideo', 'string');
+    const attrs = attrsOf(accueilSchema);
+    assert.notEqual(attrs.videoYoutube.required, true);
+    assert.notEqual(attrs.titreVideo.required, true);
+    assert.equal(attrs.videoYoutube.regex, YOUTUBE_URL_REGEX);
+  });
+
+  describe('YouTube regex', () => {
+    const re = new RegExp(YOUTUBE_URL_REGEX);
+    for (const url of [
+      'https://youtu.be/7A5fZwF773s?si=du5sTGVrPS7dlrBZ',
+      'https://www.youtube.com/watch?v=7A5fZwF773s',
+      'https://youtube.com/shorts/7A5fZwF773s',
+      'https://m.youtube.com/watch?si=abc&v=7A5fZwF773s&t=42s',
+      'https://www.youtube.com/embed/7A5fZwF773s',
+      'https://www.youtube.com/live/7A5fZwF773s?feature=share',
+      'https://www.youtube-nocookie.com/embed/7A5fZwF773s',
+    ]) {
+      it(`accepts ${url}`, () => assert.ok(re.test(url)));
+    }
+    for (const url of [
+      'https://vimeo.com/123',
+      'https://evil.com/youtube.com/x',
+      '',
+      'https://www.youtube.com/channel/UCabcdefghijk',
+      'https://youtu.be/x',
+      'https://youtu.be/7A5fZwF773sTOOLONG',
+      'https://youtube.com.evil.com/watch?v=7A5fZwF773s',
+      'https://www.youtube.com/watch',
+      ' https://youtu.be/7A5fZwF773s',
+      'https://youtu.be/7A5fZwF773s&feature=share',
+      'https://www.youtube.com/watch?v=7A5fZwF773s/x',
+    ]) {
+      it(`rejects "${url}"`, () => assert.ok(!re.test(url)));
+    }
   });
 });

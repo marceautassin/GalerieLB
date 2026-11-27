@@ -7,7 +7,7 @@ export default [
     ignores: ['dist/', 'node_modules/', '.astro/'],
   },
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {

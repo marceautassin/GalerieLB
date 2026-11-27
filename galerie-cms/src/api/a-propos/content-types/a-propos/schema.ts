@@ -36,6 +36,7 @@ export default {
     },
     adresse: {
       type: "text",
+      description: "Non utilisé par le site : l'adresse est fixée dans le code (src/lib/galerie.ts).",
     },
     horaires: {
       type: "text",

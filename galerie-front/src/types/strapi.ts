@@ -46,6 +46,9 @@ export interface StrapiMedia {
   } | null;
 }
 
+/** Média réduit à ce qu'il faut pour générer une image (ex. image de partage). */
+export type MediaImage = Pick<StrapiMedia, 'url' | 'width' | 'height'>;
+
 // --- Content types ---
 
 export interface Artiste {
@@ -89,9 +92,12 @@ export interface Exposition {
   dateFin: string | null;
   preface: string | null;
   visuels: StrapiMedia[];
-  statut: 'en-cours' | 'passee';
   slug: string;
   oeuvres: Oeuvre[];
+  videoYoutube: string | null;
+  lieu: string | null;
+  adresseLieu: string | null;
+  createdAt: string;
 }
 
 export interface ArticlePresse {
@@ -121,6 +127,14 @@ export interface APropos {
   instagram: string | null;
   vuesGalerie: StrapiMedia[];
   oeuvresMisesEnAvant: Oeuvre[];
+}
+
+export interface Accueil {
+  id: number;
+  documentId: string;
+  videoYoutube: string | null;
+  titreVideo: string | null;
+  createdAt: string;
 }
 
 export interface MessageContact {

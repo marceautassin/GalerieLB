@@ -12,6 +12,9 @@ on:
     branches: [master]
   repository_dispatch:
     types: [strapi-content-update]
+  # Rebuild quotidien (00h10 à Paris en hiver) : le statut des expositions est calculé au build.
+  schedule:
+    - cron: '10 23 * * *'
 
 permissions:
   contents: read
@@ -31,9 +34,19 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
+          check-latest: true
           cache: yarn
           cache-dependency-path: galerie-front/yarn.lock
+
+      # Cache des images optimisées par astro:assets : évite de tout régénérer à chaque build
+      # (rebuild quotidien, mises à jour CMS).
+      - uses: actions/cache@v4
+        with:
+          path: galerie-front/node_modules/.astro
+          key: astro-assets-${{ runner.os }}-${{ hashFiles('galerie-front/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            astro-assets-${{ runner.os }}-${{ hashFiles('galerie-front/yarn.lock') }}-
 
       - name: Install & build
         working-directory: galerie-front
@@ -44,6 +57,7 @@ jobs:
           SITE_URL: https://www.galerielouisbarrand.fr
         run: |
           yarn install --frozen-lockfile
+          yarn test
           yarn build
 
       - uses: actions/upload-pages-artifact@v3

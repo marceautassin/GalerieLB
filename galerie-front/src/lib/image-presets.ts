@@ -9,7 +9,7 @@
  * than the source asset automatically.
  */
 
-interface ImagePreset {
+export interface ImagePreset {
   widths: number[];
   sizes: string;
 }
@@ -20,10 +20,21 @@ interface DensityPreset {
   width: number;
 }
 
-/** Cartes dans une grille 1/2/4 colonnes (acquisitions home). */
+/** Cartes dans une grille 1/2/4 colonnes (acquisitions de l'accueil : 1 ligne de 4 à partir de 1024 px). */
 export const CARTE_GRILLE: ImagePreset = {
   widths: [400, 600, 800, 1200, 1600],
   sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw',
+};
+
+/**
+ * Catalogue /oeuvres : 1 colonne (< 640), 2 (< 1024), 3 (< 1280), 4 ensuite.
+ * Entre 1024 et 1279 px, la 5e carte de chaque série (`span-2`) occupe 2 colonnes sur 3 (~67vw) :
+ * `sizes` retient ce cas le plus large pour que les cartes doubles restent nettes.
+ * Échelle jusqu'à 2000 px : 1279 px x 67 % x DPR 2 = ~1700 px physiques.
+ */
+export const CATALOGUE_GRILLE: ImagePreset = {
+  widths: [400, 600, 800, 1000, 1200, 1600, 2000],
+  sizes: '(max-width: 640px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 67vw, 25vw',
 };
 
 /** Grille 1/2/3 colonnes (expositions, artistes, presse, fiches related). */

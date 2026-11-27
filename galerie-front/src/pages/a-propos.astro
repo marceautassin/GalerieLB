@@ -7,6 +7,7 @@ import Citation from '../components/Citation.astro';
 import { fetchAPropos } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 import { PORTRAIT_A_PROPOS, VUE_GALERIE } from '../lib/image-presets';
+import { GALERIE, adresseEnLigne, horairesGalerie } from '../lib/galerie';
 
 const apropos = await fetchAPropos();
 const vuesGalerie = apropos?.vuesGalerie ?? [];
@@ -109,38 +110,32 @@ const hasPhotoLouis = !!apropos?.photoLouis;
       </section>
     )}
 
-    {(apropos?.adresse || apropos?.horaires || apropos?.telephone || apropos?.email) && (
-      <section class="section-infos-pratiques">
-        <div class="container--edge">
-          <h2>Informations pratiques</h2>
-          <div class="infos-grid">
-            {apropos.adresse && (
-              <div class="info-bloc">
-                <h3>Adresse</h3>
-                <p>{apropos.adresse}</p>
-              </div>
-            )}
-            {apropos.horaires && (
-              <div class="info-bloc">
-                <h3>Horaires</h3>
-                <p>{apropos.horaires}</p>
-              </div>
-            )}
-            {(apropos.telephone || apropos.email) && (
-              <div class="info-bloc">
-                <h3>Contact</h3>
-                {apropos.telephone && (
-                  <p><a href={`tel:${apropos.telephone}`}>{apropos.telephone}</a></p>
-                )}
-                {apropos.email && (
-                  <p><a href={`mailto:${apropos.email}`}>{apropos.email}</a></p>
-                )}
-              </div>
-            )}
+    <section class="section-infos-pratiques">
+      <div class="container--edge">
+        <h2>Informations pratiques</h2>
+        <div class="infos-grid">
+          <div class="info-bloc">
+            <h3>Adresse</h3>
+            <p>{adresseEnLigne(GALERIE.adresse)}</p>
           </div>
+          <div class="info-bloc">
+            <h3>Horaires</h3>
+            <p>{horairesGalerie(apropos)}</p>
+          </div>
+          {apropos && (apropos.telephone || apropos.email) && (
+            <div class="info-bloc">
+              <h3>Contact</h3>
+              {apropos.telephone && (
+                <p><a href={`tel:${apropos.telephone}`}>{apropos.telephone}</a></p>
+              )}
+              {apropos.email && (
+                <p><a href={`mailto:${apropos.email}`}>{apropos.email}</a></p>
+              )}
+            </div>
+          )}
         </div>
-      </section>
-    )}
+      </div>
+    </section>
 
     <section class="section-liens-externes">
       <div class="container--edge">

@@ -2,17 +2,29 @@
 import LayoutPrincipal from '../../layouts/LayoutPrincipal.astro';
 import CarteExposition from '../../components/CarteExposition.astro';
 import { fetchExpositions } from '../../lib/strapi-client';
+import { statutExposition } from '../../lib/exposition-statut';
 
 const expositions = await fetchExpositions();
-const enCours = expositions.filter((e) => e.statut === 'en-cours');
-const passees = expositions
-  .filter((e) => e.statut === 'passee')
-  .sort((a, b) => new Date(b.dateDebut).getTime() - new Date(a.dateDebut).getTime());
+const parStatut = (statut: ReturnType<typeof statutExposition>) =>
+  expositions.filter((e) => statutExposition(e) === statut);
+const parDateDebut = (sens: 1 | -1) => (a: { dateDebut: string }, b: { dateDebut: string }) =>
+  sens * a.dateDebut.localeCompare(b.dateDebut);
+const enCours = parStatut('en-cours').sort(parDateDebut(-1));
+const aVenir = parStatut('a-venir').sort(parDateDebut(1));
+const passees = parStatut('passee').sort(parDateDebut(-1));
+const sections = [
+  aVenir.length && 'à venir',
+  enCours.length && 'en cours',
+  passees.length && 'passées',
+].filter(Boolean);
+const description = sections.length
+  ? `Expositions ${sections.join(', ').replace(/, ([^,]+)$/, ' et $1')} de la Galerie Louis Barrand.`
+  : 'Les expositions de la Galerie Louis Barrand.';
 ---
 
 <LayoutPrincipal
   title="Expositions — Galerie Louis Barrand"
-  description="Découvrez les expositions passées et en cours de la Galerie Louis Barrand."
+  description={description}
 >
   <section class="page-expositions">
     <h1>Expositions</h1>
@@ -22,6 +34,19 @@ const passees = expositions
         <h2>En cours</h2>
         <ul class="grille-expositions">
           {enCours.map((exposition) => (
+            <li>
+              <CarteExposition exposition={exposition} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {aVenir.length > 0 && (
+      <div class="section-expositions">
+        <h2>À venir</h2>
+        <ul class="grille-expositions">
+          {aVenir.map((exposition) => (
             <li>
               <CarteExposition exposition={exposition} />
             </li>

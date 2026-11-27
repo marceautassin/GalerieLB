@@ -2,10 +2,13 @@
 import { Image } from 'astro:assets';
 import LayoutPrincipal from '../layouts/LayoutPrincipal.astro';
 import CarteOeuvre from '../components/CarteOeuvre.astro';
-import { fetchOeuvres, fetchAPropos } from '../lib/strapi-client';
+import VideoYoutube from '../components/VideoYoutube.astro';
+import { fetchOeuvres, fetchAPropos, fetchAccueil } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 import { HERO_HOME } from '../lib/image-presets';
-import { buildArtGallerySchema, getSiteUrl } from '../lib/seo-utils';
+import { GALERIE } from '../lib/galerie';
+import { buildArtGallerySchema, buildVideoObjectSchema, getSiteUrl } from '../lib/seo-utils';
+import { parseYoutubeId } from '../lib/youtube';
 
 const acquisitionsRecentes = await fetchOeuvres({ sort: 'createdAt:desc', limit: 8, hasVisuels: true });
 const apropos = await fetchAPropos();
@@ -14,12 +17,29 @@ const oeuvreHero = oeuvresMisesEnAvant[0] ?? acquisitionsRecentes[0] ?? null;
 const visuelHero = oeuvreHero?.visuels?.[0] ?? null;
 
 const siteUrl = getSiteUrl(Astro.site);
-const schema = buildArtGallerySchema({ siteUrl, apropos });
+const accueil = await fetchAccueil();
+const videoId = parseYoutubeId(accueil?.videoYoutube);
+const titreVideo = accueil?.titreVideo?.trim() || null;
+const schema = [
+  buildArtGallerySchema({ siteUrl, apropos }),
+  ...(videoId
+    ? [
+        buildVideoObjectSchema({
+          videoId,
+          name: titreVideo ?? 'Galerie Louis Barrand',
+          description: `Présentation en vidéo de la Galerie Louis Barrand : ${GALERIE.description}`,
+          uploadDate: accueil?.createdAt,
+        }),
+      ]
+    : []),
+];
 ---
 
 <LayoutPrincipal
   title="Galerie Louis Barrand — Galerie d'art à Paris, XIXe-XXe siècles"
   description="Galerie d'art spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles. Découvrez les dernières acquisitions, expositions et artistes."
+  ogImage={visuelHero}
+  ogImageAlt={oeuvreHero ? `${oeuvreHero.titre}${oeuvreHero.artiste ? `, ${oeuvreHero.artiste.nom}` : ''}` : undefined}
   schema={schema}
 >
   <section class="hero container--bleed">
@@ -53,6 +73,13 @@ const schema = buildArtGallerySchema({ siteUrl, apropos });
       <a href={url('/oeuvres')} class="hero-lien">Explorer la collection</a>
     </div>
   </section>
+
+  {videoId && (
+    <section class="container--edge accueil-video">
+      {titreVideo && <h2>{titreVideo}</h2>}
+      <VideoYoutube url={accueil?.videoYoutube} titre={titreVideo ?? 'Galerie Louis Barrand'} />
+    </section>
+  )}
 
   {acquisitionsRecentes.length > 0 && (
     <section class="container--edge acquisitions-recentes">
@@ -213,6 +240,18 @@ const schema = buildArtGallerySchema({ siteUrl, apropos });
 
   .hero-lien:hover::after {
     transform: translateX(6px);
+  }
+
+  /* ---- Vidéo ---- */
+
+  .accueil-video {
+    max-width: 1000px;
+    margin-inline: auto;
+    padding-bottom: var(--space-4xl);
+  }
+
+  .accueil-video h2 {
+    margin-bottom: var(--space-xl);
   }
 
   /* ---- Acquisitions récentes ---- */

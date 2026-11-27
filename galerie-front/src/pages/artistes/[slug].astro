@@ -44,6 +44,8 @@ const schema = buildPersonSchema({ siteUrl, artiste });
 <LayoutPrincipal
   title={`${artiste.nom} — Galerie Louis Barrand`}
   description={description}
+  ogImage={artiste.photo}
+  ogImageAlt={artiste.nom}
   schema={schema}
 >
   <article class="fiche-artiste">

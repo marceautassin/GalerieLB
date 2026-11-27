@@ -1,24 +1,23 @@
 ---
 import { fetchAPropos } from '../lib/strapi-client';
+import { GALERIE, horairesGalerie, lignesAdresse } from '../lib/galerie';
 
 const currentYear = new Date().getFullYear();
 const apropos = await fetchAPropos();
+const adresse = lignesAdresse(GALERIE.adresse).join('<br />');
+const horaires = horairesGalerie(apropos).split(/\r?\n/);
 ---
 
 <footer class="site-footer">
   <div class="footer-inner">
-    {apropos?.adresse && (
-      <div class="footer-col">
-        <h3>Galerie Louis Barrand</h3>
-        <address set:html={apropos.adresse.replace(/\n/g, '<br />')} />
-      </div>
-    )}
-    {apropos?.horaires && (
-      <div class="footer-col">
-        <h3>Horaires</h3>
-        <p set:html={apropos.horaires.replace(/\n/g, '<br />')} />
-      </div>
-    )}
+    <div class="footer-col">
+      <h3>{GALERIE.nom}</h3>
+      <address set:html={adresse} />
+    </div>
+    <div class="footer-col">
+      <h3>Horaires</h3>
+      <p>{horaires.map((ligne, i) => (<>{i > 0 && <br />}{ligne}</>))}</p>
+    </div>
     <div class="footer-col">
       <h3>Liens</h3>
       <ul>
@@ -90,13 +89,13 @@ const apropos = await fetchAPropos();
     font-style: normal;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-on-dark-muted);
   }
 
   .footer-col p {
     font-size: 0.875rem;
     line-height: 1.6;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-on-dark-muted);
   }
 
   .footer-col ul {
@@ -107,7 +106,7 @@ const apropos = await fetchAPropos();
 
   .footer-col a {
     font-size: 0.875rem;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-on-dark-muted);
     transition: color var(--transition-fade);
   }
 
@@ -124,6 +123,6 @@ const apropos = await fetchAPropos();
 
   .footer-bottom p {
     font-size: 0.75rem;
-    color: var(--color-text-tertiary);
+    color: var(--color-text-on-dark-muted);
   }
 </style>
