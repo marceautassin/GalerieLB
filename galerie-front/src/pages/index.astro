@@ -6,6 +6,7 @@ import VideoYoutube from '../components/VideoYoutube.astro';
 import { fetchOeuvres, fetchAPropos, fetchAccueil } from '../lib/strapi-client';
 import { url } from '../lib/base-url';
 import { HERO_HOME } from '../lib/image-presets';
+import { GALERIE } from '../lib/galerie';
 import { buildArtGallerySchema, buildVideoObjectSchema, getSiteUrl } from '../lib/seo-utils';
 import { parseYoutubeId } from '../lib/youtube';
 
@@ -26,7 +27,8 @@ const schema = [
         buildVideoObjectSchema({
           videoId,
           name: titreVideo ?? 'Galerie Louis Barrand',
-          uploadDate: accueil?.publishedAt,
+          description: `Présentation en vidéo de la Galerie Louis Barrand : ${GALERIE.description}`,
+          uploadDate: accueil?.createdAt,
         }),
       ]
     : []),

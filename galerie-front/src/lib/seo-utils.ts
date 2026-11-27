@@ -1,5 +1,6 @@
 import type { APropos, Artiste, Exposition, Oeuvre } from '../types/strapi';
 import { youtubeEmbedUrl, youtubeThumbnail, youtubeWatchUrl } from './youtube';
+import { GALERIE, horairesEnLigne, lieuExposition, type AdressePostale } from './galerie';
 
 type JsonLd = Record<string, unknown>;
 
@@ -20,6 +21,12 @@ export function absoluteUrl(siteUrl: string, path: string | undefined | null): s
   if (path.startsWith('//')) return `https:${path}`;
   const suffix = path.startsWith('/') ? path : `/${path}`;
   return `${siteUrl}${suffix}`;
+}
+
+/** URL absolue d'une page du site, avec `/` final (forme canonique, identique au sitemap). */
+export function pageUrl(siteUrl: string, path: string): string {
+  const clean = path.replace(/^\/+|\/+$/g, '');
+  return clean ? `${siteUrl}/${clean}/` : `${siteUrl}/`;
 }
 
 export function stripHtml(html: string): string {
@@ -65,33 +72,26 @@ function compact<T extends JsonLd>(obj: T): T {
   return out as T;
 }
 
-function parseAdresse(adresse: string | null | undefined): JsonLd | undefined {
-  if (!adresse) return undefined;
-  const lines = adresse
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
-  if (lines.length === 0) return undefined;
-  const [streetAddress, addressLocality, addressCountry] = lines;
-  return compact({
-    '@type': 'PostalAddress',
-    streetAddress,
-    addressLocality: lines.length > 1 ? addressLocality : undefined,
-    addressCountry: lines.length > 2 ? addressCountry : undefined,
-  });
+function postalAddress(a: AdressePostale | undefined): JsonLd | undefined {
+  return a ? compact({ '@type': 'PostalAddress', ...a }) : undefined;
 }
 
 export function buildArtGallerySchema(opts: { siteUrl: string; apropos: APropos | null }): JsonLd {
   const { siteUrl, apropos } = opts;
+  const horaires = horairesEnLigne(apropos);
   return compact({
     '@context': 'https://schema.org',
     '@type': 'ArtGallery',
-    name: 'Galerie Louis Barrand',
-    url: siteUrl,
+    name: GALERIE.nom,
+    url: pageUrl(siteUrl, '/'),
     logo: absoluteUrl(siteUrl, '/logo.svg'),
-    description:
-      "Galerie d'art parisienne spécialisée dans la redécouverte d'artistes des XIXe et XXe siècles — peinture, dessin, estampe.",
-    address: parseAdresse(apropos?.adresse),
+    description: `${GALERIE.description} ${horaires}.`,
+    address: postalAddress(GALERIE.adresse),
+    founder: {
+      '@type': 'Person',
+      name: GALERIE.fondateur.nom,
+      award: GALERIE.fondateur.distinction,
+    },
     email: apropos?.email ?? undefined,
     telephone: apropos?.telephone ?? undefined,
     sameAs: [apropos?.instagram, apropos?.linkedin].filter(Boolean),
@@ -106,7 +106,7 @@ export function buildPersonSchema(opts: { siteUrl: string; artiste: Artiste }): 
     name: artiste.nom,
     description: artiste.biographie ? stripHtml(artiste.biographie) : undefined,
     image: absoluteUrl(siteUrl, artiste.photo?.url),
-    url: absoluteUrl(siteUrl, `/artistes/${artiste.slug}`),
+    url: pageUrl(siteUrl, `/artistes/${artiste.slug}`),
   });
 }
 
@@ -117,7 +117,7 @@ export function buildVisualArtworkSchema(opts: { siteUrl: string; oeuvre: Oeuvre
     ? compact({
         '@type': 'Person',
         name: oeuvre.artiste.nom,
-        url: absoluteUrl(siteUrl, `/artistes/${oeuvre.artiste.slug}`),
+        url: pageUrl(siteUrl, `/artistes/${oeuvre.artiste.slug}`),
       })
     : undefined;
 
@@ -134,26 +134,14 @@ export function buildVisualArtworkSchema(opts: { siteUrl: string; oeuvre: Oeuvre
     artMedium: oeuvre.technique ?? undefined,
     description,
     image: absoluteUrl(siteUrl, visuel?.url),
-    url: absoluteUrl(siteUrl, `/oeuvres/${oeuvre.slug}`),
+    url: pageUrl(siteUrl, `/oeuvres/${oeuvre.slug}`),
   });
 }
 
-export function buildExhibitionEventSchema(opts: {
-  siteUrl: string;
-  exposition: Exposition;
-  apropos: APropos | null;
-}): JsonLd {
-  const { siteUrl, exposition, apropos } = opts;
+export function buildExhibitionEventSchema(opts: { siteUrl: string; exposition: Exposition }): JsonLd {
+  const { siteUrl, exposition } = opts;
   const visuel = exposition.visuels?.[0];
-
-  const address = parseAdresse(apropos?.adresse);
-  const location = compact({
-    '@type': 'Place',
-    name: 'Galerie Louis Barrand',
-    address,
-  });
-
-  const description = exposition.preface ? stripHtml(exposition.preface) : undefined;
+  const lieu = lieuExposition(exposition);
 
   return compact({
     '@context': 'https://schema.org',
@@ -161,10 +149,13 @@ export function buildExhibitionEventSchema(opts: {
     name: exposition.titre,
     startDate: exposition.dateDebut,
     endDate: exposition.dateFin ?? undefined,
-    location,
-    description,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: { '@type': 'Place', name: lieu.nom, address: postalAddress(lieu.adresse) },
+    organizer: { '@type': 'ArtGallery', name: GALERIE.nom, url: pageUrl(siteUrl, '/') },
+    description: exposition.preface ? stripHtml(exposition.preface) : undefined,
     image: absoluteUrl(siteUrl, visuel?.url),
-    url: absoluteUrl(siteUrl, `/expositions/${exposition.slug}`),
+    url: pageUrl(siteUrl, `/expositions/${exposition.slug}`),
   });
 }
 

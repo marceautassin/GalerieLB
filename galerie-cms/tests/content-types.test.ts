@@ -384,6 +384,14 @@ describe('YouTube video fields', () => {
     assert.equal(attr.regex, YOUTUBE_URL_REGEX);
   });
 
+  it('Exposition has optional lieu (string) and adresseLieu (text) for off-site exhibitions', () => {
+    assertHasAttribute(expositionSchema, 'lieu', 'string');
+    assertHasAttribute(expositionSchema, 'adresseLieu', 'text');
+    const attrs = attrsOf(expositionSchema);
+    assert.notEqual(attrs.lieu.required, true);
+    assert.notEqual(attrs.adresseLieu.required, true);
+  });
+
   it('Accueil is a singleType with correct naming', () => {
     assert.equal(accueilSchema.kind, 'singleType');
     assert.equal(accueilSchema.collectionName, 'accueil');

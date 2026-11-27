@@ -7,10 +7,12 @@ import CarteOeuvre from '../../components/CarteOeuvre.astro';
 import SectionLiensRelies from '../../components/SectionLiensRelies.astro';
 import RichText from '../../components/RichText.astro';
 import VideoYoutube from '../../components/VideoYoutube.astro';
-import { fetchExpositions, fetchAPropos } from '../../lib/strapi-client';
+import { fetchExpositions } from '../../lib/strapi-client';
 import { formatDateFr } from '../../lib/format';
 import { url } from '../../lib/base-url';
 import { FICHE_VISUEL } from '../../lib/image-presets';
+import { lieuExposition, lignesAdresse } from '../../lib/galerie';
+import { STATUT_LABEL, statutExposition } from '../../lib/exposition-statut';
 import { buildExhibitionEventSchema, buildVideoObjectSchema, getSiteUrl, stripHtml } from '../../lib/seo-utils';
 import { parseYoutubeId } from '../../lib/youtube';
 
@@ -61,18 +63,22 @@ const breadcrumbItems = [
   { label: exposition.titre },
 ];
 
-const apropos = await fetchAPropos();
+const lieu = lieuExposition(exposition);
+const lieuAffiche = lieu.horsLesMurs ? [lieu.nom, ...(lieu.adresse ? lignesAdresse(lieu.adresse) : [])].join(' — ') : null;
+const statut = statutExposition(exposition);
 const siteUrl = getSiteUrl(Astro.site);
 const videoId = parseYoutubeId(exposition.videoYoutube);
 const schema = [
-  buildExhibitionEventSchema({ siteUrl, exposition, apropos }),
+  buildExhibitionEventSchema({ siteUrl, exposition }),
   ...(videoId
     ? [
         buildVideoObjectSchema({
           videoId,
           name: exposition.titre,
-          description: exposition.preface ? stripHtml(exposition.preface) : null,
-          uploadDate: exposition.publishedAt,
+          description: exposition.preface
+            ? stripHtml(exposition.preface)
+            : `Vidéo de l'exposition « ${exposition.titre} » à la Galerie Louis Barrand.`,
+          uploadDate: exposition.createdAt,
         }),
       ]
     : []),
@@ -91,6 +97,8 @@ const schema = [
     <header class="fiche-exposition-header">
       <h1>{exposition.titre}</h1>
       <p class="fiche-exposition-dates">{dates}</p>
+      <p class="fiche-exposition-statut">{STATUT_LABEL[statut]}</p>
+      {lieuAffiche && <p class="fiche-exposition-lieu">{lieuAffiche}</p>}
     </header>
 
     {visuels.length > 0 && (
@@ -165,6 +173,12 @@ const schema = [
     font-size: 1.125rem;
     color: var(--color-text-secondary);
     margin-top: var(--space-sm);
+  }
+
+  .fiche-exposition-statut,
+  .fiche-exposition-lieu {
+    color: var(--color-text-secondary);
+    margin-top: var(--space-xs);
   }
 
   .fiche-exposition-visuels {

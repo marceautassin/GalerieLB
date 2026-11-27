@@ -89,11 +89,12 @@ export interface Exposition {
   dateFin: string | null;
   preface: string | null;
   visuels: StrapiMedia[];
-  statut: 'en-cours' | 'passee';
   slug: string;
   oeuvres: Oeuvre[];
   videoYoutube: string | null;
-  publishedAt: string | null;
+  lieu: string | null;
+  adresseLieu: string | null;
+  createdAt: string;
 }
 
 export interface ArticlePresse {
@@ -130,7 +131,7 @@ export interface Accueil {
   documentId: string;
   videoYoutube: string | null;
   titreVideo: string | null;
-  publishedAt: string | null;
+  createdAt: string;
 }
 
 export interface MessageContact {

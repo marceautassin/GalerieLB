@@ -562,10 +562,12 @@ export interface ApiExpositionExposition extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    adresseLieu: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     dateDebut: Schema.Attribute.Date & Schema.Attribute.Required;
     dateFin: Schema.Attribute.Date;
+    lieu: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::exposition.exposition'> &
       Schema.Attribute.Private;

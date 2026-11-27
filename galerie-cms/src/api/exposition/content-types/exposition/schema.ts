@@ -38,6 +38,7 @@ export default {
       type: "enumeration",
       enum: ["en-cours", "passee"],
       default: "en-cours",
+      description: "Obsolète : le statut est calculé depuis les dates.",
     },
     slug: {
       type: "uid",
@@ -48,6 +49,16 @@ export default {
       required: false,
       regex: YOUTUBE_URL_REGEX,
       description: "URL YouTube de la vidéo de l'exposition (youtube.com, youtu.be ou youtube-nocookie.com).",
+    },
+    lieu: {
+      type: "string",
+      required: false,
+      description: "Exposition hors les murs : renseigner ce champ ET l'adresse du lieu (ex. Foire de Chatou). Les deux vides = la galerie.",
+    },
+    adresseLieu: {
+      type: "text",
+      required: false,
+      description: "Exposition hors les murs : à renseigner avec le lieu, sur une ligne (ex. Île des Impressionnistes, 78400 Chatou). Les deux vides = la galerie.",
     },
     oeuvres: {
       type: "relation",

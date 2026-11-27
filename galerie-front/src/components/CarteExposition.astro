@@ -4,6 +4,8 @@ import type { Exposition } from '../types/strapi';
 import { formatDateFr } from '../lib/format';
 import { url } from '../lib/base-url';
 import { CARTE_GRILLE_3 } from '../lib/image-presets';
+import { STATUT_LABEL, statutExposition } from '../lib/exposition-statut';
+import { lieuExposition } from '../lib/galerie';
 
 interface Props {
   exposition: Exposition;
@@ -11,7 +13,8 @@ interface Props {
 
 const { exposition } = Astro.props;
 const visuel = exposition.visuels?.[0];
-const enCours = exposition.statut === 'en-cours';
+const statut = statutExposition(exposition);
+const lieu = lieuExposition(exposition);
 
 const dates = exposition.dateFin
   ? `${formatDateFr(exposition.dateDebut, 'short')} — ${formatDateFr(exposition.dateFin, 'short')}`
@@ -35,17 +38,19 @@ const dates = exposition.dateFin
         <span>{exposition.titre.charAt(0)}</span>
       </div>
     )}
-    {enCours && <span class="badge-en-cours">En cours</span>}
+    {statut !== 'passee' && <span class="badge-statut">{STATUT_LABEL[statut]}</span>}
   </div>
   <div class="carte-exposition-info">
     <h2 class="carte-exposition-titre">{exposition.titre}</h2>
     <p class="carte-exposition-dates">{dates}</p>
+    {lieu.horsLesMurs && <p class="carte-exposition-lieu">{lieu.nom}</p>}
   </div>
 </a>
 
 <style>
   .carte-exposition {
     display: block;
+    height: 100%;
     text-decoration: none;
     transition: box-shadow var(--transition-default);
     border: 1px solid var(--color-border);
@@ -87,7 +92,7 @@ const dates = exposition.dateFin
     font-weight: 700;
   }
 
-  .badge-en-cours {
+  .badge-statut {
     position: absolute;
     top: var(--space-sm);
     right: var(--space-sm);
@@ -105,6 +110,12 @@ const dates = exposition.dateFin
   .carte-exposition-titre {
     font-size: 1.125rem;
     font-weight: 600;
+  }
+
+  .carte-exposition-lieu {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-xs);
   }
 
   .carte-exposition-dates {

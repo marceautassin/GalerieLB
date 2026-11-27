@@ -12,6 +12,9 @@ on:
     branches: [master]
   repository_dispatch:
     types: [strapi-content-update]
+  # Rebuild quotidien (00h10 à Paris en hiver) : le statut des expositions est calculé au build.
+  schedule:
+    - cron: '10 23 * * *'
 
 permissions:
   contents: read
