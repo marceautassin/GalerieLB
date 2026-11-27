@@ -219,6 +219,13 @@ h6 {
   margin-inline: calc(50% - 50vw);
 }
 
+/* 100vw inclut la barre de défilement : sans ce clip, .container--bleed crée un
+   défilement horizontal de quelques pixels. `clip` (et non `hidden`) ne crée pas de
+   conteneur de défilement et préserve `position: sticky`. */
+#main-content {
+  overflow-x: clip;
+}
+
 /* ---------- Rich Text (Markdown rendu depuis Strapi) ---------- */
 
 .rich-text {
